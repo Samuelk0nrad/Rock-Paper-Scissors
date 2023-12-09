@@ -2,6 +2,7 @@ package com.game.rockpaperscissors
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
@@ -30,13 +31,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
 
 @Composable
 @Preview
@@ -46,7 +46,9 @@ fun Weapon(){
         mutableStateOf(2)
     }
 
-
+    var isSelect by remember {
+        mutableStateOf(false)
+    }
 
     val transition = updateTransition(
         targetState = selection,
@@ -57,7 +59,7 @@ fun Weapon(){
 
     val paperSize by transition.animateFloat(
         transitionSpec = { tween(500) },
-        label = "Icon Paper Size",
+        label = "paperSize",
         targetValueByState = { selection ->
             if (selection == 1) 1.5f else 1f
         }
@@ -65,7 +67,7 @@ fun Weapon(){
 
     val rockSize by transition.animateFloat(
         transitionSpec = { tween(500) },
-        label = "Icon Rock Size",
+        label = "rockSize",
         targetValueByState = { selection ->
             if (selection == 2) 1.5f else 1f
         }
@@ -73,7 +75,7 @@ fun Weapon(){
 
     val scissorsSize by transition.animateFloat(
         transitionSpec = { tween(500) },
-        label = "Icon Rock Size",
+        label = "scissorsSize",
         targetValueByState = { selection ->
             if (selection == 3) 1.5f else 1f
         }
@@ -84,7 +86,7 @@ fun Weapon(){
 
     val paperPadding by transition.animateInt(
         transitionSpec = { tween(500) },
-        label = "Icon Paper Size",
+        label = "paperPadding",
         targetValueByState = { selection ->
             if (selection == 1) 22 else 0
         }
@@ -92,7 +94,7 @@ fun Weapon(){
 
     val rockPadding by transition.animateInt(
         transitionSpec = { tween(500) },
-        label = "Icon Rock Size",
+        label = "rockPadding",
         targetValueByState = { selection ->
             if (selection == 2) 22 else 0
         }
@@ -108,6 +110,88 @@ fun Weapon(){
 
 
     //Position
+
+    val paperPositoinAlignmentStart by transition.animateFloat (
+        transitionSpec = { tween(500) },
+        label = "paperPositoinAlignmentStart",
+        targetValueByState = { selection ->
+            if (selection == 1) 1f else if (selection == 2) 0f else -1f
+        }
+    )
+    val paperPositoinAlignmentEnd by transition.animateFloat (
+        transitionSpec = { tween(500) },
+        label = "paperPositoinAlignmentEnd",
+        targetValueByState = { selection ->
+            if (selection == 1) 1f else if (selection == 2) 2f else 3f
+        }
+    )
+
+
+    val rockPositoinAlignmentStart by transition.animateFloat (
+        transitionSpec = { tween(500) },
+        label = "rockPositoinAlignmentStart",
+        targetValueByState = { selection ->
+            if (selection == 1) 2f else if (selection == 2) 1f else 0f
+        }
+    )
+    val rockPositoinAlignmentEnd by transition.animateFloat (
+        transitionSpec = { tween(500) },
+        label = "rockPositoinAlignmentEnd",
+        targetValueByState = { selection ->
+            if (selection == 1) 0f else if (selection == 2) 1f else 2f
+        }
+    )
+
+    val scissorsPositoinAlignmentStart by transition.animateFloat (
+        transitionSpec = { tween(500) },
+        label = "scissorsPositoinAlignmentStart",
+        targetValueByState = { selection ->
+            if (selection == 1) 3f else if (selection == 2) 2f else 1f
+        }
+    )
+    val scissorsPositoinAlignmentEnd by transition.animateFloat (
+        transitionSpec = { tween(500) },
+        label = "scissorsPositoinAlignmentEnd",
+        targetValueByState = { selection ->
+            if (selection == 1) -1f else if (selection == 2) 0f else 1f
+        }
+    )
+
+
+    //Color
+
+    val paperColor by transition.animateColor (
+        transitionSpec = { tween(500) },
+        label = "scissorsColor",
+        targetValueByState = { selection ->
+            if (isSelect){
+                if(selection == 1) MaterialTheme.colorScheme.onBackground
+                else MaterialTheme.colorScheme.onSecondary
+            }else MaterialTheme.colorScheme.secondary
+        }
+    )
+
+    val rockColor by transition.animateColor (
+        transitionSpec = { tween(500) },
+        label = "scissorsColor",
+        targetValueByState = { selection ->
+            if (isSelect){
+                if(selection == 2) MaterialTheme.colorScheme.onBackground
+                else MaterialTheme.colorScheme.onSecondary
+            }else MaterialTheme.colorScheme.secondary
+        }
+    )
+
+    val scissorsColor by transition.animateColor (
+        transitionSpec = { tween(500) },
+        label = "scissorsColor",
+        targetValueByState = { selection ->
+            if (isSelect){
+                if(selection == 3) MaterialTheme.colorScheme.onBackground
+                else MaterialTheme.colorScheme.onSecondary
+            }else MaterialTheme.colorScheme.secondary
+        }
+    )
 
 
 
@@ -152,36 +236,25 @@ fun Weapon(){
                 .fillMaxSize()
                 .animateContentSize()
         ){
-            val with = this.maxWidth / 3
 
-            // For Animation of the Weapons(Movement)
-            val leftSpacer by transition.animateDp (
-                transitionSpec = { tween(500) },
-                label = "leftSpacer",
-                targetValueByState = { selection ->
-                    if (selection == 1) with else 0.dp
-                }
-            )
-
-            val reightSpacer by transition.animateDp (
-                transitionSpec = { tween(500) },
-                label = "leftSpacer",
-                targetValueByState = { selection ->
-                    if (selection == 3) with else 0.dp
-                }
-            )
+            val with: Float = (this.maxWidth / 3).value
 
             Box(
                 modifier = Modifier
+                    .fillMaxSize(),
                     //.padding(end = 120.dp)
+                contentAlignment = if (selection == 3) Alignment.TopEnd else Alignment.TopStart
             ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.End
+
+
+                Box(modifier = Modifier
+                    .padding(
+                        end = (with * paperPositoinAlignmentEnd).dp,
+                        start = (with * (if(paperPositoinAlignmentStart <= 0f) 0f else paperPositoinAlignmentStart)).dp)
                 ) {
                     Box(
                         modifier = Modifier
-                            .width(with)
+                            .width((with).dp)
                             .fillMaxHeight(),
                         contentAlignment = TopCenter
                     ) {
@@ -193,19 +266,28 @@ fun Weapon(){
                                     interactionSource = MutableInteractionSource(),
                                     indication = null
                                 ) {
-                                    Log.d("clickable", "Paper")
-                                    selection = 1
+                                    if ((selection == 1) && (!isSelect)) {
+                                        isSelect = true
+                                    } else if (!isSelect) {
+                                        selection = 1
+                                    }
+                                    Log.d("clickable", "Paper$selection")
                                 },
                             painter = painterResource(id = R.drawable.hand_paper),
                             contentDescription = "hand_paper",
-                            tint = MaterialTheme.colorScheme.secondary
+                            tint = paperColor
                         )
                     }
+                }
 
-
+                Box(modifier = Modifier
+                    .padding(
+                        end = (with * rockPositoinAlignmentEnd).dp,
+                        start = (with * rockPositoinAlignmentStart).dp)
+                ) {
                     Box(
                         modifier = Modifier
-                            .width(with)
+                            .width((with).dp)
                             .fillMaxHeight(),
                         contentAlignment = TopCenter
                     ) {
@@ -217,36 +299,53 @@ fun Weapon(){
                                     interactionSource = MutableInteractionSource(),
                                     indication = null
                                 ) {
-                                    Log.d("clickable", "Rock")
-                                    selection = 2
+                                    if ((selection == 2) && (!isSelect)) {
+                                        isSelect = true
+                                    } else if (!isSelect) {
+                                        selection = 2
+                                    }
+
+                                    Log.d("clickable", "Rock$selection")
                                 },
                             painter = painterResource(id = R.drawable.hand_rock),
                             contentDescription = "hand_rock",
-                            tint = MaterialTheme.colorScheme.secondary
+                            tint = rockColor
                         )
                     }
+                }
 
-
+                Box(modifier = Modifier
+                    .padding(
+                        end = (with * (if(scissorsPositoinAlignmentEnd <= 0) 0f else scissorsPositoinAlignmentEnd)).dp,
+                        start = (with * scissorsPositoinAlignmentStart).dp)
+                ) {
                     Box(
                         modifier = Modifier
-                            .width(with)
+                            .width((with).dp)
                             .fillMaxHeight(),
                         contentAlignment = TopCenter
                     ) {
                         Icon(
                             modifier = Modifier
                                 .padding(top = scissorsPadding.dp)
-                                .size(width = (63 * scissorsSize).dp, height = (70 * scissorsSize).dp)
+                                .size(
+                                    width = (63 * scissorsSize).dp,
+                                    height = (70 * scissorsSize).dp
+                                )
                                 .clickable(
                                     interactionSource = MutableInteractionSource(),
                                     indication = null
                                 ) {
-                                    Log.d("clickable", "Scissors")
-                                    selection = 3
+                                    if ((selection == 3) && (!isSelect)) {
+                                        isSelect = true
+                                    } else if (!isSelect) {
+                                        selection = 3
+                                    }
+                                    Log.d("clickable", "Scissors$selection")
                                 },
                             painter = painterResource(id = R.drawable.hand_scissors),
                             contentDescription = "hand_scissors",
-                            tint = MaterialTheme.colorScheme.secondary,
+                            tint = scissorsColor
                         )
                     }
                 }
