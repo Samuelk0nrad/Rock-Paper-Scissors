@@ -22,9 +22,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import font.Oswald
 
 class MainActivity : ComponentActivity() {
@@ -40,6 +43,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RockPaperScissorsTheme {
+                SetBarColor(color = MaterialTheme.colorScheme.background)
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -50,14 +55,23 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    @Composable
+    private fun SetBarColor(color: Color){
+        val systemUiController = rememberSystemUiController()
+
+        SideEffect {
+            systemUiController.setSystemBarsColor(color)
+        }
+    }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-//@Preview
+@Preview
 @Composable
 fun WelcomeSreeen(
-    context: Context
+    context: Context? = null
 ){
     Scaffold (
         modifier = Modifier.background(MaterialTheme.colorScheme.background)
@@ -117,9 +131,9 @@ fun WelcomeSreeen(
                         .background(MaterialTheme.colorScheme.secondary)
                         .fillMaxWidth()
                         .clickable {
-
-                            StartButtonClick(context)
-
+                            if(context != null){
+                                StartButtonClick(context)
+                            }
                         }
                         .padding(top = 10.dp, bottom = 10.dp)
                 ) {
