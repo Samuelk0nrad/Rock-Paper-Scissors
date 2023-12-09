@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import font.Oswald
 
@@ -117,7 +118,7 @@ fun WelcomeSreeen(
                         .fillMaxWidth()
                         .clickable {
 
-//                            StartButtonClick(context)
+                            StartButtonClick(context)
 
                         }
                         .padding(top = 10.dp, bottom = 10.dp)
@@ -138,6 +139,7 @@ fun WelcomeSreeen(
 }
 
 fun StartButtonClick(context: Context){
-//    Intent(context, GameActivity::class.java)
-
+    Intent(context, GameActivity::class.java).also {
+        startActivity(context,it,null)
+    }
 }
