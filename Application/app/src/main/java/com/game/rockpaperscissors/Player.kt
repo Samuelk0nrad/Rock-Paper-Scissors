@@ -42,19 +42,17 @@ fun Player(
     isReady: Boolean = false
 
 ){
-    var ready by remember {
-        mutableStateOf(isReady)
-    }
-
     Row(
         modifier = Modifier
+            .width(220.dp)
+            .height(98.dp)
             .background(MaterialTheme.colorScheme.background)
-            .width(162.dp)
+
     ){
         Box(
             modifier = Modifier
                 .clip(CircleShape)
-                .size(70.dp)
+                .size(98.dp)
         ){
             Image(
                 painter = profilePicture,
@@ -65,13 +63,13 @@ fun Player(
         Spacer(modifier = Modifier.width(16.dp))
 
         Column (
-            modifier = Modifier.height(70.dp)
+            modifier = Modifier.fillMaxHeight()
         ){
 
             Box() {
                 Text(
                     text = userName,
-                    fontSize = 12.sp,
+                    fontSize = 18.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onBackground
@@ -80,18 +78,18 @@ fun Player(
                 var botText = if (isBot == true) "Bot" else ""
 
                 Text(
-                    modifier = Modifier.padding(top = 14.dp),
+                    modifier = Modifier.padding(top = 21.dp),
                     text = botText,
-                    fontSize = 6.sp,
+                    fontSize = 8.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Text(
-                    modifier = Modifier.padding(top = 21.dp),
+                    modifier = Modifier.padding(top = 30.dp),
                     text = "Level:  $level",
-                    fontSize = 12.sp,
+                    fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onBackground
@@ -102,7 +100,7 @@ fun Player(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.BottomStart
             ) {
-                if (ready) {
+                if (isReady) {
                     Text(
                         text = "Ready",
                         fontSize = 12.sp,
@@ -114,7 +112,7 @@ fun Player(
                 } else {
                     Text(
                         text = "Not Ready",
-                        fontSize = 12.sp,
+                        fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.36.sp,
