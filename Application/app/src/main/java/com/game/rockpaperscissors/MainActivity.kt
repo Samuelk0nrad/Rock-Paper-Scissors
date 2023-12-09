@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    WelcomeSreeen(this)
+                    WelcomeScreen(this)
                 }
             }
         }
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun WelcomeSreeen(
+fun WelcomeScreen(
     context: Context? = null
 ){
     Scaffold (
@@ -131,7 +131,7 @@ fun WelcomeSreeen(
                         .background(MaterialTheme.colorScheme.secondary)
                         .fillMaxWidth()
                         .clickable {
-                            if(context != null){
+                            if (context != null) {
                                 StartButtonClick(context)
                             }
                         }
