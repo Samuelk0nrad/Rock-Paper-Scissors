@@ -103,7 +103,7 @@ fun Player(
                 if (isReady) {
                     Text(
                         text = "Ready",
-                        fontSize = 12.sp,
+                        fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.36.sp,
