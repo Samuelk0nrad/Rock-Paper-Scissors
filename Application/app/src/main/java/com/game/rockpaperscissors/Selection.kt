@@ -62,6 +62,9 @@ class Selection {
     @Composable
     fun Weapon(
         isSelectable: Boolean = true,
+        hide:Boolean = false,
+        isSelected: Boolean = this.isSelected,
+        currentSelection: Int = this.currentSelection
     ){
 
         var selection by remember {
@@ -74,9 +77,16 @@ class Selection {
 
         val transition = updateTransition(
             targetState = selection,
-            label = ""
+            label = "234"
         )
 
+        if(hide){
+            selection = 2
+            isSelect = false
+        } else if(!isSelectable){
+            selection = currentSelection
+            isSelect = isSelected
+        }
         //Size
 
         val paperSize by transition.animateFloat(
@@ -381,7 +391,9 @@ class Selection {
             }
         }
 
-        currentSelection = selection
-        isSelected = isSelect
+        if(!hide){
+            this.currentSelection = selection
+            this.isSelected = isSelect
+        }
     }
 }
