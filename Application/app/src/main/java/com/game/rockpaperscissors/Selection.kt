@@ -86,6 +86,9 @@ class Selection {
         } else if(!isSelectable){
             selection = currentSelection
             isSelect = isSelected
+        }else{
+            selection = this.currentSelection
+            isSelect = this.isSelected
         }
         //Size
 
@@ -300,8 +303,10 @@ class Selection {
                                     ) {
                                         if(isSelectable) {
                                             if ((selection == 1) && (!isSelect)) {
+                                                this@Selection.isSelected = true
                                                 isSelect = true
                                             } else if (!isSelect) {
+                                                this@Selection.currentSelection = 1
                                                 selection = 1
                                             }
                                             Log.d("clickable", "Paper$selection")
@@ -335,8 +340,10 @@ class Selection {
                                     ) {
                                         if(isSelectable) {
                                             if ((selection == 2) && (!isSelect)) {
+                                                this@Selection.isSelected = true
                                                 isSelect = true
                                             } else if (!isSelect) {
+                                                this@Selection.currentSelection = 2
                                                 selection = 2
                                             }
 
@@ -374,8 +381,10 @@ class Selection {
                                     ) {
                                         if(isSelectable) {
                                             if ((selection == 3) && (!isSelect)) {
+                                                this@Selection.isSelected = true
                                                 isSelect = true
                                             } else if (!isSelect) {
+                                                this@Selection.currentSelection = 3
                                                 selection = 3
                                             }
                                             Log.d("clickable", "Scissors$selection")

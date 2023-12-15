@@ -60,7 +60,7 @@ class GameFunktions {
 
 
     fun Winer(ySelect: Int = YourSelection, eSelect: Int = EnemySelection): String {
-        var res = false
+
         if (ySelect == 1) {
             result = when (eSelect) {
                 1 -> "Draw"

@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors
 
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,11 +32,23 @@ import font.Oswald
 @Preview
 @Composable
 fun VsPlayer(
-    currentRounds: Int = 12,
+    currentRound: Int = 12,
     rounds: Int = 12,
     enemyWins: Int = 1,
     playerWins: Int = 1
 ){
+    var eWins by remember {
+        mutableIntStateOf(enemyWins)
+    }
+
+    var pWins by remember {
+        mutableIntStateOf(playerWins)
+    }
+
+    pWins = playerWins
+    eWins = enemyWins
+    
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -51,13 +68,13 @@ fun VsPlayer(
                 tint = MaterialTheme.colorScheme.secondary
             )
         }
-        Box(){
+        Box{
             Row {
                 Text(
                     modifier = Modifier
                         .background(MaterialTheme.colorScheme.background)
                         .padding(start = 5.dp, end = 5.dp, top = 5.dp),
-                    text = "$currentRounds",
+                    text = "$currentRound",
                     fontSize = 63.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -111,7 +128,7 @@ fun VsPlayer(
             ){
 
                 Text(
-                    text = "$enemyWins",
+                    text = "$eWins",
                     fontSize = 20.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -119,7 +136,7 @@ fun VsPlayer(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$playerWins",
+                    text = "$pWins",
                     fontSize = 20.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
