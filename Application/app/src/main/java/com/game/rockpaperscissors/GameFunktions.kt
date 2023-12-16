@@ -41,18 +41,15 @@ class GameFunktions {
         set(value){}
 
     fun randomEnemySelection():Int {
-        var i = 0
         var res = 0
-        var count = 0
-        do {
-            i = 0
-            try {
-                res = (1..3).random()
-            } catch (e: Exception) {
-                i = 1
-            }
-            count++
-        } while (i == 1 && count <= 15)
+        val range = 10000
+
+        res = when((0..range).random()){
+            in 0..(range/3) -> 1
+            in (range/3)..(range/3*2) -> 2
+            else -> (1..3).random()
+
+        }
 
         EnemySelection = res
         return res

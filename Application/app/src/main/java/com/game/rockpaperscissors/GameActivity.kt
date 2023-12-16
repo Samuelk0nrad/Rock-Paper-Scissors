@@ -137,23 +137,6 @@ fun GameScreen(){
             )
         }
 
-        //Vs. segment
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            VsPlayer(
-                playerWins = statistics.playerWins,
-                enemyWins = statistics.enemyWins,
-                rounds = statistics.rounds,
-                currentRound = statistics.currentRound
-            )
-        }
-
-
-
-
         //Player
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -166,8 +149,23 @@ fun GameScreen(){
                 playerSelection.Weapon()
             }
             Spacer(modifier = Modifier.height(55.dp))
-            Player(isReady = playerSelection.isSelected)
+            Player(isReady = playerSelection.isSelected,
+                level = if(isReset)1 else 0)
             Spacer(modifier = Modifier.height(60.dp))
+        }
+
+        //Vs. segment
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            VsPlayer(
+                playerWins = statistics.playerWins,
+                enemyWins = statistics.enemyWins,
+                rounds = statistics.rounds,
+                currentRound = statistics.currentRound
+            )
         }
 
 
@@ -184,8 +182,10 @@ fun GameScreen(){
                         interactionSource = MutableInteractionSource(),
                         indication = null
                     ) {
+                        isShowWinText = false
                         if (!isReset) {
                             reset()
+                            Log.d("Restarafdsavt","by Click")
                         }
                     },
                 contentAlignment = Alignment.Center
@@ -208,7 +208,6 @@ fun GameScreen(){
     }
 
     randomEnemySelection()
-
 }
 
 
@@ -223,7 +222,12 @@ fun randomEnemySelection(){
 }
 
 var isWaiting = false
+private val handler = android.os.Handler(Looper.getMainLooper())
 fun winner(){
+    if(isReset){
+        handler.removeCallbacksAndMessages(null)
+        Log.d("Restarafdsavt","handler to null")
+    }
     if(enemySelection.isSelected && playerSelection.isSelected && !isWaiting){
         isReset = false
 
@@ -245,23 +249,22 @@ fun winner(){
 
         winText = win
 
-        var delayMillis: Long = 500 // Adjust the delay time as needed (in milliseconds)
+        var delayMillis: Long = 3000 // Adjust the delay time as needed (in milliseconds)
         isWaiting = true
+        isShowWinText = true
 
-
-        android.os.Handler(Looper.getMainLooper()).postDelayed({
-            isShowWinText = true }, delayMillis)
-
-        delayMillis = 3000
-
-        android.os.Handler(Looper.getMainLooper()).postDelayed({
+        handler.postDelayed({
             if(!isReset) {
                 reset()
-            } }, delayMillis)
+
+                Log.d("Restarafdsavt","in Time")
+            }
+        }, delayMillis)
     }
 }
 
 fun reset() {
+    Log.d("Restarafdsavt","reset")
     isWaiting = false
     isSet = false
     isShowWinText = false
