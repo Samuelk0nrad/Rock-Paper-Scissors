@@ -73,6 +73,7 @@ dependencies {
     // Extended Icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
+    implementation("androidx.navigation:navigation-compose:2.4.0--alpha04")
 
     val nav_version = "2.7.5"
     implementation("androidx.navigation:navigation-compose:$nav_version")

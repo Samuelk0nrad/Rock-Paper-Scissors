@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 
 class GameData{
     var rounds: Int by mutableIntStateOf(0)
-    var currentRound: Int by mutableIntStateOf(0)
+    var currentRound: Int by mutableIntStateOf(1)
     var playerWins: Int by mutableIntStateOf(0)
     var enemyWins: Int by mutableIntStateOf(0)
 

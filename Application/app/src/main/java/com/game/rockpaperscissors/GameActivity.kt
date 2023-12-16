@@ -7,8 +7,6 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,8 +39,6 @@ import com.game.rockpaperscissors.data.GameData
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import font.Oswald
-import kotlinx.coroutines.delay
-import java.util.logging.Handler
 
 
 class GameActivity : ComponentActivity() {
@@ -53,6 +48,7 @@ class GameActivity : ComponentActivity() {
         setContent{
             RockPaperScissorsTheme {
                 SetBarColor(color = MaterialTheme.colorScheme.background)
+                context = this
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -74,6 +70,8 @@ class GameActivity : ComponentActivity() {
     }
 }
 
+
+var context:Context? = null
 var currentRound = GameFunktions()
 
 var playerSelection by mutableStateOf(Selection())
@@ -95,7 +93,7 @@ var statistics by mutableStateOf(
         playerWins = 0,
         enemyWins = 0,
         rounds = 3,
-        currentRound = 0,
+        currentRound = 1,
     )
 )
 
@@ -245,38 +243,53 @@ fun winner(){
             statistics.currentRound++
         }
 
-
-
         winText = win
 
         var delayMillis: Long = 3000 // Adjust the delay time as needed (in milliseconds)
         isWaiting = true
         isShowWinText = true
 
-        handler.postDelayed({
-            if(!isReset) {
-                reset()
+        if(statistics.currentRound <= statistics.rounds){
 
-                Log.d("Restarafdsavt","in Time")
-            }
-        }, delayMillis)
+            handler.postDelayed({
+                if(!isReset) {
+                    reset()
+
+                    Log.d("Restarafdsavt","in Time")
+                }
+            }, delayMillis)
+        }else{
+
+        }
     }
 }
 
 fun reset() {
-    Log.d("Restarafdsavt","reset")
-    isWaiting = false
-    isSet = false
-    isShowWinText = false
-    isReset = true
-    currentRound = GameFunktions()
-    enemySelection = Selection()
-    playerSelection.currentSelection = 2
-    playerSelection.isSelected = false
-    roundData = currentRoundData(
-        playerSelection = 2,
-        enemySelection = 2,
-        isEnemySelect = false,
-        isPlayerSelect = false
-    )
+    if(statistics.currentRound <= statistics.rounds) {
+
+        Log.d("Restarafdsavt", "reset")
+        isWaiting = false
+        isSet = false
+        isShowWinText = false
+        isReset = true
+        currentRound = GameFunktions()
+        enemySelection = Selection()
+        playerSelection.currentSelection = 2
+        playerSelection.isSelected = false
+        roundData = currentRoundData(
+            playerSelection = 2,
+            enemySelection = 2,
+            isEnemySelect = false,
+            isPlayerSelect = false
+        )
+    }else{
+        endGame()
+    }
+}
+
+fun endGame(){
+    Log.d("Restarafdsavt","go to activity")
+    Intent(context, GameActivity::class.java).also {
+        context?.let { it1 -> ContextCompat.startActivity(it1, it, null) }
+    }
 }
