@@ -176,7 +176,7 @@ fun randomEnemySelection(
     gameViewModel: GameViewModel
 ){
     if(!isSet) {
-        enemySelection.currentSelection = currentRound.randomEnemySelection()
+        enemySelection.currentSelection = currentRound.convertUsableToRaw(currentRound.randomEnemySelection())
         enemySelection.isSelected = true
         isSet = true
     }
@@ -196,20 +196,20 @@ fun winner(
     if(enemySelection.isSelected && playerSelection.isSelected && !isWaiting){
         isReset = false
 
-        currentRound.EnemySelection = enemySelection.currentSelection
-        currentRound.YourSelection = playerSelection.currentSelection
+        currentRound.EnemySelection = currentRound.convertRawToUsable(enemySelection.currentSelection)
+        currentRound.YourSelection = currentRound.convertRawToUsable(playerSelection.currentSelection)
 
 
         when(enemySelection.currentSelection){
-            1 -> gameViewModel.updateEnemySelectionRock()
-            2 -> gameViewModel.updateEnemySelectionPaper()
+            1 -> gameViewModel.updateEnemySelectionPaper()
+            2 -> gameViewModel.updateEnemySelectionRock()
             3 -> gameViewModel.updateEnemySelectionScissors()
         }
 
 
         when(playerSelection.currentSelection){
-            1 -> gameViewModel.updatePlayerSelectionRock()
-            2 -> gameViewModel.updatePlayerSelectionPaper()
+            1 -> gameViewModel.updatePlayerSelectionPaper()
+            2 -> gameViewModel.updatePlayerSelectionRock()
             3 -> gameViewModel.updatePlayerSelectionScissors()
         }
 
@@ -221,12 +221,12 @@ fun winner(
             "Win" -> {
                 statistics.playerWins++
                 statistics.currentRound++
-                gameViewModel.updateLose()
+                gameViewModel.updateWin()
             }
             "Lose" -> {
                 statistics.enemyWins++
                 statistics.currentRound++
-                gameViewModel.updateWin()
+                gameViewModel.updateLose()
             }
             "Draw" -> {
                 gameViewModel.updateDraw()

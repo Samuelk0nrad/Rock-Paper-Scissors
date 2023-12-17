@@ -34,6 +34,19 @@ class GameFunktions {
                 throw Exception("secondSelection/EnemySelection can not be $value")
         }
 
+    fun convertRawToUsable(int: Int): Int{
+        return when(int){
+            1 -> 3
+            2 -> 2
+            3 -> 1
+            else -> int
+        }
+    }
+
+    fun convertUsableToRaw(int: Int): Int{
+        return convertRawToUsable(int)
+    }
+
     var Result:String?
         get() {
             return result

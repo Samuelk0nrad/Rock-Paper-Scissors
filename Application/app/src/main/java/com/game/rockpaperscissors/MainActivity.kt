@@ -31,12 +31,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Composable
-    private fun SetBarColor(color: Color){
-        val systemUiController = rememberSystemUiController()
 
-        SideEffect {
-            systemUiController.setSystemBarsColor(color)
-        }
+}
+
+@Composable
+fun SetBarColor(color: Color){
+    val systemUiController = rememberSystemUiController()
+
+    SideEffect {
+        systemUiController.setSystemBarsColor(color)
     }
 }

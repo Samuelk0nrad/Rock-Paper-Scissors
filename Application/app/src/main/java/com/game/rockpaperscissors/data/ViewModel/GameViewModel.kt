@@ -29,7 +29,7 @@ class GameViewModel : ViewModel(){
 
     //Win or Lose Start//
     private val _isWin = MutableStateFlow(false)
-    val isWin = _isWin.value
+    val isWin = _isWin.asStateFlow()
 
     fun cWin(){
         _isWin.value = _win.value > _lose.value

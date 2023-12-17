@@ -1,6 +1,7 @@
 package com.game.rockpaperscissors
 
 import android.util.Log
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -20,11 +21,16 @@ fun Navigation() {
     NavHost(navController = navController, startDestination = Screen.WelcomeScreen.route){
         composable(route = Screen.WelcomeScreen.route){
             WelcomeScreen(navController)
+            SetBarColor(MaterialTheme.colorScheme.background)
+
         }
 
         navigation(route = Screen.MainGame.route, startDestination = Screen.GameScreen.route){
             composable(route = Screen.GameScreen.route){entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
+
+                SetBarColor(MaterialTheme.colorScheme.background)
+
 
                 GameScreen(
                     navController,
@@ -35,9 +41,8 @@ fun Navigation() {
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
                 Log.d("GameViewModel", "${viewModel.draw}")
 
-
+                SetBarColor(MaterialTheme.colorScheme.secondaryContainer)
                 GameStatisticScreen(navController,viewModel)
-
             }
         }
 
