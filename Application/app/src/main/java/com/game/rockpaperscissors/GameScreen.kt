@@ -1,11 +1,7 @@
 package com.game.rockpaperscissors
 
-import android.content.Context
-import android.content.Intent
 import android.os.Looper
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,10 +13,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,48 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.currentRoundData
 import com.game.rockpaperscissors.data.GameData
-import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import font.Oswald
+import com.game.rockpaperscissors.data.ViewModel.GameViewModel
+import com.game.rockpaperscissors.ui.theme.Oswald
 
 
-class GameActivity : ComponentActivity() {
 
-    override fun onStart() {
-        super.onStart()
-        setContent{
-            RockPaperScissorsTheme {
-                SetBarColor(color = MaterialTheme.colorScheme.background)
-                context = this
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    GameScreen()
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun SetBarColor(color: Color){
-        val systemUiController = rememberSystemUiController()
-
-        SideEffect {
-            systemUiController.setSystemBarsColor(color)
-        }
-    }
-}
-
-
-var context:Context? = null
 var currentRound = GameFunktions()
 
 var playerSelection by mutableStateOf(Selection())
@@ -99,12 +61,12 @@ var statistics by mutableStateOf(
 
 var isReset = true
 
-@Preview
 @Composable
-fun GameScreen(){
+fun GameScreen(
+    navController: NavController,
+    gameViewModel: GameViewModel
+){
     roundData.playerSelection = playerSelection.currentSelection
-
-
     var isVisible by remember {
         mutableStateOf(isShowWinText)
     }
@@ -180,10 +142,9 @@ fun GameScreen(){
                         interactionSource = MutableInteractionSource(),
                         indication = null
                     ) {
-                        isShowWinText = false
+                        //isShowWinText = false
                         if (!isReset) {
-                            reset()
-                            Log.d("Restarafdsavt","by Click")
+                            reset(navController, gameViewModel)
                         }
                     },
                 contentAlignment = Alignment.Center
@@ -205,23 +166,29 @@ fun GameScreen(){
         }
     }
 
-    randomEnemySelection()
+    randomEnemySelection(navController, gameViewModel)
 }
 
 
 var isSet:Boolean = false
-fun randomEnemySelection(){
+fun randomEnemySelection(
+    navController: NavController,
+    gameViewModel: GameViewModel
+){
     if(!isSet) {
         enemySelection.currentSelection = currentRound.randomEnemySelection()
         enemySelection.isSelected = true
         isSet = true
     }
-    winner()
+    winner(navController, gameViewModel)
 }
 
 var isWaiting = false
 private val handler = android.os.Handler(Looper.getMainLooper())
-fun winner(){
+fun winner(
+    navController: NavController,
+    gameViewModel: GameViewModel
+){
     if(isReset){
         handler.removeCallbacksAndMessages(null)
         Log.d("Restarafdsavt","handler to null")
@@ -232,15 +199,38 @@ fun winner(){
         currentRound.EnemySelection = enemySelection.currentSelection
         currentRound.YourSelection = playerSelection.currentSelection
 
+
+        when(enemySelection.currentSelection){
+            1 -> gameViewModel.updateEnemySelectionRock()
+            2 -> gameViewModel.updateEnemySelectionPaper()
+            3 -> gameViewModel.updateEnemySelectionScissors()
+        }
+
+
+        when(playerSelection.currentSelection){
+            1 -> gameViewModel.updatePlayerSelectionRock()
+            2 -> gameViewModel.updatePlayerSelectionPaper()
+            3 -> gameViewModel.updatePlayerSelectionScissors()
+        }
+
+
+
         val win = currentRound.Winer()
 
-        if (win == "Win") {
-            statistics.playerWins++
-            statistics.currentRound++
-        }
-        else if (win == "Lose") {
-            statistics.enemyWins++
-            statistics.currentRound++
+        when (win) {
+            "Win" -> {
+                statistics.playerWins++
+                statistics.currentRound++
+                gameViewModel.updateLose()
+            }
+            "Lose" -> {
+                statistics.enemyWins++
+                statistics.currentRound++
+                gameViewModel.updateWin()
+            }
+            "Draw" -> {
+                gameViewModel.updateDraw()
+            }
         }
 
         winText = win
@@ -253,18 +243,19 @@ fun winner(){
 
             handler.postDelayed({
                 if(!isReset) {
-                    reset()
+                    reset(navController, gameViewModel)
 
                     Log.d("Restarafdsavt","in Time")
                 }
             }, delayMillis)
-        }else{
-
         }
     }
 }
 
-fun reset() {
+fun reset(
+    navController: NavController,
+    gameViewModel: GameViewModel
+) {
     if(statistics.currentRound <= statistics.rounds) {
 
         Log.d("Restarafdsavt", "reset")
@@ -283,13 +274,41 @@ fun reset() {
             isPlayerSelect = false
         )
     }else{
-        endGame()
+        endGame(navController, gameViewModel)
     }
 }
 
-fun endGame(){
-    Log.d("Restarafdsavt","go to activity")
-    Intent(context, GameActivity::class.java).also {
-        context?.let { it1 -> ContextCompat.startActivity(it1, it, null) }
-    }
+fun endGame(
+    navController: NavController,
+    gameViewModel: GameViewModel
+){
+    navController.navigate(Screen.GameStatisticScreen.route)
+
+
+
+    //Game ReSet//
+    Log.d("Restarafdsavt", "reset")
+    isWaiting = false
+    isSet = false
+    isShowWinText = false
+    isReset = true
+    currentRound = GameFunktions()
+    enemySelection = Selection()
+    playerSelection.currentSelection = 2
+    playerSelection.isSelected = false
+    roundData = currentRoundData(
+        playerSelection = 2,
+        enemySelection = 2,
+        isEnemySelect = false,
+        isPlayerSelect = false
+    )
+
+    statistics = GameData(
+        playerWins = 0,
+        enemyWins = 0,
+        rounds = 3,
+        currentRound = 1,
+    )
+
+    //^Game Reset^//
 }
