@@ -66,7 +66,13 @@ class GameViewModel : ViewModel(){
         _enemySelection[2]++
     }
     //Player/Enemy Selections End//
+    private val _rounds = MutableStateFlow(3)
+    val rounds = _rounds.asStateFlow()
 
+    fun setRounds(round: Int ){
+        _rounds.value = round
+    }
+    //GameSettings  Start//
 
 
 

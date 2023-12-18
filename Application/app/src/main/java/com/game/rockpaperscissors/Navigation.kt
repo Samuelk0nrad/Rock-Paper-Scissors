@@ -25,7 +25,15 @@ fun Navigation() {
 
         }
 
-        navigation(route = Screen.MainGame.route, startDestination = Screen.GameScreen.route){
+        navigation(route = Screen.MainGame.route, startDestination = Screen.GameSettingScreen.route){
+            composable(route = Screen.GameSettingScreen.route){entry->
+                val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
+
+                SetBarColor(MaterialTheme.colorScheme.secondaryContainer)
+
+                GameSettingScreen(navController, viewModel)
+
+            }
             composable(route = Screen.GameScreen.route){entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
 

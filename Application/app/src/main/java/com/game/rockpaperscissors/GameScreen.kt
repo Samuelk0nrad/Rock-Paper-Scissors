@@ -60,6 +60,14 @@ var statistics by mutableStateOf(
 )
 
 var isReset = true
+var isStarted = false
+
+fun onStart(
+    gameViewModel: GameViewModel
+){
+    statistics.rounds = gameViewModel.rounds.value
+    isStarted = true
+}
 
 @Composable
 fun GameScreen(
@@ -70,6 +78,8 @@ fun GameScreen(
     var isVisible by remember {
         mutableStateOf(isShowWinText)
     }
+
+    if(!isStarted) onStart(gameViewModel)
 
     isVisible = isShowWinText
 
@@ -239,6 +249,8 @@ fun winner(
         isWaiting = true
         isShowWinText = true
 
+        statistics.rounds = gameViewModel.rounds.value
+
         if(statistics.currentRound <= statistics.rounds){
 
             handler.postDelayed({
@@ -248,6 +260,8 @@ fun winner(
                     Log.d("Restarafdsavt","in Time")
                 }
             }, delayMillis)
+        }else{
+
         }
     }
 }
@@ -302,6 +316,8 @@ fun endGame(
         isEnemySelect = false,
         isPlayerSelect = false
     )
+
+    isStarted = false
 
     statistics = GameData(
         playerWins = 0,
