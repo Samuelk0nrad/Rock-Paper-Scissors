@@ -93,7 +93,7 @@ fun WelcomeScreen(
                         .fillMaxWidth()
                         .clickable {
 
-                            navController.navigate(Screen.MainGame.route)
+                            navController.navigate(Screen.HomeScreen.route)
 
                         }
                         .padding(top = 10.dp, bottom = 10.dp)
@@ -121,3 +121,16 @@ fun WelcomeScreen(
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

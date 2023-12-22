@@ -54,6 +54,9 @@ fun Navigation() {
             }
         }
 
+        composable(route = Screen.HomeScreen.route){
+            HomeScreen()
+        }
     }
 }
 
