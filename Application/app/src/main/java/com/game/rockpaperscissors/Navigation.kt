@@ -29,7 +29,7 @@ fun Navigation() {
             composable(route = Screen.GameSettingScreen.route){entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
 
-                SetBarColor(MaterialTheme.colorScheme.secondaryContainer)
+                SetBarColor(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.background)
 
                 GameSettingScreen(navController, viewModel)
 
@@ -49,13 +49,15 @@ fun Navigation() {
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
                 Log.d("GameViewModel", "${viewModel.draw}")
 
-                SetBarColor(MaterialTheme.colorScheme.secondaryContainer)
+                SetBarColor(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.background)
                 GameStatisticScreen(navController,viewModel)
             }
         }
 
         composable(route = Screen.HomeScreen.route){
-            HomeScreen()
+            SetBarColor(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.background)
+
+            HomeScreen(navController)
         }
     }
 }
@@ -70,3 +72,14 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
     }
     return viewModel(parentEntry)
 }
+
+
+
+
+
+
+
+
+
+
+
