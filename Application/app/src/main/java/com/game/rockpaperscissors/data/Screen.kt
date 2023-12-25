@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors
+package com.game.rockpaperscissors.data
 
 sealed class Screen(val route: String){
 
@@ -9,4 +9,5 @@ sealed class Screen(val route: String){
     object GameStatisticScreen : Screen("game_statistic_screen")
     object GameSettingScreen : Screen("game_setting_screen")
     object HomeScreen : Screen("home_screen")
+    object ProfileScreen : Screen("profile_screen")
 }

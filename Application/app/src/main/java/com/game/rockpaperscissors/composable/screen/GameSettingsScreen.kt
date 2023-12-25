@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors
+package com.game.rockpaperscissors.composable.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,19 +23,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.ViewModel.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
 
@@ -44,7 +41,7 @@ import com.game.rockpaperscissors.ui.theme.Oswald
 fun GameSettingScreen(
     navController: NavController,
     gameViewModel: GameViewModel
-) {
+){
 
 
     var selectedRounds by remember {
@@ -62,7 +59,7 @@ fun GameSettingScreen(
                 .fillMaxWidth()
                 .height(50.dp)
                 .clickable {
-                    navController.navigate(Screen.WelcomeScreen.route)
+
                 }
                 .background(MaterialTheme.colorScheme.secondaryContainer),
             contentAlignment = Alignment.TopCenter

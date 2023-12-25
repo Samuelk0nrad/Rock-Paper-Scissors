@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors
+package com.game.rockpaperscissors.composable.screen
 
 import android.os.Looper
 import android.util.Log
@@ -27,6 +27,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.GameFunktions
+import com.game.rockpaperscissors.composable.Player
+import com.game.rockpaperscissors.data.Screen
+import com.game.rockpaperscissors.composable.Selection
+import com.game.rockpaperscissors.composable.VsPlayer
 import com.game.rockpaperscissors.data.currentRoundData
 import com.game.rockpaperscissors.data.GameData
 import com.game.rockpaperscissors.data.ViewModel.GameViewModel

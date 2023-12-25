@@ -2,7 +2,6 @@ package com.game.rockpaperscissors.data
 
 import android.util.Log
 import com.game.rockpaperscissors.R
-import com.game.rockpaperscissors.Screen
 
 data class GameModes(
     val name: String,
@@ -10,7 +9,8 @@ data class GameModes(
     var number: Int,
     val clickAction: () -> Unit,
     val symbol: Int,
-    val rout: String
+    val rout: String,
+    val available: Boolean
 ){
     fun setToFirst(gameModes: List<GameModes>){
         val currentNumber = number
@@ -40,7 +40,8 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.welcome_ilustration,
-        rout = Screen.MainGame.route
+        rout = Screen.MainGame.route,
+        available = true
     ),
 
     GameModes(
@@ -51,7 +52,8 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.welcome_ilustration,
-        rout = Screen.MainGame.route
+        rout = Screen.MainGame.route,
+        available = false
     ),
     GameModes(
         name = "Online Multiplayer",
@@ -61,7 +63,8 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.welcome_ilustration,
-        rout = Screen.MainGame.route
+        rout = Screen.MainGame.route,
+        available = false
     ),
 
     GameModes(
@@ -72,6 +75,7 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.welcome_ilustration,
-        rout = Screen.MainGame.route
+        rout = Screen.MainGame.route,
+        available = false
     )
 )

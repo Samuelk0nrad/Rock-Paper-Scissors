@@ -1,7 +1,6 @@
 package com.game.rockpaperscissors
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.core.view.WindowCompat
+import com.game.rockpaperscissors.composable.Navigation
+import com.game.rockpaperscissors.composable.screen.ProfileScreen
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -22,14 +22,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             RockPaperScissorsTheme {
                 SetBarColor(colorSystem = MaterialTheme.colorScheme.background)
-
-
-
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+//                    ProfileScreen()
                     Navigation()
                 }
             }

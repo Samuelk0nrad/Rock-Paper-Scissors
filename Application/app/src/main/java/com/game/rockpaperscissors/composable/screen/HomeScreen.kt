@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors
+package com.game.rockpaperscissors.composable.screen
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -19,11 +19,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BarChart
+import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.Person4
 import androidx.compose.material.icons.rounded.PersonPin
-import androidx.compose.material.icons.rounded.PersonPinCircle
-import androidx.compose.material.icons.rounded.PersonalInjury
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,11 +32,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.GameModes
+import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.gameModes
 import com.game.rockpaperscissors.ui.theme.Oswald
 
@@ -76,10 +74,11 @@ fun HomeScreen (navController: NavController){
                 contentAlignment = Alignment.TopEnd
 
             ) {
-                Box(modifier = Modifier.size(45.dp)
+                Box(modifier = Modifier
+                    .size(45.dp)
                     .clip(RoundedCornerShape(30.dp))
                     .clickable {
-
+                        navController.navigate(Screen.ProfileScreen.route)
                     }
 
                 ) {
@@ -109,7 +108,7 @@ fun HomeScreen (navController: NavController){
 
             items(3){count ->
                 for (gameMode in gameModes) {
-                    if(count +1 == gameMode.number){
+                    if(count +1 == gameMode.number && gameMode.available){
                         DisplayMods(mode = gameMode, navController)
                     }
                 }
@@ -144,7 +143,7 @@ fun HomeScreen (navController: NavController){
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
 
-                        //First
+                        //First Your Profile
                         Column(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
@@ -152,6 +151,7 @@ fun HomeScreen (navController: NavController){
                                 .height(size.dp)
                                 .clickable {
 
+                                    navController.navigate(Screen.ProfileScreen.route)
 
                                 }
                                 .background(MaterialTheme.colorScheme.secondaryContainer),
@@ -180,7 +180,7 @@ fun HomeScreen (navController: NavController){
                         }
 
 
-                        //Second
+                        //Second All Statistics
                         Column(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
@@ -215,7 +215,7 @@ fun HomeScreen (navController: NavController){
                             )
                         }
 
-
+                        // Your Friends
                         Column(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
@@ -304,16 +304,18 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .clickable {
-                    mode.setToFirst(gameModes)
-                    navController.navigate(mode.rout)
-                    mode.clickAction
+                    if(mode.available) {
+                        mode.setToFirst(gameModes)
+                        navController.navigate(mode.rout)
+                        mode.clickAction
+                    }
                 }
         ){
-            Box(modifier = Modifier
-                .height(90.dp)
-                .width(90.dp)
-
-
+            Box(
+                modifier = Modifier
+                    .height(90.dp)
+                    .width(90.dp),
+                contentAlignment = Alignment.Center
             ){
                 Image(
                     modifier = Modifier.fillMaxSize(),
@@ -340,6 +342,20 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.7.sp,
                     color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+        if(!mode.available) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f)),
+                contentAlignment = Alignment.Center
+            ){
+                Icon(
+                    modifier = Modifier.fillMaxSize(0.4f),
+                    imageVector = Icons.Rounded.Lock,
+                    contentDescription = "Lock"
                 )
             }
         }

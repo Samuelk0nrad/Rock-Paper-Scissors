@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors
+package com.game.rockpaperscissors.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.ui.theme.Oswald
 
 @Preview

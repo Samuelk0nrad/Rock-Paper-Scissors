@@ -6,12 +6,12 @@ class GameFunktions {
     private var result: String = ""
 
     constructor(ySelect: Int, eSelect: Int) {
-        this.YourSelection = YourSelection
-        this.EnemySelection = EnemySelection
+        this.YourSelection = ySelect
+        this.EnemySelection = eSelect
     }
 
-    constructor(YourSelection:Int) {
-        this.YourSelection = YourSelection
+    constructor(yourSelection:Int) {
+        this.YourSelection = yourSelection
     }
 
     constructor()
