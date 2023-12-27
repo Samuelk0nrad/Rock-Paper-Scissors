@@ -101,7 +101,7 @@ fun GameStatisticScreen(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(end = 24.dp)
                     .clickable {
-                        navController.navigate(Screen.WelcomeScreen.route)
+                        navController.navigate(Screen.HomeScreen.route)
                     },
                 contentAlignment = Alignment.CenterEnd
             ) {
@@ -177,9 +177,3 @@ fun WinStatistic(
         }
     }
 }
-
-
-
-
-
-

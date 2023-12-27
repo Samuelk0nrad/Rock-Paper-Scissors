@@ -301,6 +301,8 @@ fun endGame(
     navController: NavController,
     gameViewModel: GameViewModel
 ){
+
+    navController.popBackStack()
     navController.navigate(Screen.GameStatisticScreen.route)
 
 
@@ -330,6 +332,8 @@ fun endGame(
         rounds = 3,
         currentRound = 1,
     )
+
+
 
     //^Game Reset^//
 }

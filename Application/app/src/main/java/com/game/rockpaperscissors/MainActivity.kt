@@ -11,6 +11,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.game.rockpaperscissors.composable.Navigation
+import com.game.rockpaperscissors.composable.screen.CreateProfileScreen
 import com.game.rockpaperscissors.composable.screen.ProfileScreen
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -28,7 +29,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    ProfileScreen()
-                    Navigation()
+//                    Navigation()
+                    CreateProfileScreen()
                 }
             }
         }

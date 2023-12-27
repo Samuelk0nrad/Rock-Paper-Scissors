@@ -112,14 +112,6 @@ fun WelcomeScreen(
                 }
             }
 
-            Button(
-                onClick = {
-                          navController.navigate(Screen.GameStatisticScreen.route)
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-
-            }
         }
     }
 }

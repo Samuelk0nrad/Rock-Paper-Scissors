@@ -59,7 +59,7 @@ fun GameSettingScreen(
                 .fillMaxWidth()
                 .height(50.dp)
                 .clickable {
-
+                    navController.popBackStack()
                 }
                 .background(MaterialTheme.colorScheme.secondaryContainer),
             contentAlignment = Alignment.TopCenter
