@@ -41,12 +41,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.game.rockpaperscissors.composable.Player
+import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.Screen
+import com.game.rockpaperscissors.data.ViewModel.GameViewModel
+import com.game.rockpaperscissors.data.ViewModel.PlayerViewModel
+import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.ui.theme.Oswald
 
-@Preview
+
 @Composable
-fun CreateProfileScreen() {
+fun CreateProfileScreen(
+    state: PlayerDataState,
+    onEvent: (PlayerDataEvent) -> Unit,
+    nevController: NavController
+
+) {
 
 
     var fullName by remember {
@@ -110,8 +121,11 @@ fun CreateProfileScreen() {
         Spacer(modifier = Modifier.height(43.dp))
 
         CustomTextFiled(
-            value = fullName,
-            onValueChange = { fullName = it },
+            value = /*fullName*/ state.fullName,
+            onValueChange = {
+                fullName = it
+                onEvent(PlayerDataEvent.SetFullName(it))
+            },
             placeholder = "Full Name"
         )
 
@@ -119,8 +133,11 @@ fun CreateProfileScreen() {
         Spacer(modifier = Modifier.height(43.dp))
 
         CustomTextFiled(
-            value = userName,
-            onValueChange = { userName = it },
+            value = /*userName*/ state.userName,
+            onValueChange = {
+                userName = it
+                onEvent(PlayerDataEvent.SetUserName(it))
+            },
             placeholder = "User Name"
         )
 
@@ -128,8 +145,11 @@ fun CreateProfileScreen() {
 
 
         CustomTextFiled(
-            value = birthDate,
-            onValueChange = { birthDate = it },
+            value = /*birthDate*/ state.birthData,
+            onValueChange = {
+                birthDate = it
+                onEvent(PlayerDataEvent.SetBirthData(it))
+            },
             placeholder = "Birth Date",
             modifier = Modifier.width(269.dp),
             onlyNumbers = true
@@ -163,7 +183,12 @@ fun CreateProfileScreen() {
 
             Spinner(
                 itemList = listOf("---","MALE", "FEMININE", "DIVERS"),
-                onItemSelected = {gender = it},
+                onItemSelected = {
+                    gender = it
+
+                    onEvent(PlayerDataEvent.SetGender(it))
+
+                },
                 value = gender
             )
         }
@@ -184,6 +209,7 @@ fun CreateProfileScreen() {
                 .padding(start = 51.dp, end = 51.dp)
                 .clickable {
                     showName = !showName
+                    onEvent(PlayerDataEvent.SetShowData(showName))
                 },
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -216,6 +242,7 @@ fun CreateProfileScreen() {
                 .padding(start = 51.dp, end = 51.dp)
                 .clickable {
                     showDate = !showDate
+                    onEvent(PlayerDataEvent.SetShowData(showDate))
                 },
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -254,8 +281,8 @@ fun CreateProfileScreen() {
                     .background(MaterialTheme.colorScheme.secondary)
                     .fillMaxWidth()
                     .clickable {
-
-
+                        onEvent(PlayerDataEvent.CreateNewPlayer)
+                        nevController.navigate(Screen.HomeScreen.route)
                     }
                     .padding(top = 10.dp, bottom = 10.dp)
             ) {
@@ -270,10 +297,6 @@ fun CreateProfileScreen() {
                 )
             }
         }
-
-
-
-
     }
 }
 

@@ -3,6 +3,7 @@ package com.game.rockpaperscissors.data
 sealed class Screen(val route: String){
 
     object WelcomeScreen : Screen("welcome_screen")
+    object CreateNewAccountScreen : Screen("create_new_account_screen")
 
     object MainGame : Screen("main_game")
     object GameScreen : Screen("game_screen")

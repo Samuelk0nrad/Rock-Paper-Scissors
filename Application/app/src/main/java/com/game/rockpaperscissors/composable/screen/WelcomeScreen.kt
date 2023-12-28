@@ -95,7 +95,7 @@ fun WelcomeScreen(
                         .fillMaxWidth()
                         .clickable {
 
-                            navController.navigate(Screen.HomeScreen.route)
+                            navController.navigate(Screen.CreateNewAccountScreen.route)
 
                         }
                         .padding(top = 10.dp, bottom = 10.dp)
@@ -111,7 +111,6 @@ fun WelcomeScreen(
                     )
                 }
             }
-
         }
     }
 }
