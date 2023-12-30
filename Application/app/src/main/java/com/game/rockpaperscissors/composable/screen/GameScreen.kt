@@ -34,6 +34,7 @@ import com.game.rockpaperscissors.composable.Selection
 import com.game.rockpaperscissors.composable.VsPlayer
 import com.game.rockpaperscissors.data.currentRoundData
 import com.game.rockpaperscissors.data.GameData
+import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
 
@@ -77,7 +78,8 @@ fun onStart(
 @Composable
 fun GameScreen(
     navController: NavController,
-    gameViewModel: GameViewModel
+    gameViewModel: GameViewModel,
+    playerState: PlayerDataState
 ){
     roundData.playerSelection = playerSelection.currentSelection
     var isVisible by remember {
@@ -124,8 +126,11 @@ fun GameScreen(
                 playerSelection.Weapon()
             }
             Spacer(modifier = Modifier.height(55.dp))
-            Player(isReady = playerSelection.isSelected,
-                level = if(isReset)1 else 0)
+            Player(
+                isReady = playerSelection.isSelected,
+                level = playerState.allPlayer[0].level,
+                userName = playerState.allPlayer[0].userName,
+            )
             Spacer(modifier = Modifier.height(60.dp))
         }
 

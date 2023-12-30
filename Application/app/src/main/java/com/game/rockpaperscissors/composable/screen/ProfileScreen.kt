@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.PlayerDataState
+import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
@@ -98,7 +99,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                     Icon(
                         modifier = Modifier.clickable {
 
-
+                            navController.navigate(Screen.EditProfileScreen.route)
 
                         },
                         imageVector = Icons.Rounded.Edit,

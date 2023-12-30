@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.SetBarColor
 import com.game.rockpaperscissors.composable.screen.CreateProfileScreen
+import com.game.rockpaperscissors.composable.screen.EditProfileScreen
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.composable.screen.GameScreen
 import com.game.rockpaperscissors.composable.screen.GameSettingScreen
@@ -79,6 +80,9 @@ fun Navigation() {
 
                 SetBarColor(MaterialTheme.colorScheme.background)
 
+                val dbViewModel = hiltViewModel<PlayerViewModel>()
+                val state by dbViewModel.state.collectAsState()
+
 
                 GameScreen(
                     navController,
@@ -119,6 +123,19 @@ fun Navigation() {
                 )
             }
 
+        }
+
+        composable(route = Screen.EditProfileScreen.route){
+            SetBarColor(colorStatus = MaterialTheme.colorScheme.secondaryContainer, colorNavigation = MaterialTheme.colorScheme.background)
+            val viewModel = hiltViewModel<PlayerViewModel>()
+            val state by viewModel.state.collectAsState()
+            if(state.allPlayer.isNotEmpty()) {
+                EditProfileScreen(
+                    state = state,
+                    onEvent = viewModel::onEvent,
+                    nevController = navController
+                )
+            }
         }
     }
 }
