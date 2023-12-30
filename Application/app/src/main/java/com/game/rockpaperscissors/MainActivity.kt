@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.game.rockpaperscissors.composable.Navigation
+import com.game.rockpaperscissors.composable.screen.StatisticScreen
 import com.game.rockpaperscissors.data.viewModel.TestViewModel
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -33,11 +34,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    val viewModel = hiltViewModel<TestViewModel>()
 
-                    viewModel.print()
-
-                    Navigation()
+                    StatisticScreen()
+//                    Navigation()
                 }
             }
         }

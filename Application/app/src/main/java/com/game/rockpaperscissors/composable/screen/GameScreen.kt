@@ -164,7 +164,7 @@ fun GameScreen(
                     ) {
                         //isShowWinText = false
                         if (!isReset) {
-                            reset(navController, gameViewModel)
+                            reset(navController)
                         }
                     },
                 contentAlignment = Alignment.Center
@@ -255,7 +255,7 @@ fun winner(
 
         winText = win
 
-        var delayMillis: Long = 3000 // Adjust the delay time as needed (in milliseconds)
+        val delayMillis: Long = 3000 // Adjust the delay time as needed (in milliseconds)
         isWaiting = true
         isShowWinText = true
 
@@ -265,20 +265,17 @@ fun winner(
 
             handler.postDelayed({
                 if(!isReset) {
-                    reset(navController, gameViewModel)
+                    reset(navController)
 
                     Log.d("Restarafdsavt","in Time")
                 }
             }, delayMillis)
-        }else{
-
         }
     }
 }
 
 fun reset(
     navController: NavController,
-    gameViewModel: GameViewModel
 ) {
     if(statistics.currentRound <= statistics.rounds) {
 
@@ -298,13 +295,12 @@ fun reset(
             isPlayerSelect = false
         )
     }else{
-        endGame(navController, gameViewModel)
+        endGame(navController)
     }
 }
 
 fun endGame(
     navController: NavController,
-    gameViewModel: GameViewModel
 ){
 
     navController.popBackStack()

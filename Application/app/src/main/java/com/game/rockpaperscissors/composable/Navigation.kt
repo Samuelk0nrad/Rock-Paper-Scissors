@@ -83,11 +83,13 @@ fun Navigation() {
                 val dbViewModel = hiltViewModel<PlayerViewModel>()
                 val state by dbViewModel.state.collectAsState()
 
-
-                GameScreen(
-                    navController,
-                    viewModel
-                )
+                if(state.allPlayer.isNotEmpty()){
+                    GameScreen(
+                        navController,
+                        viewModel,
+                        state
+                    )
+                }
             }
             composable(route = Screen.GameStatisticScreen.route){ entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
@@ -135,6 +137,16 @@ fun Navigation() {
                     onEvent = viewModel::onEvent,
                     nevController = navController
                 )
+            }
+        }
+        
+        navigation(route = Screen.MainStatistic.route, startDestination = Screen.StatisticScreen.route){
+            composable(route = Screen.StatisticScreen.route){
+                SetBarColor(colorStatus = MaterialTheme.colorScheme.secondaryContainer, colorNavigation = MaterialTheme.colorScheme.background)
+            }
+            
+            composable(route = Screen.ModeStatisticScreen.route){
+                
             }
         }
     }
