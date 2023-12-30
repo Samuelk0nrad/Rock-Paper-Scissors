@@ -1,23 +1,24 @@
-package com.game.rockpaperscissors.data.ViewModel
+package com.game.rockpaperscissors.data.viewModel
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlayerViewModel (
+@HiltViewModel
+class PlayerViewModel @Inject constructor(
     private val dao: PlayerDataDao
 ): ViewModel() {
 
@@ -63,9 +64,9 @@ class PlayerViewModel (
 
 
 
-                state.value.allPlayer.forEach{playerData ->
+                state.value.allPlayer.forEach{data ->
                     viewModelScope.launch {
-                        dao.deletePlayer(playerData)
+                        dao.deletePlayer(data)
                         Log.d("Room.databaseBuilder.PlayerDatabase","delete")
                     }
 

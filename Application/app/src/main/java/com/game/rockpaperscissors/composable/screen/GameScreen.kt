@@ -34,7 +34,7 @@ import com.game.rockpaperscissors.composable.Selection
 import com.game.rockpaperscissors.composable.VsPlayer
 import com.game.rockpaperscissors.data.currentRoundData
 import com.game.rockpaperscissors.data.GameData
-import com.game.rockpaperscissors.data.ViewModel.GameViewModel
+import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
 
 

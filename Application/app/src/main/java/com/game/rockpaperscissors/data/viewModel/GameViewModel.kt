@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors.data.ViewModel
+package com.game.rockpaperscissors.data.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

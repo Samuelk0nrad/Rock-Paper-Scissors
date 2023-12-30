@@ -11,4 +11,5 @@ sealed class Screen(val route: String){
     object GameSettingScreen : Screen("game_setting_screen")
     object HomeScreen : Screen("home_screen")
     object ProfileScreen : Screen("profile_screen")
+    object LogIn : Screen("log_in")
 }

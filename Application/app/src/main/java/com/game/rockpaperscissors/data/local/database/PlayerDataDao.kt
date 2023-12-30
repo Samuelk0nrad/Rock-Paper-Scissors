@@ -16,6 +16,6 @@ interface PlayerDataDao {
     suspend fun deletePlayer(playerData: PlayerData)
 
 
-    @Query("SELECT * FROM playerdata")
+    @Query("SELECT * FROM PlayerData")
     fun allPlayerData(): Flow<List<PlayerData>>
 }

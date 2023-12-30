@@ -38,7 +38,7 @@ fun WelcomeScreen(
 ){
     Scaffold (
         modifier = Modifier.background(MaterialTheme.colorScheme.background)
-    ){padding ->
+    ){padding->
         Column(
             modifier = Modifier
                 .fillMaxSize()

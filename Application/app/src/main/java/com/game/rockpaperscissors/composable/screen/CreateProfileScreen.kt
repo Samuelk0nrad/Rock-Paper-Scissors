@@ -1,5 +1,7 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.app.PendingIntent.getActivity
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -38,15 +39,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.game.rockpaperscissors.composable.Player
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.Screen
-import com.game.rockpaperscissors.data.ViewModel.GameViewModel
-import com.game.rockpaperscissors.data.ViewModel.PlayerViewModel
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.ui.theme.Oswald
 
@@ -282,7 +279,10 @@ fun CreateProfileScreen(
                     .fillMaxWidth()
                     .clickable {
                         onEvent(PlayerDataEvent.CreateNewPlayer)
-                        nevController.navigate(Screen.HomeScreen.route)
+                        if (state.fullName.isBlank() && state.userName.isBlank() && state.birthData.isBlank()) {
+                            nevController.navigate(Screen.HomeScreen.route)
+                        }
+
                     }
                     .padding(top = 10.dp, bottom = 10.dp)
             ) {

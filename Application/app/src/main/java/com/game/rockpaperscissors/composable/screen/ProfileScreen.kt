@@ -1,6 +1,5 @@
 package com.game.rockpaperscissors.composable.screen
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,12 +28,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.data.PlayerDataState
+import com.game.rockpaperscissors.data.local.database.PlayerData
+import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
+import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
 
 
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAcount:(PlayerDataEvent) -> Unit) {
 
     Column(
         modifier = Modifier
@@ -158,13 +161,13 @@ fun ProfileScreen(navController: NavController) {
             item {
                 Spacer(modifier = Modifier.height(28.dp))
 
-                ProfileNames(name = "Samuel Konrad", title = "Full Name")
+                ProfileNames(name = state.allPlayer[0].name, title = "Full Name")
             }
 
             item {
                 Spacer(modifier = Modifier.height(36.dp))
 
-                ProfileNames(name = "ThePhoenix", title = "User Name")
+                ProfileNames(name = state.allPlayer[0].userName, title = "User Name")
             }
 
             item {
@@ -193,7 +196,7 @@ fun ProfileScreen(navController: NavController) {
 
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = "2.4.2003",
+                            text = state.allPlayer[0].birthData,
                             fontSize = 20.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Bold,
@@ -231,7 +234,7 @@ fun ProfileScreen(navController: NavController) {
 
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = "Mal",
+                            text = state.allPlayer[0].gender,
                             fontSize = 20.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Bold,
@@ -335,7 +338,7 @@ fun ProfileScreen(navController: NavController) {
 
             item {
                 Column {
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(40.dp))
 
                     Box(
                         modifier = Modifier
@@ -343,7 +346,12 @@ fun ProfileScreen(navController: NavController) {
                             .height(44.dp)
                             .padding(horizontal = 45.dp)
                             .border(width = 1.dp, color = Color(0xFFFF0000), shape = RoundedCornerShape(size = 57.dp))
-                            .clip(RoundedCornerShape(57.dp)),
+                            .clip(RoundedCornerShape(57.dp))
+                            .clickable {
+                                state.allPlayer.forEach { playerData ->
+                                    deleteAcount(PlayerDataEvent.DeletePlayer(playerData))
+                                }
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
