@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,13 +25,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.game.rockpaperscissors.composable.BarGraph
 import com.game.rockpaperscissors.ui.theme.Oswald
 
@@ -184,7 +181,7 @@ fun StatisticScreen(
                 .fillMaxSize()
                 .padding(horizontal = 36.dp)
         ){
-
+/*
             item {
                 Spacer(modifier = Modifier.height(15.dp))
             }
@@ -220,7 +217,7 @@ fun StatisticScreen(
                     )
                 }
             }
-
+*/
             item {
                 Spacer(modifier = Modifier.height(53.dp))
             }
@@ -247,6 +244,7 @@ fun StatisticScreen(
                 )
             }
 
+
             item {
                 Spacer(modifier = Modifier.height(44.dp))
 
@@ -259,35 +257,61 @@ fun StatisticScreen(
                 )
             }
 
-            var i = 0
 
             items(3){
                 Modes()
 
-                Spacer(modifier = Modifier.height(15.dp))
-                Spacer(modifier = Modifier.height(1.dp).width(316.dp).background(MaterialTheme.colorScheme.secondaryContainer))
-                Spacer(modifier = Modifier.height(15.dp))
-                i++
+                Spacer(modifier = Modifier.height(20.dp))
+
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(44.dp))
+
+                Text(
+                    text = "All Rounds:",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = Oswald,
+                    letterSpacing = 0.48.sp
+                )
             }
 
 
+            var i = 0
+
+            items(3){
+                Column {
+                    AllRounds()
+
+                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier
+                        .height(1.dp)
+                        .width(316.dp)
+                        .background(MaterialTheme.colorScheme.secondaryContainer))
+                    Spacer(modifier = Modifier.height(15.dp))
+                }
+                i++
+            }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun Modes() {
+fun AllRounds(
+
+) {
 
     Box(
         modifier = Modifier
             .width(287.dp)
             .height(77.dp)
-    ){
-        Row (
+    ) {
+        Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
 
             Text(
                 text = "Name of the Mode",
@@ -307,10 +331,10 @@ fun Modes() {
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-        Row (
+        Row(
             modifier = Modifier.fillMaxHeight(),
             verticalAlignment = Alignment.Bottom
-        ){
+        ) {
             Text(
                 modifier = Modifier.padding(bottom = 5.dp),
                 text = "Rounds: ",
@@ -333,18 +357,18 @@ fun Modes() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 55.dp),
+                .padding(start = 40.dp, top = 12.dp),
             contentAlignment = Alignment.Center
-        ){
+        ) {
 
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Bottom
-            ){
-                Column (
+            ) {
+                Column(
                     horizontalAlignment = Alignment.End
-                ){
+                ) {
                     Text(
                         modifier = Modifier.width(70.dp),
                         text = "You",
@@ -387,7 +411,9 @@ fun Modes() {
                         letterSpacing = 0.5.sp,
                         textAlign = TextAlign.Left
                     )
+
                     Text(
+                        modifier = Modifier.height(27.dp),
                         text = "000",
                         fontSize = 16.sp,
                         fontFamily = Oswald,
@@ -395,15 +421,148 @@ fun Modes() {
                         letterSpacing = 0.8.sp,
                         textAlign = TextAlign.Left
                     )
+
                     Spacer(modifier = Modifier.height(3.dp))
                 }
             }
-
-
         }
     }
-
 }
+
+
+@Preview(showBackground = true)
+@Composable
+fun Modes() {
+
+    Box(
+        modifier = Modifier
+            .width(288.dp)
+            .height(82.dp)
+    ) {
+        Row (
+            modifier = Modifier.fillMaxSize()
+        ){
+            Box(
+                modifier = Modifier
+                    .size(82.dp)
+                    .background(MaterialTheme.colorScheme.onBackground)
+            ){
+
+            }
+
+            Box(modifier = Modifier.fillMaxSize()){
+                Box{
+                    Text(
+                        text = "Name of the Mode",
+                        fontSize = 20.sp,
+                        fontFamily = Oswald,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.TopEnd
+                ){
+                    Box(modifier = Modifier.padding(end = 8.dp)){
+                        Text(
+                            text = "You Played \nthis mode",
+                            fontSize = 10.sp,
+                            fontFamily = Oswald,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+
+
+                    Box(modifier = Modifier.padding(top = 19.dp)){
+                        Text(
+                            text = "32",
+                            fontSize = 32.sp,
+                            fontFamily = Oswald,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Right
+                        )
+                    }
+
+                    Box(modifier = Modifier.padding(top = 62.dp)){
+                        Text(
+                            text = "Times",
+                            fontSize = 10.sp,
+                            fontFamily = Oswald,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(end = 167.dp, bottom = 14.dp),
+                        contentAlignment = Alignment.BottomEnd
+                    ){
+                        Text(
+                            text = "12",
+                            fontSize = 15.sp,
+                            fontFamily = Oswald,
+                            fontWeight = FontWeight.Normal,
+                            textAlign = TextAlign.Right
+                        )
+                        Box(
+                            modifier = Modifier.padding(bottom = 18.dp),
+                            contentAlignment = Alignment.BottomEnd
+                        ){
+                            Text(
+                                text = "Win:",
+                                fontSize = 10.sp,
+                                fontFamily = Oswald,
+                                fontWeight = FontWeight.Light,
+                                textAlign = TextAlign.Right
+                            )
+                        }
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(end = 121.dp, bottom = 14.dp),
+                        contentAlignment = Alignment.BottomEnd
+                    ){
+                        Text(
+                            text = "12",
+                            fontSize = 15.sp,
+                            fontFamily = Oswald,
+                            fontWeight = FontWeight.Normal,
+                            textAlign = TextAlign.Right
+                        )
+                        Box(
+                            modifier = Modifier.padding(bottom = 18.dp),
+                            contentAlignment = Alignment.BottomEnd
+                        ){
+                            Text(
+                                text = "Lose:",
+                                fontSize = 10.sp,
+                                fontFamily = Oswald,
+                                fontWeight = FontWeight.Light,
+                                textAlign = TextAlign.Right
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 
 
