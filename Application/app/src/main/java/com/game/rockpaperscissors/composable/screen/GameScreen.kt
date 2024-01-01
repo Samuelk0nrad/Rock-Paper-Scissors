@@ -32,9 +32,11 @@ import com.game.rockpaperscissors.composable.Player
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.composable.Selection
 import com.game.rockpaperscissors.composable.VsPlayer
-import com.game.rockpaperscissors.data.currentRoundData
+import com.game.rockpaperscissors.data.CurrentRoundData
 import com.game.rockpaperscissors.data.GameData
 import com.game.rockpaperscissors.data.PlayerDataState
+import com.game.rockpaperscissors.data.SelectionType
+import com.game.rockpaperscissors.data.WinTyp
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
 
@@ -45,9 +47,9 @@ var currentRound = GameFunktions()
 var playerSelection by mutableStateOf(Selection())
 var enemySelection by mutableStateOf(Selection())
 var roundData by mutableStateOf(
-    currentRoundData(
-        playerSelection = 2,
-        enemySelection = 2,
+    CurrentRoundData(
+        playerSelection = SelectionType.ROCK,
+        enemySelection = SelectionType.ROCK,
         isEnemySelect = false,
         isPlayerSelect = false
     )
@@ -196,7 +198,7 @@ fun randomEnemySelection(
     gameViewModel: GameViewModel
 ){
     if(!isSet) {
-        enemySelection.currentSelection = currentRound.convertUsableToRaw(currentRound.randomEnemySelection())
+        enemySelection.currentSelection = currentRound.randomEnemySelection()
         enemySelection.isSelected = true
         isSet = true
     }
@@ -216,44 +218,44 @@ fun winner(
     if(enemySelection.isSelected && playerSelection.isSelected && !isWaiting){
         isReset = false
 
-        currentRound.EnemySelection = currentRound.convertRawToUsable(enemySelection.currentSelection)
-        currentRound.YourSelection = currentRound.convertRawToUsable(playerSelection.currentSelection)
+        currentRound.EnemySelection = enemySelection.currentSelection
+        currentRound.YourSelection = playerSelection.currentSelection
 
 
         when(enemySelection.currentSelection){
-            1 -> gameViewModel.updateEnemySelectionPaper()
-            2 -> gameViewModel.updateEnemySelectionRock()
-            3 -> gameViewModel.updateEnemySelectionScissors()
+            SelectionType.PAPER -> gameViewModel.updateEnemySelectionPaper()
+            SelectionType.ROCK -> gameViewModel.updateEnemySelectionRock()
+            SelectionType.SCISSORS -> gameViewModel.updateEnemySelectionScissors()
         }
 
 
         when(playerSelection.currentSelection){
-            1 -> gameViewModel.updatePlayerSelectionPaper()
-            2 -> gameViewModel.updatePlayerSelectionRock()
-            3 -> gameViewModel.updatePlayerSelectionScissors()
+            SelectionType.PAPER -> gameViewModel.updatePlayerSelectionPaper()
+            SelectionType.ROCK -> gameViewModel.updatePlayerSelectionRock()
+            SelectionType.SCISSORS -> gameViewModel.updatePlayerSelectionScissors()
         }
 
 
 
-        val win = currentRound.Winer()
+        val win = currentRound.winner()
 
         when (win) {
-            "Win" -> {
+            WinTyp.Win -> {
                 statistics.playerWins++
                 statistics.currentRound++
                 gameViewModel.updateWin()
             }
-            "Lose" -> {
+            WinTyp.Lose -> {
                 statistics.enemyWins++
                 statistics.currentRound++
                 gameViewModel.updateLose()
             }
-            "Draw" -> {
+            WinTyp.Draw -> {
                 gameViewModel.updateDraw()
             }
         }
 
-        winText = win
+        winText = "$win"
 
         val delayMillis: Long = 3000 // Adjust the delay time as needed (in milliseconds)
         isWaiting = true
@@ -286,11 +288,11 @@ fun reset(
         isReset = true
         currentRound = GameFunktions()
         enemySelection = Selection()
-        playerSelection.currentSelection = 2
+        playerSelection.currentSelection = SelectionType.ROCK
         playerSelection.isSelected = false
-        roundData = currentRoundData(
-            playerSelection = 2,
-            enemySelection = 2,
+        roundData = CurrentRoundData(
+            playerSelection = SelectionType.ROCK,
+            enemySelection = SelectionType.ROCK,
             isEnemySelect = false,
             isPlayerSelect = false
         )
@@ -316,11 +318,11 @@ fun endGame(
     isReset = true
     currentRound = GameFunktions()
     enemySelection = Selection()
-    playerSelection.currentSelection = 2
+    playerSelection.currentSelection = SelectionType.ROCK
     playerSelection.isSelected = false
-    roundData = currentRoundData(
-        playerSelection = 2,
-        enemySelection = 2,
+    roundData = CurrentRoundData(
+        playerSelection = SelectionType.ROCK,
+        enemySelection = SelectionType.ROCK,
         isEnemySelect = false,
         isPlayerSelect = false
     )

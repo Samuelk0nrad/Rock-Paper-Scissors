@@ -34,27 +34,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.game.rockpaperscissors.R
+import com.game.rockpaperscissors.data.SelectionType
 
 class Selection {
 
     var isSelected by mutableStateOf(false)
-    var currentSelection by mutableIntStateOf(2)
+    var currentSelection by mutableStateOf(SelectionType.ROCK)
 
-    constructor(setIsSelected: Boolean, setSelection: Int){
+    constructor(setIsSelected: Boolean, setSelection: SelectionType){
         isSelected = setIsSelected
         Selection = setSelection
     }
     constructor(){
         isSelected = false
-        Selection = 2
+        Selection = SelectionType.ROCK
     }
 
-    var Selection: Int
+    var Selection: SelectionType
         get() = currentSelection
         set(value) {
-            if(value in 1..3){
-                currentSelection = value
-            }
+            currentSelection = value
         }
 
 
@@ -65,11 +64,11 @@ class Selection {
         isSelectable: Boolean = true,
         hide:Boolean = false,
         isSelected: Boolean = this.isSelected,
-        currentSelection: Int = this.currentSelection
+        currentSelection: SelectionType = this.currentSelection
     ){
 
         var selection by remember {
-            mutableIntStateOf(currentSelection)
+            mutableStateOf(currentSelection)
         }
 
         var isSelect by remember {
@@ -82,7 +81,7 @@ class Selection {
         )
 
         if(hide){
-            selection = 2
+            selection = SelectionType.ROCK
             isSelect = false
         } else if(!isSelectable){
             selection = currentSelection
@@ -97,7 +96,7 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "paperSize",
             targetValueByState = { selection1 ->
-                if (selection1 == 1) 1.5f else 1f
+                if (selection1 == SelectionType.PAPER) 1.5f else 1f
             }
         )
 
@@ -105,7 +104,7 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "rockSize",
             targetValueByState = { selection1 ->
-                if (selection1 == 2) 1.5f else 1f
+                if (selection1 == SelectionType.ROCK) 1.5f else 1f
             }
         )
 
@@ -113,7 +112,7 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "scissorsSize",
             targetValueByState = { selection1 ->
-                if (selection1 == 3) 1.5f else 1f
+                if (selection1 == SelectionType.SCISSORS) 1.5f else 1f
             }
         )
 
@@ -124,7 +123,7 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "paperPadding",
             targetValueByState = { selection1 ->
-                if (selection1 == 1) 22 else 0
+                if (selection1 == SelectionType.PAPER) 22 else 0
             }
         )
 
@@ -132,7 +131,7 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "rockPadding",
             targetValueByState = { selection1 ->
-                if (selection1 == 2) 22 else 0
+                if (selection1 == SelectionType.ROCK) 22 else 0
             }
         )
 
@@ -140,7 +139,7 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "scissorsPaddingToTop",
             targetValueByState = { selection1 ->
-                if (selection1 == 3) 22 else 0
+                if (selection1 == SelectionType.SCISSORS) 22 else 0
             }
         )
 
@@ -151,14 +150,24 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "paperPositionAlignmentStart",
             targetValueByState = { selection1 ->
-                if (selection1 == 1) 1f else if (selection1 == 2) 0f else -1f
+                when(selection1){
+                    SelectionType.ROCK -> 0f
+                    SelectionType.PAPER -> 1f
+                    SelectionType.SCISSORS -> -1f
+                }
             }
         )
+
         val paperPositionAlignmentEnd by transition.animateFloat (
             transitionSpec = { tween(500) },
             label = "paperPositionAlignmentEnd",
             targetValueByState = { selection1 ->
-                if (selection1 == 1) 1f else if (selection1 == 2) 2f else 3f
+
+                when(selection1){
+                    SelectionType.ROCK -> 2f
+                    SelectionType.PAPER -> 1f
+                    SelectionType.SCISSORS -> 3f
+                }
             }
         )
 
@@ -167,14 +176,22 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "rockPositionAlignmentStart",
             targetValueByState = { selection1 ->
-                if (selection1 == 1) 2f else if (selection1 == 2) 1f else 0f
+                when(selection1){
+                    SelectionType.ROCK -> 1f
+                    SelectionType.PAPER -> 2f
+                    SelectionType.SCISSORS -> 0f
+                }
             }
         )
         val rockPositionAlignmentEnd by transition.animateFloat (
             transitionSpec = { tween(500) },
             label = "rockPositionAlignmentEnd",
             targetValueByState = { selection1 ->
-                if (selection1 == 1) 0f else if (selection1 == 2) 1f else 2f
+                when(selection1){
+                    SelectionType.ROCK -> 1f
+                    SelectionType.PAPER -> 0f
+                    SelectionType.SCISSORS -> 2f
+                }
             }
         )
 
@@ -182,14 +199,23 @@ class Selection {
             transitionSpec = { tween(500) },
             label = "scissorsPositionAlignmentStart",
             targetValueByState = { selection1 ->
-                if (selection1 == 1) 3f else if (selection1 == 2) 2f else 1f
+                when(selection1){
+                    SelectionType.ROCK -> 2f
+                    SelectionType.PAPER -> 3f
+                    SelectionType.SCISSORS -> 1f
+                }
             }
         )
         val scissorsPositionAlignmentEnd by transition.animateFloat (
             transitionSpec = { tween(500) },
             label = "scissorsPositionAlignmentEnd",
             targetValueByState = { selection1 ->
-                if (selection1 == 1) -1f else if (selection1 == 2) 0f else 1f
+
+                when(selection1){
+                    SelectionType.ROCK -> 0f
+                    SelectionType.PAPER -> -1f
+                    SelectionType.SCISSORS -> 1f
+                }
             }
         )
 
@@ -201,7 +227,7 @@ class Selection {
             label = "scissorsColor",
             targetValueByState = { selection1 ->
                 if (isSelect){
-                    if(selection1 == 1) MaterialTheme.colorScheme.onBackground
+                    if(selection1 == SelectionType.PAPER) MaterialTheme.colorScheme.onBackground
                     else MaterialTheme.colorScheme.onSecondary
                 }else MaterialTheme.colorScheme.secondary
             }
@@ -212,7 +238,7 @@ class Selection {
             label = "scissorsColor",
             targetValueByState = { selection1 ->
                 if (isSelect){
-                    if(selection1 == 2) MaterialTheme.colorScheme.onBackground
+                    if(selection1 == SelectionType.ROCK) MaterialTheme.colorScheme.onBackground
                     else MaterialTheme.colorScheme.onSecondary
                 }else MaterialTheme.colorScheme.secondary
             }
@@ -223,7 +249,7 @@ class Selection {
             label = "scissorsColor",
             targetValueByState = { select ->
                 if (isSelect){
-                    if(select == 3) MaterialTheme.colorScheme.onBackground
+                    if(select == SelectionType.SCISSORS) MaterialTheme.colorScheme.onBackground
                     else MaterialTheme.colorScheme.onSecondary
                 }else MaterialTheme.colorScheme.secondary
             }
@@ -279,7 +305,7 @@ class Selection {
                     modifier = Modifier
                         .fillMaxSize(),
                     //.padding(end = 120.dp)
-                    contentAlignment = if (selection == 3) Alignment.TopEnd else Alignment.TopStart
+                    contentAlignment = if (selection == SelectionType.SCISSORS) Alignment.TopEnd else Alignment.TopStart
                 ) {
 
 
@@ -303,12 +329,12 @@ class Selection {
                                         indication = null
                                     ) {
                                         if(isSelectable) {
-                                            if ((selection == 1) && (!isSelect)) {
+                                            if ((selection == SelectionType.PAPER) && (!isSelect)) {
                                                 this@Selection.isSelected = true
                                                 isSelect = true
                                             } else if (!isSelect) {
-                                                this@Selection.currentSelection = 1
-                                                selection = 1
+                                                this@Selection.currentSelection = SelectionType.PAPER
+                                                selection = SelectionType.PAPER
                                             }
                                             Log.d("clickable", "Paper$selection")
                                         }
@@ -340,12 +366,12 @@ class Selection {
                                         indication = null
                                     ) {
                                         if(isSelectable) {
-                                            if ((selection == 2) && (!isSelect)) {
+                                            if ((selection == SelectionType.ROCK) && (!isSelect)) {
                                                 this@Selection.isSelected = true
                                                 isSelect = true
                                             } else if (!isSelect) {
-                                                this@Selection.currentSelection = 2
-                                                selection = 2
+                                                this@Selection.currentSelection = SelectionType.ROCK
+                                                selection = SelectionType.ROCK
                                             }
 
                                             Log.d("clickable", "Rock$selection")
@@ -381,12 +407,12 @@ class Selection {
                                         indication = null
                                     ) {
                                         if(isSelectable) {
-                                            if ((selection == 3) && (!isSelect)) {
+                                            if ((selection == SelectionType.SCISSORS) && (!isSelect)) {
                                                 this@Selection.isSelected = true
                                                 isSelect = true
                                             } else if (!isSelect) {
-                                                this@Selection.currentSelection = 3
-                                                selection = 3
+                                                this@Selection.currentSelection = SelectionType.SCISSORS
+                                                selection = SelectionType.SCISSORS
                                             }
                                             Log.d("clickable", "Scissors$selection")
                                         }

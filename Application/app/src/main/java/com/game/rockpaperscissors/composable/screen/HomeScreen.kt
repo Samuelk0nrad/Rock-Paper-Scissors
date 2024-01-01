@@ -188,6 +188,7 @@ fun HomeScreen (navController: NavController){
                                 .height(size.dp)
                                 .clickable {
 
+                                    navController.navigate(Screen.MainStatistic.route)
 
                                 }
                                 .background(MaterialTheme.colorScheme.secondaryContainer),
