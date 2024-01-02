@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlayerDataDao {
-    @Insert
+    @Upsert
     suspend fun upsertPlayer(playerData: PlayerData)
 
     @Delete

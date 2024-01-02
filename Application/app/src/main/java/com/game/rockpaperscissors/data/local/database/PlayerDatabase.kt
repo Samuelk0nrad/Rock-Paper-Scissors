@@ -9,5 +9,7 @@ import androidx.room.RoomDatabase
     version = 1
 )
 abstract class PlayerDatabase: RoomDatabase() {
+
     abstract val dao: PlayerDataDao
+
 }
