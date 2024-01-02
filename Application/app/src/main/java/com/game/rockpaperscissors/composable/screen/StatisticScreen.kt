@@ -30,14 +30,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.game.rockpaperscissors.composable.BarGraph
 import com.game.rockpaperscissors.ui.theme.Oswald
 
-@Preview
 @Composable
 fun StatisticScreen(
-//    navController: NavController
+    navController: NavController
 ) {
+
+
+
+
+
+
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +55,7 @@ fun StatisticScreen(
                 .fillMaxWidth()
                 .height(50.dp)
                 .clickable {
-//                    navController.popBackStack()
+                    navController.popBackStack()
                 }
                 .background(MaterialTheme.colorScheme.secondaryContainer),
             contentAlignment = Alignment.TopCenter

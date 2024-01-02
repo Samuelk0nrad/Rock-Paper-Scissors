@@ -73,7 +73,6 @@ var statistics by mutableStateOf(
 )
 
 var isReset = true
-var isStarted = false
 
 fun onStart(
     gameViewModel: GameViewModel,
@@ -81,7 +80,6 @@ fun onStart(
 ){
     statistics.rounds = gameViewModel.rounds.value
     onEvent(GameDataEvent.SetRounds(gameViewModel.rounds.value))
-    isStarted = true
 }
 
 @Composable
@@ -98,7 +96,7 @@ fun GameScreen(
         mutableStateOf(isShowWinText)
     }
 
-    if(!isStarted) onStart(gameViewModel, onEvent)
+    onStart(gameViewModel, onEvent)
 
     isVisible = isShowWinText
 
@@ -358,7 +356,6 @@ fun endGame(
     navController.popBackStack()
     navController.navigate(Screen.GameStatisticScreen.route)
     onEvent(GameDataEvent.CreateNewPlayer)
-    isStarted = false
 
     statistics = GameData(
         playerWins = 0,
