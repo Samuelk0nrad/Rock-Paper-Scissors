@@ -17,6 +17,4 @@ interface GameDataDao {
 
     @Query("SELECT * FROM GameDataEntity ORDER BY timestamp DESC")
     fun getGameDataOrderedByDate(): Flow<List<GameDataEntity>>
-
-
 }

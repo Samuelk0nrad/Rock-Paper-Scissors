@@ -2,6 +2,8 @@ package com.game.rockpaperscissors.di
 
 import android.content.Context
 import androidx.room.Room
+import com.game.rockpaperscissors.data.local.database.GameDataDao
+import com.game.rockpaperscissors.data.local.database.GameDatabase
 import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
 import com.game.rockpaperscissors.data.local.database.PlayerDatabase
@@ -31,4 +33,17 @@ object AppModule {
     @Provides
     @Singleton
     fun provideString(): String = "hallo"
+
+
+    @Provides
+    @Singleton
+    fun provideGameDb(@ApplicationContext appContext: Context) : GameDatabase = Room.databaseBuilder(
+        appContext,
+        GameDatabase::class.java,
+        "game.db"
+    ).build()
+
+    @Provides
+    @Singleton
+    fun provideGameDBDao(gameDatabase: GameDatabase): GameDataDao = gameDatabase.dao
 }

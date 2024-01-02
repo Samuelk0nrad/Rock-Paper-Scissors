@@ -34,11 +34,16 @@ import com.game.rockpaperscissors.composable.Selection
 import com.game.rockpaperscissors.composable.VsPlayer
 import com.game.rockpaperscissors.data.CurrentRoundData
 import com.game.rockpaperscissors.data.GameData
+import com.game.rockpaperscissors.data.GameDataState
+import com.game.rockpaperscissors.data.OneRound
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.WinTyp
+import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
+
+
 
 
 
@@ -71,9 +76,11 @@ var isReset = true
 var isStarted = false
 
 fun onStart(
-    gameViewModel: GameViewModel
+    gameViewModel: GameViewModel,
+    onEvent: (GameDataEvent) -> Unit
 ){
     statistics.rounds = gameViewModel.rounds.value
+    onEvent(GameDataEvent.SetRounds(gameViewModel.rounds.value))
     isStarted = true
 }
 
@@ -81,14 +88,17 @@ fun onStart(
 fun GameScreen(
     navController: NavController,
     gameViewModel: GameViewModel,
-    playerState: PlayerDataState
+    playerState: PlayerDataState,
+    state: GameDataState,
+    onEvent: (GameDataEvent) -> Unit
 ){
     roundData.playerSelection = playerSelection.currentSelection
+
     var isVisible by remember {
         mutableStateOf(isShowWinText)
     }
 
-    if(!isStarted) onStart(gameViewModel)
+    if(!isStarted) onStart(gameViewModel, onEvent)
 
     isVisible = isShowWinText
 
@@ -166,7 +176,7 @@ fun GameScreen(
                     ) {
                         //isShowWinText = false
                         if (!isReset) {
-                            reset(navController)
+                            reset(navController, onEvent)
                         }
                     },
                 contentAlignment = Alignment.Center
@@ -188,28 +198,30 @@ fun GameScreen(
         }
     }
 
-    randomEnemySelection(navController, gameViewModel)
+    randomEnemySelection(navController, gameViewModel, onEvent)
 }
 
 
 var isSet:Boolean = false
 fun randomEnemySelection(
     navController: NavController,
-    gameViewModel: GameViewModel
+    gameViewModel: GameViewModel,
+    onEvent: (GameDataEvent) -> Unit
 ){
     if(!isSet) {
         enemySelection.currentSelection = currentRound.randomEnemySelection()
         enemySelection.isSelected = true
         isSet = true
     }
-    winner(navController, gameViewModel)
+    winner(navController, gameViewModel, onEvent)
 }
 
 var isWaiting = false
 private val handler = android.os.Handler(Looper.getMainLooper())
 fun winner(
     navController: NavController,
-    gameViewModel: GameViewModel
+    gameViewModel: GameViewModel,
+    onEvent: (GameDataEvent) -> Unit
 ){
     if(isReset){
         handler.removeCallbacksAndMessages(null)
@@ -220,6 +232,7 @@ fun winner(
 
         currentRound.EnemySelection = enemySelection.currentSelection
         currentRound.YourSelection = playerSelection.currentSelection
+
 
 
         when(enemySelection.currentSelection){
@@ -255,6 +268,18 @@ fun winner(
             }
         }
 
+        when {
+            statistics.enemyWins == statistics.playerWins -> {
+                onEvent(GameDataEvent.SetWin(WinTyp.Draw))
+            }
+            statistics.enemyWins < statistics.playerWins -> {
+                onEvent(GameDataEvent.SetWin(WinTyp.Win))
+            }
+            else -> {
+                onEvent(GameDataEvent.SetWin(WinTyp.Lose))
+            }
+        }
+
         winText = "$win"
 
         val delayMillis: Long = 3000 // Adjust the delay time as needed (in milliseconds)
@@ -267,17 +292,25 @@ fun winner(
 
             handler.postDelayed({
                 if(!isReset) {
-                    reset(navController)
+                    reset(navController, onEvent)
 
                     Log.d("Restarafdsavt","in Time")
                 }
             }, delayMillis)
         }
+        val oneRound = OneRound(
+            enemySelection = currentRound.EnemySelection!!,
+            playerSelection = currentRound.YourSelection!!,
+            result = win
+
+        )
+        onEvent(GameDataEvent.SetNewRound(oneRound))
     }
 }
 
 fun reset(
     navController: NavController,
+    onEvent: (GameDataEvent) -> Unit
 ) {
     if(statistics.currentRound <= statistics.rounds) {
 
@@ -297,20 +330,15 @@ fun reset(
             isPlayerSelect = false
         )
     }else{
-        endGame(navController)
+        endGame(navController, onEvent)
     }
 }
 
 fun endGame(
     navController: NavController,
+    onEvent: (GameDataEvent) -> Unit
 ){
-
-    navController.popBackStack()
-    navController.navigate(Screen.GameStatisticScreen.route)
-
-
-
-    //Game ReSet//
+//Game ReSet//
     Log.d("Restarafdsavt", "reset")
     isWaiting = false
     isSet = false
@@ -327,6 +355,9 @@ fun endGame(
         isPlayerSelect = false
     )
 
+    navController.popBackStack()
+    navController.navigate(Screen.GameStatisticScreen.route)
+    onEvent(GameDataEvent.CreateNewPlayer)
     isStarted = false
 
     statistics = GameData(
@@ -335,8 +366,5 @@ fun endGame(
         rounds = 3,
         currentRound = 1,
     )
-
-
-
-    //^Game Reset^//
+//^Game Reset^//
 }

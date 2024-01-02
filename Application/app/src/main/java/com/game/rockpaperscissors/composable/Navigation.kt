@@ -26,6 +26,7 @@ import com.game.rockpaperscissors.composable.screen.GameStatisticScreen
 import com.game.rockpaperscissors.composable.screen.HomeScreen
 import com.game.rockpaperscissors.composable.screen.ProfileScreen
 import com.game.rockpaperscissors.composable.screen.WelcomeScreen
+import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.data.viewModel.TestViewModel
 
@@ -70,6 +71,9 @@ fun Navigation() {
             composable(route = Screen.GameSettingScreen.route){ entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
 
+
+
+
                 SetBarColor(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.background)
 
                 GameSettingScreen(navController, viewModel)
@@ -81,13 +85,18 @@ fun Navigation() {
                 SetBarColor(MaterialTheme.colorScheme.background)
 
                 val dbViewModel = hiltViewModel<PlayerViewModel>()
-                val state by dbViewModel.state.collectAsState()
+                val playerState by dbViewModel.state.collectAsState()
 
-                if(state.allPlayer.isNotEmpty()){
+                val gameDataViewModel = hiltViewModel<GameDataViewModel>()
+                val gameState by gameDataViewModel.state.collectAsState()
+
+                if(playerState.allPlayer.isNotEmpty()){
                     GameScreen(
-                        navController,
-                        viewModel,
-                        state
+                        navController = navController,
+                        gameViewModel = viewModel,
+                        playerState = playerState,
+                        state = gameState,
+                        onEvent = gameDataViewModel::onEvent
                     )
                 }
             }

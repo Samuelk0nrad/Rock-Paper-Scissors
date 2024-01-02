@@ -6,10 +6,13 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import com.game.rockpaperscissors.data.Enemy
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.OneRound
 import com.game.rockpaperscissors.data.WinTyp
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -19,10 +22,12 @@ class GameDataEntity (
     val rounds: Int,
     val win: WinTyp,
 
+    @TypeConverters(AllRoundConverter::class)
+    val allRounds: List<OneRound>,
+
     @Embedded
-    val allRounds: OneRound,
-    @Embedded
-    val enemy: Enemy,
+    val enemy: Enemy?,
+
 
     @ColumnInfo(name = "timestamp")
     val timestamp: LocalDateTime = LocalDateTime.now(),
@@ -46,5 +51,19 @@ object LocalDateTimeConverter {
     @JvmStatic
     fun fromLocalDateTime(dateTime: LocalDateTime?): String? {
         return dateTime?.format(formatter)
+    }
+}
+
+class AllRoundConverter{
+
+
+    @TypeConverter
+    fun fromRoundList(value: List<OneRound>?): String? {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun toRoundList(value: String?): List<OneRound>? {
+        return Gson().fromJson(value, object : TypeToken<List<OneRound>>() {}.type)
     }
 }
