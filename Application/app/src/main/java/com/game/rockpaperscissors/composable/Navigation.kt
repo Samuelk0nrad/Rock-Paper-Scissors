@@ -25,6 +25,7 @@ import com.game.rockpaperscissors.composable.screen.GameSettingScreen
 import com.game.rockpaperscissors.composable.screen.GameStatisticScreen
 import com.game.rockpaperscissors.composable.screen.HomeScreen
 import com.game.rockpaperscissors.composable.screen.ProfileScreen
+import com.game.rockpaperscissors.composable.screen.StatisticScreen
 import com.game.rockpaperscissors.composable.screen.WelcomeScreen
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
@@ -43,6 +44,7 @@ fun Navigation() {
                 val viewModel = hiltViewModel<PlayerViewModel>()
                 val state by viewModel.state.collectAsState()
                 if(state.allPlayer.isNotEmpty()){
+                    navController.popBackStack()
                     navController.navigate(Screen.HomeScreen.route)
                 }
 
@@ -132,6 +134,8 @@ fun Navigation() {
                         navController.navigate(Screen.LogIn.route)
                     }
                 )
+            }else{
+                navController.popBackStack()
             }
 
         }
@@ -146,12 +150,22 @@ fun Navigation() {
                     onEvent = viewModel::onEvent,
                     nevController = navController
                 )
+            }else{
+                navController.popBackStack()
             }
         }
         
         navigation(route = Screen.MainStatistic.route, startDestination = Screen.StatisticScreen.route){
             composable(route = Screen.StatisticScreen.route){
                 SetBarColor(colorStatus = MaterialTheme.colorScheme.secondaryContainer, colorNavigation = MaterialTheme.colorScheme.background)
+
+                val viewModel = hiltViewModel<GameDataViewModel>()
+                val state by viewModel.state.collectAsState()
+                val gameData = state.allGames
+
+                if(gameData.isNotEmpty()){
+                    StatisticScreen(navController = navController, gameData = gameData)
+                }
             }
             
             composable(route = Screen.ModeStatisticScreen.route){

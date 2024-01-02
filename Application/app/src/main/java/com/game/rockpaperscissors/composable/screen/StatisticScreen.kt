@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIos
@@ -32,15 +33,78 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.composable.BarGraph
+import com.game.rockpaperscissors.data.GameModesEnum
+import com.game.rockpaperscissors.data.SelectionType
+import com.game.rockpaperscissors.data.WinTyp
+import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.ui.theme.Oswald
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun StatisticScreen(
-    navController: NavController
+    navController: NavController,
+    gameData:List<GameDataEntity>
 ) {
 
+    var modeList = listOf<dataMode>()
 
 
+    var yRock = 0
+    var yPaper = 0
+    var yScissors = 0
+
+
+    var eRock = 0
+    var ePaper = 0
+    var eScissors = 0
+
+    gameData.forEach{data ->
+
+        var isAdd = false
+        modeList.forEach{modeData->
+            if(data.mode == modeData.mode){
+                modeData.allPlayedRounds++
+
+                when(data.win){
+                    WinTyp.Lose -> modeData.allLose++
+                    WinTyp.Win -> modeData.allWins++
+                    WinTyp.Draw -> modeData.allDraws++
+                }
+                isAdd = true
+            }
+        }
+
+        if(!isAdd){
+            val mode = dataMode(
+                mode = data.mode,
+                allPlayedRounds = 1
+            )
+            when(data.win){
+                WinTyp.Lose -> mode.allLose++
+                WinTyp.Win -> mode.allWins++
+                WinTyp.Draw -> mode.allDraws++
+            }
+
+            modeList = modeList + mode
+
+        }
+
+        data.allRounds.forEach{
+            when(it.enemySelection){
+                SelectionType.ROCK -> eRock++
+                SelectionType.PAPER -> ePaper++
+                SelectionType.SCISSORS -> eScissors++
+            }
+
+
+            when(it.playerSelection){
+                SelectionType.ROCK -> yRock++
+                SelectionType.PAPER -> yPaper++
+                SelectionType.SCISSORS -> yScissors++
+            }
+        }
+    }
 
 
 
@@ -230,7 +294,7 @@ fun StatisticScreen(
 
             item {
                 BarGraph(
-                    values = listOf(1f, 2f, 3f),
+                    values = listOf(yRock.toFloat(), yPaper.toFloat(), yScissors.toFloat()),
                     name = listOf("Rock", "Paper", "Scissors"),
                     height = 302,
                     title = "Your Selection:"
@@ -243,7 +307,7 @@ fun StatisticScreen(
 
             item {
                 BarGraph(
-                    values = listOf(1f, 2f, 3f),
+                    values = listOf(eRock.toFloat(), ePaper.toFloat(), eScissors.toFloat()),
                     name = listOf("Rock", "Paper", "Scissors"),
                     height = 302,
                     title = "Enemy Selection:"
@@ -264,8 +328,13 @@ fun StatisticScreen(
             }
 
 
-            items(3){
-                Modes()
+            items(modeList){mode->
+                Modes(
+                    mode = mode.mode,
+                    rounds = mode.allPlayedRounds,
+                    wins = mode.allWins,
+                    loses = mode.allLose
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -283,12 +352,29 @@ fun StatisticScreen(
                 )
             }
 
-
-            var i = 0
-
-            items(3){
+            items(gameData){gameData ->
                 Column {
-                    AllRounds()
+
+                    var yourWins = 0
+                    var enemyWins = 0
+                    gameData.allRounds.forEach{round->
+                        when(round.result){
+                            WinTyp.Lose -> enemyWins++
+                            WinTyp.Win -> yourWins++
+                            else -> {}
+                        }
+                    }
+
+                    val formattedDate = gameData.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+
+                    AllRounds(
+                        rounds = gameData.rounds,
+                        yourWins = yourWins,
+                        enemyWins = enemyWins,
+                        win = gameData.win,
+                        date = formattedDate,
+                        mode = gameData.mode
+                    )
 
                     Spacer(modifier = Modifier.height(15.dp))
                     Spacer(modifier = Modifier
@@ -297,16 +383,21 @@ fun StatisticScreen(
                         .background(MaterialTheme.colorScheme.secondaryContainer))
                     Spacer(modifier = Modifier.height(15.dp))
                 }
-                i++
+
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+
 @Composable
 fun AllRounds(
-
+    rounds: Int,
+    yourWins: Int,
+    enemyWins: Int,
+    win: WinTyp,
+    date: String,
+    mode: GameModesEnum,
 ) {
 
     Box(
@@ -320,7 +411,7 @@ fun AllRounds(
         ) {
 
             Text(
-                text = "Name of the Mode",
+                text = "$mode",
                 fontSize = 13.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Normal,
@@ -329,7 +420,7 @@ fun AllRounds(
             )
 
             Text(
-                text = "21.10.1233",
+                text = date,
                 fontSize = 16.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,
@@ -351,7 +442,7 @@ fun AllRounds(
             )
 
             Text(
-                text = "10",
+                text = "$rounds",
                 fontSize = 24.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,
@@ -382,10 +473,10 @@ fun AllRounds(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.5.sp,
-                        textAlign = TextAlign.Right
+                        textAlign = TextAlign.Right,
                     )
                     Text(
-                        text = "000",
+                        text = "$yourWins",
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.SemiBold,
@@ -398,7 +489,7 @@ fun AllRounds(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Text(
-                    text = "Win",
+                    text = "$win",
                     fontSize = 20.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -420,7 +511,7 @@ fun AllRounds(
 
                     Text(
                         modifier = Modifier.height(27.dp),
-                        text = "000",
+                        text = "$enemyWins",
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.SemiBold,
@@ -436,9 +527,14 @@ fun AllRounds(
 }
 
 
-@Preview(showBackground = true)
+
 @Composable
-fun Modes() {
+fun Modes(
+    mode: GameModesEnum,
+    rounds: Int,
+    wins: Int,
+    loses: Int
+) {
 
     Box(
         modifier = Modifier
@@ -459,7 +555,7 @@ fun Modes() {
             Box(modifier = Modifier.fillMaxSize()){
                 Box{
                     Text(
-                        text = "Name of the Mode",
+                        text = "$mode",
                         fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
@@ -477,13 +573,14 @@ fun Modes() {
                             fontSize = 10.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Medium,
+                            lineHeight = 14.sp
                         )
                     }
 
 
                     Box(modifier = Modifier.padding(top = 19.dp)){
                         Text(
-                            text = "32",
+                            text = "$rounds",
                             fontSize = 32.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Bold,
@@ -512,7 +609,7 @@ fun Modes() {
                         contentAlignment = Alignment.BottomEnd
                     ){
                         Text(
-                            text = "12",
+                            text = "$wins",
                             fontSize = 15.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Normal,
@@ -544,7 +641,7 @@ fun Modes() {
                         contentAlignment = Alignment.BottomEnd
                     ){
                         Text(
-                            text = "12",
+                            text = "$loses",
                             fontSize = 15.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Normal,
@@ -568,6 +665,14 @@ fun Modes() {
         }
     }
 }
+
+data class dataMode(
+    var mode: GameModesEnum,
+    var allPlayedRounds: Int = 0,
+    var allWins: Int = 0,
+    var allLose: Int = 0,
+    var allDraws: Int = 0
+)
 
 
 
