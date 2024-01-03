@@ -276,10 +276,10 @@ fun CreateProfileScreen(
                     .background(appColor.secondaryContainer)
                     .fillMaxWidth()
                     .clickable {
-                        onEvent(PlayerDataEvent.CreateNewPlayer)
-                        if (state.fullName.isBlank() && state.userName.isBlank() && state.birthData.isBlank()) {
+                        if (state.fullName.isNotBlank() && state.userName.isNotBlank() && state.birthData.isNotBlank()) {
                             nevController.navigate(Screen.HomeScreen.route)
                         }
+                        onEvent(PlayerDataEvent.CreateNewPlayer)
 
                     }
                     .padding(top = 10.dp, bottom = 10.dp)

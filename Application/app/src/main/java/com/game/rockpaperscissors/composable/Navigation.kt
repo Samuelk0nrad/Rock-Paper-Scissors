@@ -34,14 +34,18 @@ import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
+import com.game.rockpaperscissors.data.viewModel.NavigationViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.appColor
 
 @Composable
 fun Navigation() {
 
+    val navViewModel = hiltViewModel<NavigationViewModel>()
+    val isLoggedIn = navViewModel.isLoggedIn
+
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.LogIn.route){
+    NavHost(navController = navController, startDestination = if(isLoggedIn) Screen.HomeScreen.route else Screen.LogIn.route ){
 
         navigation(route = Screen.LogIn.route, startDestination = Screen.WelcomeScreen.route) {
             composable(route = Screen.WelcomeScreen.route) {

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,12 +23,15 @@ import androidx.compose.material.icons.rounded.ArrowBackIos
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -48,6 +52,12 @@ fun StatisticScreen(
     gameData:List<GameDataEntity>
 ) {
 
+    var displayDate by remember{
+        mutableIntStateOf(30)
+    }
+
+    val gameDataEntityList = filterGameDataByData(gameData = gameData, days = displayDate)
+
     var modeList = listOf<dataMode>()
 
 
@@ -60,7 +70,7 @@ fun StatisticScreen(
     var ePaper = 0
     var eScissors = 0
 
-    gameData.forEach{data ->
+    gameDataEntityList.forEach{ data ->
 
         var isAdd = false
         modeList.forEach{modeData->
@@ -154,18 +164,30 @@ fun StatisticScreen(
 
         Row (
             modifier = Modifier
+                .height(28.dp)
                 .fillMaxWidth()
                 .padding(horizontal = 36.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
-            Text(
-                text = "Last",
-                fontSize = 15.sp,
-                fontFamily = Oswald,
-                fontWeight = FontWeight.Normal,
-                letterSpacing = 0.45.sp,
-                color = appColor.onBackground
-            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(4.dp))
+                    .height(28.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    modifier = Modifier.height(28.dp),
+                    text = "Last",
+                    fontSize = 15.sp,
+                    fontFamily = Oswald,
+                    fontWeight = FontWeight.Normal,
+                    letterSpacing = 0.45.sp,
+                    color = appColor.onBackground,
+                    textAlign = TextAlign.Center,
+
+
+                    )
+            }
 
             Spacer(modifier = Modifier.width(13.dp))
 
@@ -174,24 +196,31 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(appColor.onSecondaryContainer)
+                    .background(if(displayDate != 7) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
-                    .height(24.dp)
-                    .background(appColor.background),
+                    .height(28.dp)
+                    .background(if(displayDate == 7) appColor.onSecondaryContainer else appColor.background)
+                    .clickable {
+                        displayDate = 7
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
+                    modifier = Modifier.height(28.dp),
                     text = "7 days",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = appColor.onBackground
+                    color = appColor.onBackground,
+                    textAlign = TextAlign.Center,
+
+
                 )
             }
 
@@ -199,24 +228,30 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(appColor.onSecondaryContainer)
+                    .background(if(displayDate == 90) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
-                    .height(24.dp)
-                    .background(appColor.onSecondaryContainer),
+                    .height(28.dp)
+                    .background(if(displayDate == 30) appColor.onSecondaryContainer else appColor.background)
+                    .clickable {
+                        displayDate = 30
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
+                    modifier = Modifier.height(28.dp),
                     text = "30 days",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = appColor.onBackground
+                    color = appColor.onBackground,
+                    textAlign = TextAlign.Center
+
                 )
             }
 
@@ -224,24 +259,30 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(appColor.onSecondaryContainer)
+                    .background(if(displayDate == 7) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
-                    .height(24.dp)
-                    .background(appColor.background),
+                    .height(28.dp)
+                    .background(if(displayDate == 90) appColor.onSecondaryContainer else appColor.background)
+                    .clickable {
+                        displayDate = 90
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
+                    modifier = Modifier.height(28.dp),
                     text = "90 days",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = appColor.onBackground
+                    color = appColor.onBackground,
+                    textAlign = TextAlign.Center
+
                 )
             }
         }
@@ -359,7 +400,7 @@ fun StatisticScreen(
                 )
             }
 
-            items(gameData){gameData ->
+            items(gameDataEntityList){ gameData ->
                 Column {
 
                     var yourWins = 0
@@ -703,6 +744,23 @@ fun Modes(
     }
 }
 
+
+
+fun filterGameDataByData(gameData: List<GameDataEntity>, days: Int): List<GameDataEntity>{
+    val deleteTime = LocalDateTime.now().minusDays(days.toLong())
+
+    var gameDatas = emptyList<GameDataEntity>()
+
+    for (data in gameData){
+        if(data.timestamp.isAfter(deleteTime)){
+            gameDatas = gameDatas + data
+        }
+    }
+
+    return gameDatas
+}
+
+
 data class dataMode(
     var mode: GameModesEnum,
     var allPlayedRounds: Int = 0,
@@ -710,6 +768,8 @@ data class dataMode(
     var allLose: Int = 0,
     var allDraws: Int = 0
 )
+
+
 
 
 
