@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,9 +41,7 @@ import com.game.rockpaperscissors.data.WinTyp
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
-
-
-
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 var currentRound = GameFunktions()
@@ -104,7 +101,7 @@ fun GameScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ){
 
 
@@ -163,7 +160,7 @@ fun GameScreen(
             visible = isVisible,
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
+                .background(appColor.background.copy(alpha = 0.7f))
         ) {
             Box(
                 modifier = Modifier

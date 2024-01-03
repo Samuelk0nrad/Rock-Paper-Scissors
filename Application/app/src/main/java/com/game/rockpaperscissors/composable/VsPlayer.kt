@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @Preview
@@ -53,7 +54,7 @@ fun VsPlayer(
         modifier = Modifier
             .fillMaxWidth()
             .height(115.dp)
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ){
         Box(
             modifier = Modifier
@@ -65,20 +66,20 @@ fun VsPlayer(
                     .padding(bottom = 0.dp),
                 painter = painterResource(id = R.drawable.ic_vs),
                 contentDescription = "VS.",
-                tint = MaterialTheme.colorScheme.secondary
+                tint = appColor.onSecondary
             )
         }
         Box{
             Row {
                 Text(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
+                        .background(appColor.background)
                         .padding(start = 5.dp, end = 5.dp, top = 5.dp),
                     text = "$currentRound",
                     fontSize = 63.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
 
                 Box(
@@ -94,7 +95,7 @@ fun VsPlayer(
                         fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = appColor.onBackground
                     )
                 }
             }
@@ -108,12 +109,13 @@ fun VsPlayer(
 
             Text(
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(appColor.background)
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 0.dp),
                 text = "VS",
                 fontSize = 40.sp,
                 fontFamily = Oswald,
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.Normal,
+                color = appColor.onBackground
             )
         }
 
@@ -132,7 +134,7 @@ fun VsPlayer(
                     fontSize = 20.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -140,7 +142,7 @@ fun VsPlayer(
                     fontSize = 20.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
         }

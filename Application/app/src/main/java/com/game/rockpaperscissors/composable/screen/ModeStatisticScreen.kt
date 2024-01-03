@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIos
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +33,7 @@ import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.WinTyp
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -74,7 +74,7 @@ fun ModeStatisticScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ){
 
         Box(
@@ -84,7 +84,7 @@ fun ModeStatisticScreen(
                 .clickable {
                     navController.popBackStack()
                 }
-                .background(MaterialTheme.colorScheme.secondaryContainer),
+                .background(appColor.secondaryContainer),
             contentAlignment = Alignment.TopCenter
         ) {
 
@@ -97,7 +97,8 @@ fun ModeStatisticScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBackIos,
-                    contentDescription = "Go Back"
+                    contentDescription = "Go Back",
+                    tint = appColor.onBackground
                 )
             }
 
@@ -107,7 +108,7 @@ fun ModeStatisticScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
         }
 
@@ -125,7 +126,7 @@ fun ModeStatisticScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Normal,
                 letterSpacing = 0.45.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.width(13.dp))
@@ -135,7 +136,7 @@ fun ModeStatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer)
+                    .background(appColor.onSecondaryContainer)
             )
 
             Box(
@@ -143,7 +144,7 @@ fun ModeStatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(24.dp)
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(appColor.background),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -152,7 +153,7 @@ fun ModeStatisticScreen(
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
 
@@ -160,7 +161,7 @@ fun ModeStatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer)
+                    .background(appColor.onSecondaryContainer)
             )
 
             Box(
@@ -168,7 +169,7 @@ fun ModeStatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(24.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer),
+                    .background(appColor.onSecondaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -177,7 +178,7 @@ fun ModeStatisticScreen(
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
 
@@ -185,7 +186,7 @@ fun ModeStatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer)
+                    .background(appColor.onSecondaryContainer)
             )
 
             Box(
@@ -193,7 +194,7 @@ fun ModeStatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(24.dp)
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(appColor.background),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -202,7 +203,7 @@ fun ModeStatisticScreen(
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
         }
@@ -235,7 +236,7 @@ fun ModeStatisticScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .background(appColor.secondaryContainer)
                     ){
 
                     }
@@ -322,7 +323,7 @@ fun ModeStatisticScreen(
                     Spacer(modifier = Modifier
                         .height(1.dp)
                         .width(316.dp)
-                        .background(MaterialTheme.colorScheme.secondaryContainer))
+                        .background(appColor.onSecondaryContainer))
                     Spacer(modifier = Modifier.height(15.dp))
                 }
             }

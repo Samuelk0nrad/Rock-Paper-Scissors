@@ -23,7 +23,6 @@ import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PersonPin
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,6 +38,7 @@ import com.game.rockpaperscissors.data.GameModes
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.gameModes
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @Composable
@@ -47,13 +47,13 @@ fun HomeScreen (navController: NavController){
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(MaterialTheme.colorScheme.secondaryContainer),
+                .background(appColor.secondaryContainer),
             contentAlignment = Alignment.TopCenter
         ) {
             Text(
@@ -101,7 +101,7 @@ fun HomeScreen (navController: NavController){
                     fontFamily = Oswald,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 0.8.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
 
@@ -128,7 +128,7 @@ fun HomeScreen (navController: NavController){
                             .fillMaxWidth()
                             .height(1.dp)
                             .padding(start = 30.dp, end = 30.dp)
-                            .background(MaterialTheme.colorScheme.onBackground)
+                            .background(appColor.onSecondaryContainer)
 
                     )
                     
@@ -143,45 +143,7 @@ fun HomeScreen (navController: NavController){
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
 
-                        //First Your Profile
-                        Column(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .width(size.dp)
-                                .height(size.dp)
-                                .clickable {
-
-                                    navController.navigate(Screen.ProfileScreen.route)
-
-                                }
-                                .background(MaterialTheme.colorScheme.secondaryContainer),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Your",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Light,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Icon(
-                                modifier = Modifier.size(45.dp),
-                                imageVector = Icons.Rounded.Person,
-                                contentDescription = "Profile Picture",
-                                tint = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = "Profile",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
-
-
-                        //Second All Statistics
-                        Column(
+                        Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
                                 .width(size.dp)
@@ -191,64 +153,158 @@ fun HomeScreen (navController: NavController){
                                     navController.navigate(Screen.MainStatistic.route)
 
                                 }
-                                .background(MaterialTheme.colorScheme.secondaryContainer),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .background(appColor.secondaryContainer),
                         ) {
-                            Text(
-                                text = "All",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Light,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Icon(
-                                modifier = Modifier.size(45.dp),
-                                imageVector = Icons.Rounded.BarChart,
-                                contentDescription = "Profile Picture",
-                                tint = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = "Statistics",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
+                            //First Your Profile
+                            Column(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .width(size.dp)
+                                    .height(size.dp)
+                                    .clickable {
+
+                                        navController.navigate(Screen.ProfileScreen.route)
+
+                                    }
+                                    .background(appColor.secondaryContainer),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Your",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Light,
+                                    color = appColor.onBackground
+                                )
+                                Icon(
+                                    modifier = Modifier.size(45.dp),
+                                    imageVector = Icons.Rounded.Person,
+                                    contentDescription = "Profile Picture",
+                                    tint = appColor.onBackground
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(bottom = 2.dp),
+                                contentAlignment = Alignment.BottomCenter
+                            ) {
+                                Text(
+                                    text = "Profile",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Bold,
+                                    color = appColor.onBackground
+                                )
+                            }
                         }
 
-                        // Your Friends
-                        Column(
+                        Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
                                 .width(size.dp)
                                 .height(size.dp)
                                 .clickable {
 
+                                    navController.navigate(Screen.MainStatistic.route)
 
                                 }
-                                .background(MaterialTheme.colorScheme.secondaryContainer),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .background(appColor.secondaryContainer),
                         ) {
-                            Text(
-                                text = "Your",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Light,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Icon(
-                                modifier = Modifier.size(45.dp),
-                                imageVector = Icons.Rounded.PersonPin,
-                                contentDescription = "Profile Picture",
-                                tint = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = "Friends",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
+                            //Second All Statistics
+                            Column(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .width(size.dp)
+                                    .height(size.dp)
+                                    .background(appColor.secondaryContainer),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "All",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Light,
+                                    color = appColor.onBackground
+                                )
+                                Icon(
+                                    modifier = Modifier.size(45.dp),
+                                    imageVector = Icons.Rounded.BarChart,
+                                    contentDescription = "Profile Picture",
+                                    tint = appColor.onBackground
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(bottom = 2.dp),
+                                contentAlignment = Alignment.BottomCenter
+                            ) {
+                                Text(
+                                    text = "Statistics",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Bold,
+                                    color = appColor.onBackground
+                                )
+                            }
+                        }
+
+
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .width(size.dp)
+                                .height(size.dp)
+                                .clickable {
+
+                                    navController.navigate(Screen.MainStatistic.route)
+
+                                }
+                                .background(appColor.secondaryContainer),
+                        ) {
+                            // Your Friends
+                            Column(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .width(size.dp)
+                                    .height(size.dp)
+                                    .clickable {
+
+
+                                    }
+                                    .background(appColor.secondaryContainer),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Your",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Light,
+                                    color = appColor.onBackground
+                                )
+                                Icon(
+                                    modifier = Modifier.size(45.dp),
+                                    imageVector = Icons.Rounded.PersonPin,
+                                    contentDescription = "Profile Picture",
+                                    tint = appColor.onBackground
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(bottom = 2.dp),
+                                contentAlignment = Alignment.BottomCenter
+                            ) {
+                                Text(
+                                    text = "Friends",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Bold,
+                                    color = appColor.onBackground
+                                )
+                            }
                         }
                     }
 
@@ -260,7 +316,7 @@ fun HomeScreen (navController: NavController){
                             .fillMaxWidth()
                             .height(1.dp)
                             .padding(start = 30.dp, end = 30.dp)
-                            .background(MaterialTheme.colorScheme.onBackground)
+                            .background(appColor.onSecondaryContainer)
 
                     )
 
@@ -277,7 +333,7 @@ fun HomeScreen (navController: NavController){
                     fontFamily = Oswald,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 0.8.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
 
@@ -296,7 +352,7 @@ fun HomeScreen (navController: NavController){
 @Composable
 fun DisplayMods(mode: GameModes, navController: NavController) {
     Box(modifier = Modifier
-        .background(MaterialTheme.colorScheme.background)
+        .background(appColor.background)
         .fillMaxWidth()
         .height(122.dp)
         .padding(top = 16.dp, bottom = 16.dp, start = 38.dp, end = 38.dp)
@@ -305,7 +361,7 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .clickable {
-                    if(mode.available) {
+                    if (mode.available) {
                         mode.setToFirst(gameModes)
                         navController.navigate(mode.rout)
                         mode.clickAction
@@ -334,7 +390,7 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
                 Text(
                     text = mode.description,
@@ -342,7 +398,7 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.7.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
         }
@@ -350,13 +406,14 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f)),
+                    .background(appColor.background.copy(alpha = 0.7f)),
                 contentAlignment = Alignment.Center
             ){
                 Icon(
                     modifier = Modifier.fillMaxSize(0.4f),
                     imageVector = Icons.Rounded.Lock,
-                    contentDescription = "Lock"
+                    contentDescription = "Lock",
+                    tint = appColor.onBackground
                 )
             }
         }

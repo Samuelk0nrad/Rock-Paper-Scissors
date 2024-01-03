@@ -22,7 +22,6 @@ import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +40,7 @@ import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @Composable
@@ -85,7 +85,7 @@ fun EditProfileScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ){
 
         Box(
@@ -97,7 +97,7 @@ fun EditProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(89.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .background(appColor.secondaryContainer)
             ) {
 
                 Box(
@@ -115,7 +115,8 @@ fun EditProfileScreen(
                             nevController.popBackStack()
                         },
                         imageVector = Icons.Rounded.Close,
-                        contentDescription = "Go Back"
+                        contentDescription = "Go Back",
+                        tint = appColor.onBackground
                     )
                 }
 
@@ -153,7 +154,7 @@ fun EditProfileScreen(
                         },
                         imageVector = Icons.Rounded.Check,
                         contentDescription = "Apply",
-                        tint = MaterialTheme.colorScheme.onBackground
+                        tint = appColor.onBackground
                     )
                 }
 
@@ -173,7 +174,7 @@ fun EditProfileScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(100.dp))
-                        .background(MaterialTheme.colorScheme.onBackground),
+                        .background(appColor.onBackground),
                     imageVector = Icons.Rounded.Person,
                     contentDescription = "Profile"
                 )
@@ -191,14 +192,14 @@ fun EditProfileScreen(
 
 
                             }
-                            .background(MaterialTheme.colorScheme.background),
+                            .background(appColor.background),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             modifier = Modifier.size(22.dp),
                             imageVector = Icons.Rounded.CameraAlt,
                             contentDescription = "Camera",
-                            tint = MaterialTheme.colorScheme.onBackground
+                            tint = appColor.onBackground
                         )
                     }
                 }
@@ -263,7 +264,7 @@ fun EditProfileScreen(
                 fontWeight = FontWeight.ExtraLight,
                 fontSize = 20.sp,
                 letterSpacing = 1.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -299,7 +300,7 @@ fun EditProfileScreen(
                 modifier = Modifier.size(24.dp),
                 imageVector = if(showName) Icons.Rounded.CheckBoxOutlineBlank else Icons.Rounded.CheckBox,
                 contentDescription = "CheckBox",
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.width(13.dp))
@@ -311,7 +312,7 @@ fun EditProfileScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.75.sp,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = appColor.onBackground,
                 textAlign = TextAlign.Center
             )
         }
@@ -332,7 +333,7 @@ fun EditProfileScreen(
                 modifier = Modifier.size(24.dp),
                 imageVector = if(showData) Icons.Rounded.CheckBoxOutlineBlank else Icons.Rounded.CheckBox,
                 contentDescription = "CheckBox",
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = appColor.onBackground
             )
 
 
@@ -345,7 +346,7 @@ fun EditProfileScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.75.sp,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = appColor.onBackground,
                 textAlign = TextAlign.Center
             )
         }

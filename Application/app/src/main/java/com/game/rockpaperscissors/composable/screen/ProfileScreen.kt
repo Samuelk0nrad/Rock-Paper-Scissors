@@ -34,7 +34,7 @@ import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
-
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @Composable
@@ -43,7 +43,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ) {
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -54,7 +54,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(89.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .background(appColor.secondaryContainer)
             ) {
 
                 Box(
@@ -69,7 +69,8 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                             navController.popBackStack()
                         },
                         imageVector = Icons.Rounded.ArrowBackIos,
-                        contentDescription = "Go Back"
+                        contentDescription = "Go Back",
+                        tint = appColor.onBackground
                     )
                 }
 
@@ -104,7 +105,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                         },
                         imageVector = Icons.Rounded.Edit,
                         contentDescription = "Go Back",
-                        tint = MaterialTheme.colorScheme.onBackground
+                        tint = appColor.onBackground
                     )
                 }
 
@@ -124,7 +125,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(100.dp))
-                        .background(MaterialTheme.colorScheme.onBackground),
+                        .background(appColor.onBackground),
                     imageVector = Icons.Rounded.Person,
                     contentDescription = "Profile"
                 )
@@ -142,14 +143,14 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
 
 
                             }
-                            .background(MaterialTheme.colorScheme.background),
+                            .background(appColor.background),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             modifier = Modifier.size(22.dp),
                             imageVector = Icons.Rounded.CameraAlt,
                             contentDescription = "Camera",
-                            tint = MaterialTheme.colorScheme.onBackground
+                            tint = appColor.onBackground
                         )
                     }
                 }
@@ -190,7 +191,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Light,
                             letterSpacing = 1.6.sp,
-                            color = MaterialTheme.colorScheme.onBackground,
+                            color = appColor.onBackground,
                             textAlign = TextAlign.Start
                         )
 
@@ -203,7 +204,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.6.sp,
                             textAlign = TextAlign.End,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = appColor.onBackground
                         )
                     }
                 }
@@ -228,7 +229,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Light,
                             letterSpacing = 1.6.sp,
-                            color = MaterialTheme.colorScheme.onBackground,
+                            color = appColor.onBackground,
                             textAlign = TextAlign.Start
                         )
 
@@ -241,7 +242,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.6.sp,
                             textAlign = TextAlign.End,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = appColor.onBackground
                         )
                     }
                 }
@@ -272,7 +273,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
 
 
                                 }
-                                .background(MaterialTheme.colorScheme.secondaryContainer),
+                                .background(appColor.secondaryContainer),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
@@ -280,20 +281,20 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                                 fontSize = 16.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Light,
-                                color = MaterialTheme.colorScheme.onBackground
+                                color = appColor.onBackground
                             )
                             Icon(
                                 modifier = Modifier.size(45.dp),
                                 imageVector = Icons.Rounded.BarChart,
                                 contentDescription = "Profile Picture",
-                                tint = MaterialTheme.colorScheme.onBackground
+                                tint = appColor.onBackground
                             )
                             Text(
                                 text = "Statistics",
                                 fontSize = 16.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
+                                color = appColor.onBackground
                             )
                         }
 
@@ -309,7 +310,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
 
 
                                 }
-                                .background(MaterialTheme.colorScheme.secondaryContainer),
+                                .background(appColor.secondaryContainer),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
@@ -317,20 +318,20 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                                 fontSize = 16.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Light,
-                                color = MaterialTheme.colorScheme.onBackground
+                                color = appColor.onBackground
                             )
                             Icon(
                                 modifier = Modifier.size(45.dp),
                                 imageVector = Icons.Rounded.PersonPin,
                                 contentDescription = "Profile Picture",
-                                tint = MaterialTheme.colorScheme.onBackground
+                                tint = appColor.onBackground
                             )
                             Text(
                                 text = "Friends",
                                 fontSize = 16.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
+                                color = appColor.onBackground
                             )
                         }
                     }
@@ -346,7 +347,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                             .fillMaxWidth()
                             .height(44.dp)
                             .padding(horizontal = 45.dp)
-                            .border(width = 1.dp, color = Color(0xFFFF0000), shape = RoundedCornerShape(size = 57.dp))
+                            .border(width = 1.dp, appColor.purRed, shape = RoundedCornerShape(size = 57.dp))
                             .clip(RoundedCornerShape(57.dp))
                             .clickable {
                                 state.allPlayer.forEach { playerData ->
@@ -362,7 +363,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                             fontWeight = FontWeight.Light,
                             textAlign = TextAlign.Center,
                             letterSpacing = 0.8.sp,
-                            color = Color(0xFFFF0000)
+                            color = appColor.purRed
                         )
                     }
                 }
@@ -387,7 +388,7 @@ fun ProfileNames(name: String, title: String) {
             fontFamily = Oswald,
             fontWeight = FontWeight.Light,
             letterSpacing = 1.6.sp,
-            color = MaterialTheme.colorScheme.onBackground
+            color = appColor.onBackground
         )
 
         Spacer(modifier = Modifier.height(15.dp))
@@ -400,7 +401,7 @@ fun ProfileNames(name: String, title: String) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             letterSpacing = 1.6.sp,
-            color = MaterialTheme.colorScheme.onBackground
+            color = appColor.onBackground
         )
         Spacer(modifier = Modifier.height(5.dp))
 
@@ -408,7 +409,7 @@ fun ProfileNames(name: String, title: String) {
             modifier = Modifier
                 .height(1.dp)
                 .width(178.dp)
-                .background(MaterialTheme.colorScheme.onBackground)
+                .background(appColor.onBackground)
         )
     }
 

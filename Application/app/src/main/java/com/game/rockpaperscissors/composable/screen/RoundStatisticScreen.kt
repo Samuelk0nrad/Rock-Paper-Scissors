@@ -30,6 +30,7 @@ import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.WinTyp
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 @Composable
 fun RoundStatisticScreen(
@@ -80,14 +81,14 @@ fun RoundStatisticScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(appColor.background)
         ) {
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .background(appColor.secondaryContainer)
                     .clickable {
                                navController.popBackStack()
                     },
@@ -111,7 +112,8 @@ fun RoundStatisticScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.ArrowBackIos,
-                        contentDescription = "Go Back"
+                        contentDescription = "Go Back",
+                        tint = appColor.onBackground
                     )
                 }
             }

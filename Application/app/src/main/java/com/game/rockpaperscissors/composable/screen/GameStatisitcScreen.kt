@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,6 +29,7 @@ import com.game.rockpaperscissors.composable.BarGraph
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @Composable
@@ -44,14 +44,14 @@ fun GameStatisticScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(appColor.background)
         ) {
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                    .background(appColor.secondaryContainer),
                 contentAlignment = Alignment.TopCenter
             ) {
                 Text(
@@ -102,7 +102,7 @@ fun GameStatisticScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(45.dp)
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(appColor.background)
                     .padding(end = 24.dp)
                     .clickable {
                         navController.navigate(Screen.HomeScreen.route)
@@ -111,7 +111,8 @@ fun GameStatisticScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowForwardIos,
-                    contentDescription = "Navigation"
+                    contentDescription = "Navigation",
+                    tint = appColor.onBackground
                 )
             }
         }
@@ -158,7 +159,7 @@ fun WinStatistic(
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
 
 
@@ -168,7 +169,7 @@ fun WinStatistic(
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
 
 
@@ -177,7 +178,7 @@ fun WinStatistic(
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
         }

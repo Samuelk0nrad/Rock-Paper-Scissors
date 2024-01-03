@@ -15,6 +15,7 @@ import com.game.rockpaperscissors.composable.Navigation
 import com.game.rockpaperscissors.composable.screen.StatisticScreen
 import com.game.rockpaperscissors.data.viewModel.TestViewModel
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
+import com.game.rockpaperscissors.ui.theme.appColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,11 +28,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RockPaperScissorsTheme {
-                SetBarColor(colorSystem = MaterialTheme.colorScheme.background)
+                SetBarColor(colorSystem = appColor.background)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = appColor.background
                 ) {
                     Navigation()
                 }

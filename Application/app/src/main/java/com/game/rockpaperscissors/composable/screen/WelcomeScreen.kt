@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +27,7 @@ import androidx.navigation.NavController
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,11 +36,13 @@ fun WelcomeScreen(
     navController: NavController
 ){
     Scaffold (
-        modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        modifier = Modifier.fillMaxSize()
+            .background(appColor.background)
     ){padding->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(appColor.background)
                 .padding(top = 115.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -53,7 +54,7 @@ fun WelcomeScreen(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 letterSpacing = 1.5.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.height(13.dp))
@@ -65,7 +66,7 @@ fun WelcomeScreen(
                 fontWeight = FontWeight.Light,
                 textAlign = TextAlign.Center,
                 letterSpacing = 1.28.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.height(55.dp))
@@ -91,7 +92,7 @@ fun WelcomeScreen(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.secondary)
+                        .background(appColor.secondaryContainer)
                         .fillMaxWidth()
                         .clickable {
 
@@ -107,7 +108,7 @@ fun WelcomeScreen(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSecondary
+                        color = appColor.onBackground
                     )
                 }
             }

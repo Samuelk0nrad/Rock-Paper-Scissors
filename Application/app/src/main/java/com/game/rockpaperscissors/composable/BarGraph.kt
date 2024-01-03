@@ -5,7 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @Composable
@@ -32,7 +33,7 @@ fun BarGraph(
 
     Column (
         modifier = modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(appColor.secondaryContainer)
 
     ){
 
@@ -41,7 +42,8 @@ fun BarGraph(
             text = title,
             fontSize = 24.sp,
             fontFamily = Oswald,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = appColor.onBackground
         )
         Box(
             modifier = Modifier
@@ -49,7 +51,7 @@ fun BarGraph(
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp)
         ) {
 
-            val color: Color = MaterialTheme.colorScheme.background
+            val color: Color = appColor.background
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val barCount = values.size
                 val totalPadding = barPadding * (barCount - 1)
@@ -90,7 +92,7 @@ fun BarGraph(
                         ) {
                             Text(
                                 text = value.toInt().toString(),
-                                color = MaterialTheme.colorScheme.onBackground,
+                                color = appColor.onBackground,
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter),
                                 fontFamily = Oswald
@@ -123,7 +125,7 @@ fun BarGraph(
                     ) {
                         Text(
                             text = value,
-                            color = MaterialTheme.colorScheme.onBackground,
+                            color = appColor.onBackground,
                             modifier = Modifier
                                 .align(Alignment.TopCenter),
                             fontFamily = Oswald,
@@ -133,6 +135,5 @@ fun BarGraph(
                 }
             }
         }
-
     }
 }

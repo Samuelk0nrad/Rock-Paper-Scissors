@@ -1,7 +1,5 @@
 package com.game.rockpaperscissors.composable.screen
 
-import android.app.PendingIntent.getActivity
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,7 +23,6 @@ import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,6 +43,7 @@ import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @Composable
@@ -75,7 +73,7 @@ fun CreateProfileScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ){
         Spacer(modifier = Modifier.height(111.dp))
 
@@ -85,7 +83,7 @@ fun CreateProfileScreen(
             fontSize = 32.sp,
             fontFamily = Oswald,
             fontWeight = FontWeight.Normal,
-            color = MaterialTheme.colorScheme.onBackground
+            color = appColor.onBackground
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -100,7 +98,7 @@ fun CreateProfileScreen(
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(90.dp))
-                    .background(MaterialTheme.colorScheme.onBackground),
+                    .background(appColor.onBackground),
                 contentAlignment = Alignment.Center
 
             ){
@@ -110,7 +108,7 @@ fun CreateProfileScreen(
                         .padding(13.dp),
                     imageVector = Icons.Rounded.CameraAlt,
                     contentDescription = "Camara",
-                    tint = MaterialTheme.colorScheme.background
+                    tint = appColor.background
                 )
             }
         }
@@ -172,7 +170,7 @@ fun CreateProfileScreen(
                 fontWeight = FontWeight.ExtraLight,
                 fontSize = 20.sp,
                 letterSpacing = 1.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -214,7 +212,7 @@ fun CreateProfileScreen(
                 modifier = Modifier.size(24.dp),
                 imageVector = if(showName) Icons.Rounded.CheckBoxOutlineBlank else Icons.Rounded.CheckBox,
                 contentDescription = "CheckBox",
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.width(13.dp))
@@ -226,7 +224,7 @@ fun CreateProfileScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.75.sp,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = appColor.onBackground,
                 textAlign = TextAlign.Center
             )
         }
@@ -247,7 +245,7 @@ fun CreateProfileScreen(
                 modifier = Modifier.size(24.dp),
                 imageVector = if(showDate) Icons.Rounded.CheckBoxOutlineBlank else Icons.Rounded.CheckBox,
                 contentDescription = "CheckBox",
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = appColor.onBackground
             )
 
 
@@ -260,7 +258,7 @@ fun CreateProfileScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.75.sp,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = appColor.onBackground,
                 textAlign = TextAlign.Center
             )
         }
@@ -275,7 +273,7 @@ fun CreateProfileScreen(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.secondary)
+                    .background(appColor.secondaryContainer)
                     .fillMaxWidth()
                     .clickable {
                         onEvent(PlayerDataEvent.CreateNewPlayer)
@@ -293,7 +291,7 @@ fun CreateProfileScreen(
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSecondary
+                    color = appColor.onBackground
                 )
             }
         }
@@ -326,7 +324,7 @@ fun CustomTextFiled(
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 letterSpacing = 1.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             ),
             singleLine = true,
             keyboardOptions = if(!onlyNumbers) KeyboardOptions.Default
@@ -342,7 +340,7 @@ fun CustomTextFiled(
                 fontWeight = FontWeight.ExtraLight,
                 fontSize = 20.sp,
                 letterSpacing = 1.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
         }
         Box(
@@ -353,7 +351,7 @@ fun CustomTextFiled(
                 modifier = Modifier
                     .height(1.dp)
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.onBackground)
+                    .background(appColor.onBackground)
             )
         }
 
@@ -387,7 +385,7 @@ fun Spinner(
             fontFamily = Oswald,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp,
-            color = MaterialTheme.colorScheme.onBackground
+            color = appColor.onBackground
         )
 
 
@@ -413,7 +411,7 @@ fun Spinner(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = appColor.onBackground
                     )
                 }, onClick = {
                     expanded = false

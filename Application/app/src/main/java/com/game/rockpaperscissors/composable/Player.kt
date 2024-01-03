@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 @Preview
 @Composable
@@ -43,7 +43,7 @@ fun Player(
         modifier = Modifier
             .width(220.dp)
             .height(98.dp)
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
 
     ){
         Box(
@@ -63,16 +63,16 @@ fun Player(
             modifier = Modifier.fillMaxHeight()
         ){
 
-            Box() {
+            Box {
                 Text(
                     text = userName,
                     fontSize = 18.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
 
-                var botText = if (isBot == true) "Bot" else ""
+                val botText = if (isBot) "Bot" else ""
 
                 Text(
                     modifier = Modifier.padding(top = 21.dp),
@@ -80,7 +80,7 @@ fun Player(
                     fontSize = 8.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
 
                 Text(
@@ -89,7 +89,7 @@ fun Player(
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
 
@@ -104,7 +104,7 @@ fun Player(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.36.sp,
-                        color = Color.Green
+                        color = appColor.green
                     )
                 } else {
                     Text(
@@ -113,7 +113,7 @@ fun Player(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.36.sp,
-                        color = Color.Red
+                        color = appColor.red
                     )
                 }
             }

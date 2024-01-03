@@ -1,7 +1,6 @@
 package com.game.rockpaperscissors.composable
 
 import android.util.Log
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,7 +35,7 @@ import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
-import com.game.rockpaperscissors.data.viewModel.TestViewModel
+import com.game.rockpaperscissors.ui.theme.appColor
 
 @Composable
 fun Navigation() {
@@ -46,7 +45,7 @@ fun Navigation() {
 
         navigation(route = Screen.LogIn.route, startDestination = Screen.WelcomeScreen.route) {
             composable(route = Screen.WelcomeScreen.route) {
-                SetBarColor(MaterialTheme.colorScheme.background)
+                SetBarColor(appColor.background)
 
                 val viewModel = hiltViewModel<PlayerViewModel>()
                 val state by viewModel.state.collectAsState()
@@ -60,10 +59,7 @@ fun Navigation() {
             }
 
             composable(route = Screen.CreateNewAccountScreen.route) {
-                SetBarColor(
-                    colorStatus = MaterialTheme.colorScheme.secondaryContainer,
-                    colorNavigation = MaterialTheme.colorScheme.background
-                )
+                SetBarColor(colorSystem = appColor.background)
 
                 val viewModel = hiltViewModel<PlayerViewModel>()
                 val state by viewModel.state.collectAsState()
@@ -83,7 +79,7 @@ fun Navigation() {
 
 
 
-                SetBarColor(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.background)
+                SetBarColor(appColor.secondaryContainer, appColor.background)
 
                 GameSettingScreen(navController, viewModel)
 
@@ -91,7 +87,7 @@ fun Navigation() {
             composable(route = Screen.GameScreen.route){ entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
 
-                SetBarColor(MaterialTheme.colorScheme.background)
+                SetBarColor(appColor.background)
 
                 val dbViewModel = hiltViewModel<PlayerViewModel>()
                 val playerState by dbViewModel.state.collectAsState()
@@ -113,13 +109,13 @@ fun Navigation() {
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
                 Log.d("GameViewModel", "${viewModel.draw}")
 
-                SetBarColor(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.background)
+                SetBarColor(appColor.secondaryContainer, appColor.background)
                 GameStatisticScreen(navController,viewModel)
             }
         }
 
         composable(route = Screen.HomeScreen.route){
-            SetBarColor(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.background)
+            SetBarColor(appColor.secondaryContainer, appColor.background)
 
 
 
@@ -127,7 +123,7 @@ fun Navigation() {
         }
 
         composable(route = Screen.ProfileScreen.route){
-            SetBarColor(colorStatus = MaterialTheme.colorScheme.secondaryContainer, colorNavigation = MaterialTheme.colorScheme.background)
+            SetBarColor(colorStatus = appColor.secondaryContainer, colorNavigation = appColor.background)
 
             val viewModel = hiltViewModel<PlayerViewModel>()
             val state by viewModel.state.collectAsState()
@@ -146,7 +142,7 @@ fun Navigation() {
         }
 
         composable(route = Screen.EditProfileScreen.route){
-            SetBarColor(colorStatus = MaterialTheme.colorScheme.secondaryContainer, colorNavigation = MaterialTheme.colorScheme.background)
+            SetBarColor(colorStatus = appColor.secondaryContainer, colorNavigation = appColor.background)
             val viewModel = hiltViewModel<PlayerViewModel>()
             val state by viewModel.state.collectAsState()
             if(state.allPlayer.isNotEmpty()) {
@@ -160,7 +156,10 @@ fun Navigation() {
         
         navigation(route = Screen.MainStatistic.route, startDestination = Screen.StatisticScreen.route){
             composable(route = Screen.StatisticScreen.route){
-                SetBarColor(colorStatus = MaterialTheme.colorScheme.secondaryContainer, colorNavigation = MaterialTheme.colorScheme.background)
+                SetBarColor(
+                    colorStatus = appColor.secondaryContainer,
+                    colorNavigation = appColor.background
+                )
 
                 val viewModel = hiltViewModel<GameDataViewModel>()
                 val state by viewModel.state.collectAsState()

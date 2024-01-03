@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIos
 import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -35,6 +34,7 @@ import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 
 //@Preview
 @Composable
@@ -51,7 +51,7 @@ fun GameSettingScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ){
 
         Box(
@@ -61,7 +61,7 @@ fun GameSettingScreen(
                 .clickable {
                     navController.popBackStack()
                 }
-                .background(MaterialTheme.colorScheme.secondaryContainer),
+                .background(appColor.secondaryContainer),
             contentAlignment = Alignment.TopCenter
         ) {
 
@@ -74,7 +74,8 @@ fun GameSettingScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBackIos,
-                    contentDescription = "Go Back"
+                    contentDescription = "Go Back",
+                    tint = appColor.onBackground,
                 )
             }
 
@@ -84,7 +85,7 @@ fun GameSettingScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
         }
 
@@ -114,7 +115,7 @@ fun GameSettingScreen(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(if(selectedRounds == 1) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSecondaryContainer)
+                                .background(if(selectedRounds == 1) appColor.secondary else appColor.secondaryContainer)
                                 .width(width)
                                 .clickable {
                                     selectedRounds = 1
@@ -129,16 +130,17 @@ fun GameSettingScreen(
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Normal,
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onSecondary
+                                color = appColor.onBackground
                             )
                         }
 
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(if(selectedRounds == 2) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSecondaryContainer)
+                                .background(if(selectedRounds == 2) appColor.secondary else appColor.secondaryContainer)
                                 .width(width)
                                 .clickable {
+
                                     selectedRounds = 2
 
                                 }
@@ -151,7 +153,7 @@ fun GameSettingScreen(
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Normal,
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onSecondary
+                                color = appColor.onBackground
                             )
                         }
 
@@ -159,7 +161,7 @@ fun GameSettingScreen(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(if(selectedRounds == 3) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.onSecondaryContainer)
+                                .background(if(selectedRounds == 3) appColor.secondary else appColor.secondaryContainer)
                                 .width(width)
                                 .clickable {
                                     selectedRounds = 3
@@ -173,7 +175,7 @@ fun GameSettingScreen(
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Normal,
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onSecondary
+                                color = appColor.onBackground
                             )
                         }
                     }
@@ -184,7 +186,7 @@ fun GameSettingScreen(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.secondary)
+                        .background(appColor.secondaryContainer)
                         .fillMaxWidth()
                         .clickable {
                             gameViewModel.setRounds(when (selectedRounds){
@@ -204,7 +206,7 @@ fun GameSettingScreen(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSecondary
+                        color = appColor.onBackground
                     )
 
                     Box(
@@ -216,7 +218,7 @@ fun GameSettingScreen(
                         Icon(
                             imageVector = Icons.Rounded.ArrowForwardIos,
                             contentDescription = "Start",
-                            tint = MaterialTheme.colorScheme.onSecondary
+                            tint = appColor.onBackground
                         )
                     }
                 }

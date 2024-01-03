@@ -35,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.SelectionType
+import com.game.rockpaperscissors.ui.theme.appColor
 
 class Selection {
 
@@ -227,9 +228,9 @@ class Selection {
             label = "scissorsColor",
             targetValueByState = { selection1 ->
                 if (isSelect){
-                    if(selection1 == SelectionType.PAPER) MaterialTheme.colorScheme.onBackground
-                    else MaterialTheme.colorScheme.onSecondary
-                }else MaterialTheme.colorScheme.secondary
+                    if(selection1 == SelectionType.PAPER) appColor.onBackground
+                    else appColor.secondary
+                }else appColor.onSecondary
             }
         )
 
@@ -238,9 +239,9 @@ class Selection {
             label = "scissorsColor",
             targetValueByState = { selection1 ->
                 if (isSelect){
-                    if(selection1 == SelectionType.ROCK) MaterialTheme.colorScheme.onBackground
-                    else MaterialTheme.colorScheme.onSecondary
-                }else MaterialTheme.colorScheme.secondary
+                    if(selection1 == SelectionType.ROCK) appColor.onBackground
+                    else appColor.secondary
+                }else appColor.onSecondary
             }
         )
 
@@ -249,21 +250,21 @@ class Selection {
             label = "scissorsColor",
             targetValueByState = { select ->
                 if (isSelect){
-                    if(select == SelectionType.SCISSORS) MaterialTheme.colorScheme.onBackground
-                    else MaterialTheme.colorScheme.onSecondary
-                }else MaterialTheme.colorScheme.secondary
+                    if(select == SelectionType.SCISSORS) appColor.onBackground
+                    else appColor.secondary
+                }else appColor.onSecondary
             }
         )
 
 
 
 
-        val width: Int = 342
+        val width = 342
         Box(
             modifier = Modifier
                 .width(width.dp)
                 .height(163.dp)
-                .background(MaterialTheme.colorScheme.background),
+                .background(appColor.background),
             contentAlignment = Alignment.TopCenter
         ){
 
@@ -277,7 +278,7 @@ class Selection {
                     modifier = Modifier
                         .width(1.dp)
                         .fillMaxHeight()
-                        .background(MaterialTheme.colorScheme.onBackground)
+                        .background(appColor.onSecondaryContainer)
                 )
 
                 Spacer(
@@ -289,7 +290,7 @@ class Selection {
                     modifier = Modifier
                         .width(1.dp)
                         .fillMaxHeight()
-                        .background(MaterialTheme.colorScheme.onBackground)
+                        .background(appColor.onSecondaryContainer)
                 )
             }
 

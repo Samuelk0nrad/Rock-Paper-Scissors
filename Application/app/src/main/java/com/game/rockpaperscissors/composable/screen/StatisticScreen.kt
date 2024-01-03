@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIos
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,6 +38,7 @@ import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.WinTyp
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.ui.theme.Oswald
+import com.game.rockpaperscissors.ui.theme.appColor
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -112,7 +112,7 @@ fun StatisticScreen(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(appColor.background)
     ){
 
         Box(
@@ -122,7 +122,7 @@ fun StatisticScreen(
                 .clickable {
                     navController.popBackStack()
                 }
-                .background(MaterialTheme.colorScheme.secondaryContainer),
+                .background(appColor.secondaryContainer),
             contentAlignment = Alignment.TopCenter
         ) {
 
@@ -135,7 +135,8 @@ fun StatisticScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBackIos,
-                    contentDescription = "Go Back"
+                    contentDescription = "Go Back",
+                    tint = appColor.onBackground
                 )
             }
 
@@ -145,7 +146,7 @@ fun StatisticScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
         }
 
@@ -163,7 +164,7 @@ fun StatisticScreen(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Normal,
                 letterSpacing = 0.45.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.width(13.dp))
@@ -173,7 +174,7 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer)
+                    .background(appColor.onSecondaryContainer)
             )
 
             Box(
@@ -181,7 +182,7 @@ fun StatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(24.dp)
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(appColor.background),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -190,7 +191,7 @@ fun StatisticScreen(
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
 
@@ -198,7 +199,7 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer)
+                    .background(appColor.onSecondaryContainer)
             )
 
             Box(
@@ -206,7 +207,7 @@ fun StatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(24.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer),
+                    .background(appColor.onSecondaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -215,7 +216,7 @@ fun StatisticScreen(
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
 
@@ -223,7 +224,7 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(MaterialTheme.colorScheme.onSecondaryContainer)
+                    .background(appColor.onSecondaryContainer)
             )
 
             Box(
@@ -231,7 +232,7 @@ fun StatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(24.dp)
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(appColor.background),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -240,7 +241,7 @@ fun StatisticScreen(
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
                     letterSpacing = 0.45.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = appColor.onBackground
                 )
             }
         }
@@ -273,7 +274,7 @@ fun StatisticScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .background(appColor.secondaryContainer)
                     ){
 
                     }
@@ -324,7 +325,8 @@ fun StatisticScreen(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = Oswald,
-                    letterSpacing = 0.48.sp
+                    letterSpacing = 0.48.sp,
+                    color = appColor.onBackground
                 )
             }
 
@@ -352,7 +354,8 @@ fun StatisticScreen(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = Oswald,
-                    letterSpacing = 0.48.sp
+                    letterSpacing = 0.48.sp,
+                    color = appColor.onBackground
                 )
             }
 
@@ -387,7 +390,7 @@ fun StatisticScreen(
                     Spacer(modifier = Modifier
                         .height(1.dp)
                         .width(316.dp)
-                        .background(MaterialTheme.colorScheme.secondaryContainer))
+                        .background(appColor.onSecondaryContainer))
                     Spacer(modifier = Modifier.height(15.dp))
                 }
             }
@@ -425,7 +428,7 @@ fun AllRounds(
                 fontSize = 13.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
 
             )
 
@@ -435,7 +438,7 @@ fun AllRounds(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.8.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
         }
         Row(
@@ -448,7 +451,7 @@ fun AllRounds(
                 fontSize = 13.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
 
             Text(
@@ -457,7 +460,7 @@ fun AllRounds(
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.8.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = appColor.onBackground
             )
         }
 
@@ -484,6 +487,7 @@ fun AllRounds(
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.5.sp,
                         textAlign = TextAlign.Right,
+                        color = appColor.onBackground
                     )
                     Text(
                         text = "$yourWins",
@@ -491,7 +495,8 @@ fun AllRounds(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.8.sp,
-                        textAlign = TextAlign.Right
+                        textAlign = TextAlign.Right,
+                        color = appColor.onBackground
                     )
                     Spacer(modifier = Modifier.height(3.dp))
                 }
@@ -504,6 +509,7 @@ fun AllRounds(
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.5.sp,
+                    color = appColor.onBackground
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -516,7 +522,8 @@ fun AllRounds(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.5.sp,
-                        textAlign = TextAlign.Left
+                        textAlign = TextAlign.Left,
+                        color = appColor.onBackground
                     )
 
                     Text(
@@ -526,7 +533,8 @@ fun AllRounds(
                         fontFamily = Oswald,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.8.sp,
-                        textAlign = TextAlign.Left
+                        textAlign = TextAlign.Left,
+                        color = appColor.onBackground
                     )
 
                     Spacer(modifier = Modifier.height(3.dp))
@@ -561,7 +569,7 @@ fun Modes(
             Box(
                 modifier = Modifier
                     .size(82.dp)
-                    .background(MaterialTheme.colorScheme.onBackground)
+                    .background(appColor.onBackground)
             ){
 
             }
@@ -573,6 +581,7 @@ fun Modes(
                         fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
+                        color = appColor.onBackground
                     )
                 }
 
@@ -587,7 +596,9 @@ fun Modes(
                             fontSize = 10.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Medium,
-                            lineHeight = 14.sp
+                            lineHeight = 14.sp,
+                            color = appColor.onBackground
+
                         )
                     }
 
@@ -598,7 +609,9 @@ fun Modes(
                             fontSize = 32.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Right
+                            textAlign = TextAlign.Right,
+                            color = appColor.onBackground
+
                         )
                     }
 
@@ -608,6 +621,8 @@ fun Modes(
                             fontSize = 10.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Medium,
+                            color = appColor.onBackground
+
                         )
                     }
                 }
@@ -627,7 +642,9 @@ fun Modes(
                             fontSize = 15.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Normal,
-                            textAlign = TextAlign.Right
+                            textAlign = TextAlign.Right,
+                            color = appColor.onBackground
+
                         )
                         Box(
                             modifier = Modifier.padding(bottom = 18.dp),
@@ -638,7 +655,9 @@ fun Modes(
                                 fontSize = 10.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Light,
-                                textAlign = TextAlign.Right
+                                textAlign = TextAlign.Right,
+                                color = appColor.onBackground
+
                             )
                         }
                     }
@@ -659,7 +678,9 @@ fun Modes(
                             fontSize = 15.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Normal,
-                            textAlign = TextAlign.Right
+                            textAlign = TextAlign.Right,
+                            color = appColor.onBackground
+
                         )
                         Box(
                             modifier = Modifier.padding(bottom = 18.dp),
@@ -670,7 +691,9 @@ fun Modes(
                                 fontSize = 10.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Light,
-                                textAlign = TextAlign.Right
+                                textAlign = TextAlign.Right,
+                                color = appColor.onBackground
+
                             )
                         }
                     }
