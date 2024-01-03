@@ -112,7 +112,14 @@ fun GameScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Spacer(modifier = Modifier.height(60.dp))
-            Player(isReady = enemySelection.isSelected)
+            Player(
+                isReady = enemySelection.isSelected,
+                onClick = {
+                    gameViewModel.selectedPlayer = gameViewModel.enemy
+
+                    navController.navigate(Screen.GamePlayerProfileScreen.route)
+                }
+            )
             Spacer(modifier = Modifier.height(55.dp))
 
             enemySelection.Weapon(
@@ -137,6 +144,11 @@ fun GameScreen(
                 isReady = playerSelection.isSelected,
                 level = playerState.allPlayer[0].level,
                 userName = playerState.allPlayer[0].userName,
+                onClick = {
+                    gameViewModel.selectedPlayer = gameViewModel.player
+
+                    navController.navigate(Screen.GamePlayerProfileScreen.route)
+                }
             )
             Spacer(modifier = Modifier.height(60.dp))
         }

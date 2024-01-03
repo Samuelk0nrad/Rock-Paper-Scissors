@@ -17,4 +17,5 @@ sealed class Screen(val route: String){
     object ModeStatisticScreen : Screen("mode_statistic_screen")
     object RoundStatisticScreen : Screen("round_statistic_screen")
     object MainStatistic: Screen("main_statistic")
+    object GamePlayerProfileScreen: Screen("game_player_profile_screen")
 }

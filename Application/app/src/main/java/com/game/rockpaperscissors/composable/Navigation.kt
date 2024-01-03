@@ -20,6 +20,7 @@ import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.SetBarColor
 import com.game.rockpaperscissors.composable.screen.CreateProfileScreen
 import com.game.rockpaperscissors.composable.screen.EditProfileScreen
+import com.game.rockpaperscissors.composable.screen.GamePlayerProfileScreen
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.composable.screen.GameScreen
 import com.game.rockpaperscissors.composable.screen.GameSettingScreen
@@ -76,7 +77,10 @@ fun Navigation() {
             }
         }
 
-        navigation(route = Screen.MainGame.route, startDestination = Screen.GameSettingScreen.route){
+        navigation(
+            route = Screen.MainGame.route,
+            startDestination = Screen.GameSettingScreen.route
+        ){
             composable(route = Screen.GameSettingScreen.route){ entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
 
@@ -115,6 +119,17 @@ fun Navigation() {
 
                 SetBarColor(appColor.secondaryContainer, appColor.background)
                 GameStatisticScreen(navController,viewModel)
+            }
+            composable(route = Screen.GamePlayerProfileScreen.route){entry->
+                val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
+                val player = viewModel.selectedPlayer
+
+                if (player != null) {
+                    GamePlayerProfileScreen(
+                        navController = navController,
+                        player = player
+                    )
+                }
             }
         }
 

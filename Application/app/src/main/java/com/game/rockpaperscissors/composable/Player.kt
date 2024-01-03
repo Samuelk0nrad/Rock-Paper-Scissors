@@ -2,6 +2,7 @@ package com.game.rockpaperscissors.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,7 +37,8 @@ fun Player(
     userName: String = "User Name",
     isBot: Boolean = true,
     level: Int = 41,
-    isReady: Boolean = false
+    isReady: Boolean = false,
+    onClick: () -> Unit = {}
 
 ){
     Row(
@@ -44,7 +46,9 @@ fun Player(
             .width(220.dp)
             .height(98.dp)
             .background(appColor.background)
-
+            .clickable {
+                onClick()
+            }
     ){
         Box(
             modifier = Modifier

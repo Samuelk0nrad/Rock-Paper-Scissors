@@ -2,10 +2,16 @@ package com.game.rockpaperscissors.data.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.game.rockpaperscissors.data.local.database.PlayerData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class GameViewModel : ViewModel(){
+
+    var player: PlayerData? = null
+    var enemy: PlayerData? = null
+
+    var selectedPlayer: PlayerData? = null
 
     //Win/Lose/Draw Count Start//
     private val _lose = MutableStateFlow(0)
