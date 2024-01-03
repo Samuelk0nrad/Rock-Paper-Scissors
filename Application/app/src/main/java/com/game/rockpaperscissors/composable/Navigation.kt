@@ -11,10 +11,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.SetBarColor
 import com.game.rockpaperscissors.composable.screen.CreateProfileScreen
@@ -24,9 +26,14 @@ import com.game.rockpaperscissors.composable.screen.GameScreen
 import com.game.rockpaperscissors.composable.screen.GameSettingScreen
 import com.game.rockpaperscissors.composable.screen.GameStatisticScreen
 import com.game.rockpaperscissors.composable.screen.HomeScreen
+import com.game.rockpaperscissors.composable.screen.ModeStatisticScreen
 import com.game.rockpaperscissors.composable.screen.ProfileScreen
+import com.game.rockpaperscissors.composable.screen.RoundStatisticScreen
 import com.game.rockpaperscissors.composable.screen.StatisticScreen
 import com.game.rockpaperscissors.composable.screen.WelcomeScreen
+import com.game.rockpaperscissors.data.GameModesEnum
+import com.game.rockpaperscissors.data.local.database.GameDataEntity
+import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.data.viewModel.TestViewModel
@@ -134,8 +141,6 @@ fun Navigation() {
                         navController.navigate(Screen.LogIn.route)
                     }
                 )
-            }else{
-                navController.popBackStack()
             }
 
         }
@@ -150,8 +155,6 @@ fun Navigation() {
                     onEvent = viewModel::onEvent,
                     nevController = navController
                 )
-            }else{
-                navController.popBackStack()
             }
         }
         
@@ -168,8 +171,51 @@ fun Navigation() {
                 }
             }
             
-            composable(route = Screen.ModeStatisticScreen.route){
-                
+            composable(
+                route = "${Screen.ModeStatisticScreen.route}/{mode}",
+                arguments = listOf(navArgument("mode"){type = NavType.StringType})
+            ){backStackEntry->
+
+                var mode: GameModesEnum? = null
+
+                backStackEntry.arguments?.getString("mode")?.let {
+                    mode = enumValueOf<GameModesEnum>(it)
+                }
+
+                val viewModel = hiltViewModel<GameDataViewModel>()
+                val state by viewModel.state.collectAsState()
+                val allGameData = state.allGames
+
+
+                var gameData: List<GameDataEntity> = emptyList()
+
+                if(mode != null) {
+
+                    allGameData.forEach {
+                        if (it.mode == mode){
+                            gameData = gameData + it
+                        }
+                    }
+
+                    ModeStatisticScreen(mode = mode!!, navController = navController, gameData = gameData)
+                }
+            }
+
+            composable(
+                route = "${Screen.RoundStatisticScreen.route}/{roundId}",
+                arguments = listOf(navArgument("roundId"){type = NavType.LongType})
+            ){backStackEntry->
+                val id = backStackEntry.arguments?.getLong("roundId")
+
+                val viewModel = hiltViewModel<GameDataViewModel>()
+                val state by viewModel.state.collectAsState()
+
+                viewModel.onEvent(GameDataEvent.GetById(id!!))
+                val roundData = state.gameById
+
+                if (roundData != null) {
+                    RoundStatisticScreen(navController = navController, round = roundData)
+                }
             }
         }
     }
@@ -184,21 +230,4 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
         navController.getBackStackEntry(navGraphRoute)
     }
     return viewModel(parentEntry)
-}
-
-@Composable
-inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
-    navController: NavHostController,
-    crossinline viewModelFactory: (NavBackStackEntry) -> T
-): T {
-    // Retrieve the route of the navigation graph containing the current destination
-    val navGraphRoute = destination.parent?.route ?: return viewModelFactory(this)
-
-    // Get the NavBackStackEntry of the parent destination (navigation graph)
-    val parentEntry = remember(this) {
-        navController.getBackStackEntry(navGraphRoute)
-    }
-
-    // Use the provided viewModelFactory to create the shared ViewModel with parameters
-    return viewModelFactory(parentEntry)
 }

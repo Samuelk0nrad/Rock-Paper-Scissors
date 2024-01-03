@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.composable.BarGraph
 import com.game.rockpaperscissors.data.GameModesEnum
+import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.WinTyp
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
@@ -333,7 +334,10 @@ fun StatisticScreen(
                     mode = mode.mode,
                     rounds = mode.allPlayedRounds,
                     wins = mode.allWins,
-                    loses = mode.allLose
+                    loses = mode.allLose,
+                    clicked = {
+                        navController.navigate("${Screen.ModeStatisticScreen.route}/$it")
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -373,7 +377,10 @@ fun StatisticScreen(
                         enemyWins = enemyWins,
                         win = gameData.win,
                         date = formattedDate,
-                        mode = gameData.mode
+                        mode = gameData.mode,
+                        onClick = {
+                            navController.navigate("${Screen.RoundStatisticScreen.route}/${gameData.id}")
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))
@@ -383,7 +390,6 @@ fun StatisticScreen(
                         .background(MaterialTheme.colorScheme.secondaryContainer))
                     Spacer(modifier = Modifier.height(15.dp))
                 }
-
             }
         }
     }
@@ -398,12 +404,16 @@ fun AllRounds(
     win: WinTyp,
     date: String,
     mode: GameModesEnum,
+    onClick: () -> Unit
 ) {
 
     Box(
         modifier = Modifier
             .width(287.dp)
             .height(77.dp)
+            .clickable {
+                onClick()
+            }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -533,13 +543,17 @@ fun Modes(
     mode: GameModesEnum,
     rounds: Int,
     wins: Int,
-    loses: Int
+    loses: Int,
+    clicked: (GameModesEnum) -> Unit
 ) {
 
     Box(
         modifier = Modifier
             .width(288.dp)
             .height(82.dp)
+            .clickable {
+                clicked(mode)
+            }
     ) {
         Row (
             modifier = Modifier.fillMaxSize()

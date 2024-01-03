@@ -69,7 +69,11 @@ fun GameStatisticScreen(
             ) {
                 val barName = listOf("Rock", "Paper", "Scissors")
                 item {
-                    WinStatistic(viewModel)
+                    WinStatistic(
+                        win = viewModel.win.collectAsState().value,
+                        lose = viewModel.lose.collectAsState().value,
+                        draw = viewModel.draw.collectAsState().value
+                    )
                 }
                 item {
                     BarGraph(
@@ -117,7 +121,10 @@ fun GameStatisticScreen(
 
 @Composable
 fun WinStatistic(
-    gameViewModel: GameViewModel
+    win: Int,
+    lose: Int,
+    draw: Int,
+    isWin: Boolean = win > lose
 ) {
 
 
@@ -127,13 +134,12 @@ fun WinStatistic(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        gameViewModel.cWin()
         Text(
-            text = if(gameViewModel.isWin.collectAsState().value) "Win" else "Lose",
+            text = if(isWin) "Win" else "Lose",
             fontFamily = Oswald,
             fontSize = 50.sp,
             fontWeight = FontWeight.Bold,
-            color = if(gameViewModel.isWin.collectAsState().value) Color.Green else Color.Red
+            color = if(isWin) Color.Green else Color.Red
         )
 
         BoxWithConstraints(
@@ -148,7 +154,7 @@ fun WinStatistic(
             Row {
                 Text(
                     modifier = Modifier.width(width),
-                    text = "Lose: ${gameViewModel.lose.collectAsState().value}",
+                    text = "Lose: $lose",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -158,7 +164,7 @@ fun WinStatistic(
 
                 Text(
                     modifier = Modifier.width(width),
-                    text = "Win: ${gameViewModel.win.collectAsState().value}",
+                    text = "Win: $win",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -167,7 +173,7 @@ fun WinStatistic(
 
 
                 Text(
-                    text = "Draw: ${gameViewModel.draw.collectAsState().value}",
+                    text = "Draw: $draw",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,

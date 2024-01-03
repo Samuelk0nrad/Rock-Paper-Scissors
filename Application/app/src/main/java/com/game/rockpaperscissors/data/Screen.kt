@@ -15,5 +15,6 @@ sealed class Screen(val route: String){
     object EditProfileScreen : Screen("edit_profile_screen")
     object StatisticScreen : Screen("statistic_screen")
     object ModeStatisticScreen : Screen("mode_statistic_screen")
+    object RoundStatisticScreen : Screen("round_statistic_screen")
     object MainStatistic: Screen("main_statistic")
 }

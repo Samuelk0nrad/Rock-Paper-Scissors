@@ -1,6 +1,8 @@
 package com.game.rockpaperscissors.data.viewModel
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.game.rockpaperscissors.data.GameDataState
@@ -9,9 +11,11 @@ import com.game.rockpaperscissors.data.local.database.GameDataDao
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,6 +33,7 @@ class GameDataViewModel @Inject constructor(
             allGames =  allGames
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), GameDataState())
+
 
     fun onEvent(event: GameDataEvent){
         when(event){
@@ -102,6 +107,16 @@ class GameDataViewModel @Inject constructor(
                 _state.update { it.copy(
                     win = event.win
                 ) }
+            }
+            is GameDataEvent.GetById -> {
+                var gameData: GameDataEntity?
+                viewModelScope.launch {
+                    gameData = dao.getGameDataById(event.id).firstOrNull()
+                    _state.update { it.copy(
+
+                        gameById = gameData
+                    ) }
+                }
             }
         }
     }

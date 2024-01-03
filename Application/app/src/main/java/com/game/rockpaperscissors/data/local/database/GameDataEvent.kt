@@ -12,4 +12,5 @@ sealed interface  GameDataEvent {
     data class SetWin(val win: WinTyp): GameDataEvent
     data class SetNewRound(val oneRound: OneRound): GameDataEvent
     data class SetEnemy(val enemy: Enemy): GameDataEvent
+    data class GetById(val id: Long): GameDataEvent
 }

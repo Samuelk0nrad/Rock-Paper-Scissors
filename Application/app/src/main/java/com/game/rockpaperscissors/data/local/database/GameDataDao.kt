@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.data.local.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
@@ -17,4 +18,7 @@ interface GameDataDao {
 
     @Query("SELECT * FROM GameDataEntity ORDER BY timestamp DESC")
     fun getGameDataOrderedByDate(): Flow<List<GameDataEntity>>
+
+    @Query("SELECT * FROM GameDataEntity WHERE id=:id")
+    fun getGameDataById(id: Long): Flow<GameDataEntity>
 }
