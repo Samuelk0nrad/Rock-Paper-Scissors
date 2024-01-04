@@ -2,9 +2,7 @@ package com.game.rockpaperscissors.data.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.game.rockpaperscissors.data.GameDataState
 import com.game.rockpaperscissors.data.PlayerDataState
-import com.game.rockpaperscissors.data.local.database.GameDataDao
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,24 +13,19 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class NavigationViewModel @Inject constructor(
-    @Named("playerDao")
-    dao: PlayerDataDao
+class EnemyViewModel @Inject constructor(
+    @Named("enemyDao")
+    private val dao: PlayerDataDao
 ): ViewModel() {
-    private val _allPlayer = dao.allPlayerData().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    private val _allEnemy = dao.allPlayerData().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _state = MutableStateFlow(PlayerDataState())
-    val state = combine(_state, _allPlayer) { state, allPlayer ->
+    val state = combine(_state, _allEnemy) { state, allEnemy ->
         state.copy(
-            allPlayer = allPlayer,
+            allPlayer = allEnemy,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PlayerDataState())
 
-    val isLoggedIn = state.value.allPlayer.isNotEmpty()
-
+    val enemys = _allEnemy
 }
-
-
-
-
-

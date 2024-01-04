@@ -34,6 +34,7 @@ import com.game.rockpaperscissors.composable.screen.WelcomeScreen
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
+import com.game.rockpaperscissors.data.viewModel.EnemyViewModel
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
 import com.game.rockpaperscissors.data.viewModel.NavigationViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
@@ -57,6 +58,7 @@ fun Navigation() {
                 if(state.allPlayer.isNotEmpty()){
                     navController.popBackStack()
                     navController.navigate(Screen.HomeScreen.route)
+                    Log.d("PlayerViewModel", "isNotEmpty: ${state.allPlayer.size}")
                 }
 
 
@@ -81,15 +83,42 @@ fun Navigation() {
             route = Screen.MainGame.route,
             startDestination = Screen.GameSettingScreen.route
         ){
-            composable(route = Screen.GameSettingScreen.route){ entry->
-                val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
+            composable(
+                route = "${Screen.GameSettingScreen.route}/{mode}",
+                arguments = listOf(navArgument("mode"){type = NavType.StringType})
 
-
-
-
+            ){ entry->
                 SetBarColor(appColor.secondaryContainer, appColor.background)
 
-                GameSettingScreen(navController, viewModel)
+                val gameViewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
+
+
+                val modeString: String? = entry.arguments?.getString("mode")
+                val mode: GameModesEnum = enumValueOf(modeString!!)
+
+                val viewModel = hiltViewModel<PlayerViewModel>()
+                val state by viewModel.state.collectAsState()
+
+                val enemyViewModel = hiltViewModel<EnemyViewModel>()
+                val enemyState by enemyViewModel.state.collectAsState()
+
+
+                val enemy = enemyState.allPlayer
+
+
+                if(state.allPlayer.isNotEmpty() && enemy.isNotEmpty()) {
+                    val player = state.allPlayer[0]
+
+
+                    Log.d("PlayerViewModel", "EnemyViewModel: ${enemy.size}" )
+                    GameSettingScreen(
+                        navController = navController,
+                        gameViewModel = gameViewModel,
+                        mode = mode,
+                        playerData = player,
+                        enemyData = enemy
+                    )
+                }
 
             }
             composable(route = Screen.GameScreen.route){ entry->
@@ -107,7 +136,6 @@ fun Navigation() {
                     GameScreen(
                         navController = navController,
                         gameViewModel = viewModel,
-                        playerState = playerState,
                         state = gameState,
                         onEvent = gameDataViewModel::onEvent
                     )
@@ -121,6 +149,8 @@ fun Navigation() {
                 GameStatisticScreen(navController,viewModel)
             }
             composable(route = Screen.GamePlayerProfileScreen.route){entry->
+                SetBarColor(appColor.secondaryContainer, appColor.background)
+
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
                 val player = viewModel.selectedPlayer
 

@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class GameViewModel : ViewModel(){
 
-    var player: PlayerData? = null
-    var enemy: PlayerData? = null
+    lateinit var player: PlayerData
+    lateinit var enemy: PlayerData
 
     var selectedPlayer: PlayerData? = null
 

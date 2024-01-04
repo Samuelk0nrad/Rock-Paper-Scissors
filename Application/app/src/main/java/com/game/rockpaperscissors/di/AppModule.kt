@@ -2,9 +2,9 @@ package com.game.rockpaperscissors.di
 
 import android.content.Context
 import androidx.room.Room
+import com.game.rockpaperscissors.data.local.database.EnemyDatabase
 import com.game.rockpaperscissors.data.local.database.GameDataDao
 import com.game.rockpaperscissors.data.local.database.GameDatabase
-import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
 import com.game.rockpaperscissors.data.local.database.PlayerDatabase
 import dagger.Module
@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -28,6 +29,7 @@ object AppModule {
 
     @Provides
     @Singleton
+    @Named("playerDao")
     fun providePlayerDBDao(playerDatabase: PlayerDatabase): PlayerDataDao = playerDatabase.dao
 
     @Provides
@@ -46,4 +48,17 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGameDBDao(gameDatabase: GameDatabase): GameDataDao = gameDatabase.dao
+
+    @Provides
+    @Singleton
+    fun provideEnemyDb(@ApplicationContext appContext: Context) : EnemyDatabase = Room.databaseBuilder(
+        appContext,
+        EnemyDatabase::class.java,
+        "enemy.db"
+    ).createFromAsset("database/enemy.db").build()
+
+    @Provides
+    @Singleton
+    @Named("enemyDao")
+    fun provideEnemyDbDao(enemyDatabase: EnemyDatabase) : PlayerDataDao = enemyDatabase.dao
 }

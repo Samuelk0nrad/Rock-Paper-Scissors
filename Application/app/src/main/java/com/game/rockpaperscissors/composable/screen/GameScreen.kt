@@ -83,7 +83,6 @@ fun onStart(
 fun GameScreen(
     navController: NavController,
     gameViewModel: GameViewModel,
-    playerState: PlayerDataState,
     state: GameDataState,
     onEvent: (GameDataEvent) -> Unit
 ){
@@ -96,6 +95,9 @@ fun GameScreen(
     onStart(gameViewModel, onEvent)
 
     isVisible = isShowWinText
+
+    val player = gameViewModel.player
+    val enemy = gameViewModel.enemy
 
 
     Box(
@@ -114,6 +116,9 @@ fun GameScreen(
             Spacer(modifier = Modifier.height(60.dp))
             Player(
                 isReady = enemySelection.isSelected,
+                userName = enemy.userName,
+                level = enemy.level,
+                isBot = true,
                 onClick = {
                     gameViewModel.selectedPlayer = gameViewModel.enemy
 
@@ -142,8 +147,8 @@ fun GameScreen(
             Spacer(modifier = Modifier.height(55.dp))
             Player(
                 isReady = playerSelection.isSelected,
-                level = playerState.allPlayer[0].level,
-                userName = playerState.allPlayer[0].userName,
+                level = player.level,
+                userName = player.userName,
                 onClick = {
                     gameViewModel.selectedPlayer = gameViewModel.player
 

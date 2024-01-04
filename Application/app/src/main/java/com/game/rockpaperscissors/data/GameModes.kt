@@ -40,7 +40,7 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.welcome_ilustration,
-        rout = Screen.MainGame.route,
+        rout = "${Screen.GameSettingScreen.route}/RANDOM",
         available = true
     ),
 

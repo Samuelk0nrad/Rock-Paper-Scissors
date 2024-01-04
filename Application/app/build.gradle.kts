@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("androidx.room") version "2.6.0-rc01"
 
 }
 
@@ -21,6 +22,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] =
+                    "$projectDir/schemas"
+            }
+        }
+    }
+
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+            arg("kapt.kotlin.generated", "$projectDir/kapt_generated")
         }
     }
 
@@ -110,4 +125,20 @@ dependencies {
     implementation("com.google.code.gson:gson:2.9.0")
 
 
+}
+
+ksp {
+    arg("ksp.kotlin.generated", "$projectDir/ksp_generated")
+}
+
+kapt {
+    useBuildCache = true
+    correctErrorTypes = true
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+}
+
+room {
+    schemaDirectory(path = "$projectDir/schemas")
 }

@@ -16,9 +16,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
+    @Named("playerDao")
     private val dao: PlayerDataDao
 ): ViewModel() {
 

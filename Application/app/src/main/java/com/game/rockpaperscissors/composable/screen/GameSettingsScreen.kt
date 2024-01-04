@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.Screen
+import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
+import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 
@@ -40,9 +44,32 @@ import com.game.rockpaperscissors.ui.theme.appColor
 @Composable
 fun GameSettingScreen(
     navController: NavController,
-    gameViewModel: GameViewModel
+    gameViewModel: GameViewModel,
+    mode: GameModesEnum,
+    playerData: PlayerData,
+    enemyData: List<PlayerData>
 ){
 
+
+    gameViewModel.player = playerData
+
+    when(mode){
+        GameModesEnum.RANDOM -> {
+            val i = (enemyData.indices).random()
+
+            val enemy = enemyData[i]
+            gameViewModel.enemy = enemy
+        }
+        GameModesEnum.LOCAL_MULTIPLAYER -> {
+
+        }
+        GameModesEnum.ONLINE_MULTIPLAYER -> {
+
+        }
+        GameModesEnum.AI_MODE -> {
+
+        }
+    }
 
     var selectedRounds by remember {
         mutableIntStateOf(1)
@@ -115,7 +142,7 @@ fun GameSettingScreen(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(if(selectedRounds == 1) appColor.secondary else appColor.secondaryContainer)
+                                .background(if (selectedRounds == 1) appColor.secondary else appColor.secondaryContainer)
                                 .width(width)
                                 .clickable {
                                     selectedRounds = 1
@@ -137,7 +164,7 @@ fun GameSettingScreen(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(if(selectedRounds == 2) appColor.secondary else appColor.secondaryContainer)
+                                .background(if (selectedRounds == 2) appColor.secondary else appColor.secondaryContainer)
                                 .width(width)
                                 .clickable {
 
@@ -161,7 +188,7 @@ fun GameSettingScreen(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(if(selectedRounds == 3) appColor.secondary else appColor.secondaryContainer)
+                                .background(if (selectedRounds == 3) appColor.secondary else appColor.secondaryContainer)
                                 .width(width)
                                 .clickable {
                                     selectedRounds = 3
@@ -189,12 +216,14 @@ fun GameSettingScreen(
                         .background(appColor.secondaryContainer)
                         .fillMaxWidth()
                         .clickable {
-                            gameViewModel.setRounds(when (selectedRounds){
-                                1 -> 3
-                                2 -> 5
-                                3 -> 13
-                                else -> 3
-                            })
+                            gameViewModel.setRounds(
+                                when (selectedRounds) {
+                                    1 -> 3
+                                    2 -> 5
+                                    3 -> 13
+                                    else -> 3
+                                }
+                            )
                             navController.navigate(Screen.GameScreen.route)
                         }
                         .padding(top = 10.dp, bottom = 12.dp)
