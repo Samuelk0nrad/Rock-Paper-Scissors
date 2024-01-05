@@ -18,4 +18,7 @@ interface PlayerDataDao {
 
     @Query("SELECT * FROM PlayerData")
     fun allPlayerData(): Flow<List<PlayerData>>
+
+    @Query("SELECT COUNT(*) FROM PlayerData")
+    suspend fun getCount(): Int
 }

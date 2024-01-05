@@ -124,7 +124,8 @@ dependencies {
     //Gson
     implementation("com.google.code.gson:gson:2.9.0")
 
-
+    //Splash Screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }
 
 ksp {
