@@ -73,7 +73,8 @@ fun Player(
                     fontSize = 18.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
-                    color = appColor.onBackground
+                    color = appColor.onBackground,
+                    maxLines = 1
                 )
 
                 val botText = if (isBot) "Bot" else ""

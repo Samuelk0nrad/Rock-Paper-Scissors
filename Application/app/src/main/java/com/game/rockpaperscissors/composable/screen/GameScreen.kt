@@ -33,9 +33,8 @@ import com.game.rockpaperscissors.composable.Selection
 import com.game.rockpaperscissors.composable.VsPlayer
 import com.game.rockpaperscissors.data.CurrentRoundData
 import com.game.rockpaperscissors.data.GameData
-import com.game.rockpaperscissors.data.GameDataState
 import com.game.rockpaperscissors.data.OneRound
-import com.game.rockpaperscissors.data.PlayerDataState
+import com.game.rockpaperscissors.data.PlayerPlayData
 import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.WinTyp
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
@@ -44,338 +43,355 @@ import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 
 
-var currentRound = GameFunktions()
-
-var playerSelection by mutableStateOf(Selection())
-var enemySelection by mutableStateOf(Selection())
-var roundData by mutableStateOf(
-    CurrentRoundData(
-        playerSelection = SelectionType.ROCK,
-        enemySelection = SelectionType.ROCK,
-        isEnemySelect = false,
-        isPlayerSelect = false
-    )
-)
-
-var isShowWinText by mutableStateOf(false)
-var winText: String = ""
-
-var statistics by mutableStateOf(
-    GameData(
-        playerWins = 0,
-        enemyWins = 0,
-        rounds = 3,
-        currentRound = 1,
-    )
-)
-
-var isReset = true
-
-fun onStart(
-    gameViewModel: GameViewModel,
-    onEvent: (GameDataEvent) -> Unit
+class GameScreen (
+    private val gameViewModel: GameViewModel,
+    private val onEvent: (GameDataEvent) -> Unit,
+    private val navController: NavController,
 ){
-    statistics.rounds = gameViewModel.rounds.value
-    onEvent(GameDataEvent.SetRounds(gameViewModel.rounds.value))
-}
 
-@Composable
-fun GameScreen(
-    navController: NavController,
-    gameViewModel: GameViewModel,
-    state: GameDataState,
-    onEvent: (GameDataEvent) -> Unit
-){
-    roundData.playerSelection = playerSelection.currentSelection
+    var currentRound = GameFunktions()
 
-    var isVisible by remember {
-        mutableStateOf(isShowWinText)
-    }
-
-    onStart(gameViewModel, onEvent)
-
-    isVisible = isShowWinText
-
-    val player = gameViewModel.player
-    val enemy = gameViewModel.enemy
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(appColor.background)
-    ){
-
-
-        //Enemy
-        Column (
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Spacer(modifier = Modifier.height(60.dp))
-            Player(
-                isReady = enemySelection.isSelected,
-                userName = enemy.userName,
-                level = enemy.level,
-                isBot = true,
-                onClick = {
-                    gameViewModel.selectedPlayer = gameViewModel.enemy
-
-                    navController.navigate(Screen.GamePlayerProfileScreen.route)
-                }
-            )
-            Spacer(modifier = Modifier.height(55.dp))
-
-            enemySelection.Weapon(
-                isSelectable = false,
-                hide = !playerSelection.isSelected
-            )
-        }
-
-        //Player
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier.rotate(180f)
-            ){
-                playerSelection.Weapon()
-            }
-            Spacer(modifier = Modifier.height(55.dp))
-            Player(
-                isReady = playerSelection.isSelected,
-                level = player.level,
-                userName = player.userName,
-                onClick = {
-                    gameViewModel.selectedPlayer = gameViewModel.player
-
-                    navController.navigate(Screen.GamePlayerProfileScreen.route)
-                }
-            )
-            Spacer(modifier = Modifier.height(60.dp))
-        }
-
-        //Vs. segment
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            VsPlayer(
-                playerWins = statistics.playerWins,
-                enemyWins = statistics.enemyWins,
-                rounds = statistics.rounds,
-                currentRound = statistics.currentRound
-            )
-        }
-
-
-        AnimatedVisibility(
-            visible = isVisible,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(appColor.background.copy(alpha = 0.7f))
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null
-                    ) {
-                        //isShowWinText = false
-                        if (!isReset) {
-                            reset(navController, onEvent)
-                        }
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = winText,
-                    fontSize = 90.sp,
-                    color = when(winText){
-                        "Win" -> Color.Green
-                        "Lose" -> Color.Red
-                        else -> Color.Gray
-                    },
-                    letterSpacing = 3.sp,
-                    fontFamily = Oswald,
-                    fontWeight = FontWeight.Bold,
-
-                    )
-            }
-        }
-    }
-
-    randomEnemySelection(navController, gameViewModel, onEvent)
-}
-
-
-var isSet:Boolean = false
-fun randomEnemySelection(
-    navController: NavController,
-    gameViewModel: GameViewModel,
-    onEvent: (GameDataEvent) -> Unit
-){
-    if(!isSet) {
-        enemySelection.currentSelection = currentRound.randomEnemySelection()
-        enemySelection.isSelected = true
-        isSet = true
-    }
-    winner(navController, gameViewModel, onEvent)
-}
-
-var isWaiting = false
-private val handler = android.os.Handler(Looper.getMainLooper())
-fun winner(
-    navController: NavController,
-    gameViewModel: GameViewModel,
-    onEvent: (GameDataEvent) -> Unit
-){
-    if(isReset){
-        handler.removeCallbacksAndMessages(null)
-        Log.d("Restarafdsavt","handler to null")
-    }
-    if(enemySelection.isSelected && playerSelection.isSelected && !isWaiting){
-        isReset = false
-
-        currentRound.EnemySelection = enemySelection.currentSelection
-        currentRound.YourSelection = playerSelection.currentSelection
+    private var _playerSelection by mutableStateOf(Selection())
+    private var _enemySelection by mutableStateOf(Selection())
 
 
 
-        when(enemySelection.currentSelection){
-            SelectionType.PAPER -> gameViewModel.updateEnemySelectionPaper()
-            SelectionType.ROCK -> gameViewModel.updateEnemySelectionRock()
-            SelectionType.SCISSORS -> gameViewModel.updateEnemySelectionScissors()
-        }
+    private var _playerData by mutableStateOf(PlayerPlayData(
+        selection = SelectionType.ROCK,
+        isSelected = false,
+        isSelectable = true,
+        hide = false
+    ))
+
+    private var _enemyData by mutableStateOf(PlayerPlayData(
+        selection = SelectionType.ROCK,
+        isSelected = false,
+        isSelectable = true,
+        hide = false
+    ))
+
+    var playerData get() = _playerData
+        set(value) {_playerData = value}
+
+    var enemyData get() = _enemyData
+        set(value) {_enemyData = value}
 
 
-        when(playerSelection.currentSelection){
-            SelectionType.PAPER -> gameViewModel.updatePlayerSelectionPaper()
-            SelectionType.ROCK -> gameViewModel.updatePlayerSelectionRock()
-            SelectionType.SCISSORS -> gameViewModel.updatePlayerSelectionScissors()
-        }
-
-
-
-        val win = currentRound.winner()
-
-        when (win) {
-            WinTyp.Win -> {
-                statistics.playerWins++
-                statistics.currentRound++
-                gameViewModel.updateWin()
-            }
-            WinTyp.Lose -> {
-                statistics.enemyWins++
-                statistics.currentRound++
-                gameViewModel.updateLose()
-            }
-            WinTyp.Draw -> {
-                gameViewModel.updateDraw()
-            }
-        }
-
-        when {
-            statistics.enemyWins == statistics.playerWins -> {
-                onEvent(GameDataEvent.SetWin(WinTyp.Draw))
-            }
-            statistics.enemyWins < statistics.playerWins -> {
-                onEvent(GameDataEvent.SetWin(WinTyp.Win))
-            }
-            else -> {
-                onEvent(GameDataEvent.SetWin(WinTyp.Lose))
-            }
-        }
-
-        winText = "$win"
-
-        val delayMillis: Long = 3000 // Adjust the delay time as needed (in milliseconds)
-        isWaiting = true
-        isShowWinText = true
-
-        statistics.rounds = gameViewModel.rounds.value
-
-        if(statistics.currentRound <= statistics.rounds){
-
-            handler.postDelayed({
-                if(!isReset) {
-                    reset(navController, onEvent)
-
-                    Log.d("Restarafdsavt","in Time")
-                }
-            }, delayMillis)
-        }
-        val oneRound = OneRound(
-            enemySelection = currentRound.EnemySelection!!,
-            playerSelection = currentRound.YourSelection!!,
-            result = win
-
-        )
-        onEvent(GameDataEvent.SetNewRound(oneRound))
-    }
-}
-
-fun reset(
-    navController: NavController,
-    onEvent: (GameDataEvent) -> Unit
-) {
-    if(statistics.currentRound <= statistics.rounds) {
-
-        Log.d("Restarafdsavt", "reset")
-        isWaiting = false
-        isSet = false
-        isShowWinText = false
-        isReset = true
-        currentRound = GameFunktions()
-        enemySelection = Selection()
-        playerSelection.currentSelection = SelectionType.ROCK
-        playerSelection.isSelected = false
-        roundData = CurrentRoundData(
+    private var roundData by mutableStateOf(
+        CurrentRoundData(
             playerSelection = SelectionType.ROCK,
             enemySelection = SelectionType.ROCK,
             isEnemySelect = false,
             isPlayerSelect = false
         )
-    }else{
-        endGame(navController, onEvent)
+    )
+
+    private var isShowWinText by mutableStateOf(false)
+    private var winText: String = ""
+
+    private var statistics by mutableStateOf(
+        GameData(
+            playerWins = 0,
+            enemyWins = 0,
+            rounds = 3,
+            currentRound = 1,
+        )
+    )
+
+    private var isReset = true
+
+    init {
+        statistics.rounds = gameViewModel.rounds.value
+        onEvent(GameDataEvent.SetRounds(gameViewModel.rounds.value))
+    }
+
+
+
+    @Composable
+    fun CompGameScreen(
+        onReset: () -> Unit
+    ) {
+        roundData.playerSelection = _playerSelection.currentSelection
+
+        var isVisible by remember {
+            mutableStateOf(isShowWinText)
+        }
+
+
+        isVisible = isShowWinText
+
+        val player = gameViewModel.player
+        val enemy = gameViewModel.enemy
+
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(appColor.background)
+        ) {
+
+
+            //Enemy
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(60.dp))
+                Player(
+                    isReady = _enemyData.isSelected,
+                    userName = enemy.userName,
+                    level = enemy.level,
+                    isBot = true,
+                    onClick = {
+                        gameViewModel.selectedPlayer = gameViewModel.enemy
+
+                        navController.navigate(Screen.GamePlayerProfileScreen.route)
+                    }
+                )
+                Spacer(modifier = Modifier.height(55.dp))
+
+                _enemySelection.Weapon(
+                    isSelectable = false,
+                    hide = !_playerSelection.isSelected,
+                    onClick = {
+                        _enemyData = _enemyData.copy(
+                            isSelected = _enemySelection.isSelected,
+                            selection = _enemySelection.currentSelection
+                        )
+                    }
+                )
+            }
+
+            //Player
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier.rotate(180f)
+                ) {
+                    _playerSelection.Weapon(
+                        isSelectable = _playerData.isSelectable,
+                        hide = _playerData.hide,
+                        onClick = {
+                            _playerData = _playerData.copy(
+                                isSelected = _playerSelection.isSelected,
+                                selection = _playerSelection.currentSelection
+                            )
+                        }
+                    )
+                }
+                Spacer(modifier = Modifier.height(55.dp))
+                Player(
+                    isReady = _playerSelection.isSelected,
+                    level = player.level,
+                    userName = player.userName,
+                    onClick = {
+                        gameViewModel.selectedPlayer = gameViewModel.player
+
+                        navController.navigate(Screen.GamePlayerProfileScreen.route)
+                    },
+                    isBot = false
+                )
+                Spacer(modifier = Modifier.height(60.dp))
+            }
+
+            //Vs. segment
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                VsPlayer(
+                    playerWins = statistics.playerWins,
+                    enemyWins = statistics.enemyWins,
+                    rounds = statistics.rounds,
+                    currentRound = statistics.currentRound
+                )
+            }
+
+
+            AnimatedVisibility(
+                visible = isVisible,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(appColor.background.copy(alpha = 0.7f))
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable(
+                            interactionSource = MutableInteractionSource(),
+                            indication = null
+                        ) {
+                            //isShowWinText = false
+                            if (!isReset) {
+                                reset(onReset)
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = winText,
+                        fontSize = 90.sp,
+                        color = when (winText) {
+                            "Win" -> Color.Green
+                            "Lose" -> Color.Red
+                            else -> Color.Gray
+                        },
+                        letterSpacing = 3.sp,
+                        fontFamily = Oswald,
+                        fontWeight = FontWeight.Bold,
+
+                    )
+                }
+            }
+        }
+    }
+
+    fun printisReady(){
+//        Log.d("Screen.GameScreen.route","${_playerData.isSelected}")
+    }
+
+
+    private var isSet: Boolean = false
+
+    private var isWaiting = false
+    private val handler = android.os.Handler(Looper.getMainLooper())
+
+    fun winner(onReset: () -> Unit) {
+        if (isReset) {
+            handler.removeCallbacksAndMessages(null)
+            Log.d("Restarafdsavt", "handler to null")
+        }
+        if (!isWaiting) {
+            isReset = false
+
+            currentRound.EnemySelection = _enemySelection.currentSelection
+            currentRound.YourSelection = _playerSelection.currentSelection
+
+
+
+            when (_enemySelection.currentSelection) {
+                SelectionType.PAPER -> gameViewModel.updateEnemySelectionPaper()
+                SelectionType.ROCK -> gameViewModel.updateEnemySelectionRock()
+                SelectionType.SCISSORS -> gameViewModel.updateEnemySelectionScissors()
+            }
+
+
+            when (_playerSelection.currentSelection) {
+                SelectionType.PAPER -> gameViewModel.updatePlayerSelectionPaper()
+                SelectionType.ROCK -> gameViewModel.updatePlayerSelectionRock()
+                SelectionType.SCISSORS -> gameViewModel.updatePlayerSelectionScissors()
+            }
+
+
+            val win = currentRound.winner()
+
+            when (win) {
+                WinTyp.Win -> {
+                    statistics.playerWins++
+                    statistics.currentRound++
+                    gameViewModel.updateWin()
+                }
+
+                WinTyp.Lose -> {
+                    statistics.enemyWins++
+                    statistics.currentRound++
+                    gameViewModel.updateLose()
+                }
+
+                WinTyp.Draw -> {
+                    gameViewModel.updateDraw()
+                }
+            }
+
+            when {
+                statistics.enemyWins == statistics.playerWins -> {
+                    onEvent(GameDataEvent.SetWin(WinTyp.Draw))
+                }
+
+                statistics.enemyWins < statistics.playerWins -> {
+                    onEvent(GameDataEvent.SetWin(WinTyp.Win))
+                }
+
+                else -> {
+                    onEvent(GameDataEvent.SetWin(WinTyp.Lose))
+                }
+            }
+
+            winText = "$win"
+
+            val delayMillis: Long = 3000 // Adjust the delay time as needed (in milliseconds)
+            isWaiting = true
+            isShowWinText = true
+
+            statistics.rounds = gameViewModel.rounds.value
+
+            if (statistics.currentRound <= statistics.rounds) {
+
+                handler.postDelayed({
+                    if (!isReset) {
+                        reset(onReset)
+
+                        Log.d("Restarafdsavt", "in Time")
+                    }
+                }, delayMillis)
+            }
+            val oneRound = OneRound(
+                enemySelection = currentRound.EnemySelection!!,
+                playerSelection = currentRound.YourSelection!!,
+                result = win
+            )
+            onEvent(GameDataEvent.SetNewRound(oneRound))
+        }
+    }
+
+
+
+    private fun reset(onReset: () -> Unit) {
+        if (statistics.currentRound <= statistics.rounds) {
+
+            Log.d("Restarafdsavt", "reset")
+            isWaiting = false
+            isSet = false
+            isShowWinText = false
+            isReset = true
+            currentRound = GameFunktions()
+            _enemySelection = Selection()
+            _playerSelection.currentSelection = SelectionType.ROCK
+            _playerSelection.isSelected = false
+            roundData = CurrentRoundData(
+                playerSelection = SelectionType.ROCK,
+                enemySelection = SelectionType.ROCK,
+                isEnemySelect = false,
+                isPlayerSelect = false
+            )
+            onReset()
+        } else{
+            endGame()
+        }
+    }
+
+    private fun endGame() {
+        navController.popBackStack()
+        navController.navigate(Screen.GameStatisticScreen.route)
+        onEvent(GameDataEvent.CreateNewPlayer)
     }
 }
 
-fun endGame(
-    navController: NavController,
-    onEvent: (GameDataEvent) -> Unit
-){
-//Game ReSet//
-    Log.d("Restarafdsavt", "reset")
-    isWaiting = false
-    isSet = false
-    isShowWinText = false
-    isReset = true
-    currentRound = GameFunktions()
-    enemySelection = Selection()
-    playerSelection.currentSelection = SelectionType.ROCK
-    playerSelection.isSelected = false
-    roundData = CurrentRoundData(
-        playerSelection = SelectionType.ROCK,
-        enemySelection = SelectionType.ROCK,
-        isEnemySelect = false,
-        isPlayerSelect = false
-    )
 
-    navController.popBackStack()
-    navController.navigate(Screen.GameStatisticScreen.route)
-    onEvent(GameDataEvent.CreateNewPlayer)
 
-    statistics = GameData(
-        playerWins = 0,
-        enemyWins = 0,
-        rounds = 3,
-        currentRound = 1,
-    )
-//^Game Reset^//
-}
+
+
+
+
+
+
+
+
+
+
+

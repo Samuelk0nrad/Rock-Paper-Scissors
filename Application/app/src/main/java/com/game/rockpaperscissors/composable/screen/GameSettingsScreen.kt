@@ -49,8 +49,7 @@ fun GameSettingScreen(
     playerData: PlayerData,
     enemyData: List<PlayerData>
 ){
-
-
+    gameViewModel.gameMode = mode
     gameViewModel.player = playerData
 
     when(mode){

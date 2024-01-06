@@ -2,6 +2,7 @@ package com.game.rockpaperscissors.data.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.PlayerData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,6 +13,8 @@ class GameViewModel : ViewModel(){
     lateinit var enemy: PlayerData
 
     var selectedPlayer: PlayerData? = null
+
+    lateinit var gameMode: GameModesEnum
 
     //Win/Lose/Draw Count Start//
     private val _lose = MutableStateFlow(0)

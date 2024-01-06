@@ -65,12 +65,14 @@ class Selection {
         isSelectable: Boolean = true,
         hide:Boolean = false,
         isSelected: Boolean = this.isSelected,
-        currentSelection: SelectionType = this.currentSelection
+        currentSelection: SelectionType = this.currentSelection,
+        onClick: () -> Unit = {}
     ){
 
         var selection by remember {
             mutableStateOf(currentSelection)
         }
+
 
         var isSelect by remember {
             mutableStateOf(isSelected)
@@ -338,6 +340,7 @@ class Selection {
                                                 selection = SelectionType.PAPER
                                             }
                                             Log.d("clickable", "Paper$selection")
+                                            onClick()
                                         }
                                     },
                                 painter = painterResource(id = R.drawable.hand_paper),
@@ -376,6 +379,7 @@ class Selection {
                                             }
 
                                             Log.d("clickable", "Rock$selection")
+                                            onClick()
                                         }
                                     },
                                 painter = painterResource(id = R.drawable.hand_rock),
@@ -416,6 +420,7 @@ class Selection {
                                                 selection = SelectionType.SCISSORS
                                             }
                                             Log.d("clickable", "Scissors$selection")
+                                            onClick()
                                         }
                                     },
                                 painter = painterResource(id = R.drawable.hand_scissors),

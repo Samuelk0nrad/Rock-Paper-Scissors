@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,8 +23,8 @@ import com.game.rockpaperscissors.SetBarColor
 import com.game.rockpaperscissors.composable.screen.CreateProfileScreen
 import com.game.rockpaperscissors.composable.screen.EditProfileScreen
 import com.game.rockpaperscissors.composable.screen.GamePlayerProfileScreen
-import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.composable.screen.GameScreen
+import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.composable.screen.GameSettingScreen
 import com.game.rockpaperscissors.composable.screen.GameStatisticScreen
 import com.game.rockpaperscissors.composable.screen.HomeScreen
@@ -48,6 +49,8 @@ fun Navigation() {
     val isLoggedIn = navViewModel.isLoggedIn
 
     val navController = rememberNavController()
+
+
     NavHost(navController = navController, startDestination = if(isLoggedIn) Screen.HomeScreen.route else Screen.LogIn.route ){
 
         navigation(route = Screen.LogIn.route, startDestination = Screen.WelcomeScreen.route) {
@@ -133,12 +136,15 @@ fun Navigation() {
                 val gameDataViewModel = hiltViewModel<GameDataViewModel>()
                 val gameState by gameDataViewModel.state.collectAsState()
 
+
+
+
                 if(playerState.allPlayer.isNotEmpty()){
-                    GameScreen(
-                        navController = navController,
+                    SetingUpGameScreen(
+                        gameMode = viewModel.gameMode,
                         gameViewModel = viewModel,
-                        state = gameState,
-                        onEvent = gameDataViewModel::onEvent
+                        onEvent = gameDataViewModel::onEvent,
+                        navController = navController
                     )
                 }
             }
