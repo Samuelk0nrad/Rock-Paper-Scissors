@@ -1,5 +1,9 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,11 +36,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.ui.theme.Oswald
@@ -80,6 +86,16 @@ fun EditProfileScreen(
     onEvent(PlayerDataEvent.SetGender(gender))
     onEvent(PlayerDataEvent.SetShowData(showData))
     onEvent(PlayerDataEvent.SetShowName(showName))
+
+
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {uri -> if(uri != null) imageUri = uri; onEvent(PlayerDataEvent.SetUserImage(uri.toString()))}
+    )
 
 
     Column (
@@ -178,6 +194,13 @@ fun EditProfileScreen(
                     imageVector = Icons.Rounded.Person,
                     contentDescription = "Profile"
                 )
+
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.BottomEnd
@@ -189,8 +212,9 @@ fun EditProfileScreen(
                             .size(30.dp)
                             .clip(RoundedCornerShape(30.dp))
                             .clickable {
-
-
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
                             }
                             .background(appColor.background),
                         contentAlignment = Alignment.Center

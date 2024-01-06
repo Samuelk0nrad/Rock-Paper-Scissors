@@ -1,14 +1,9 @@
 package com.game.rockpaperscissors.data.viewModel
 
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.game.rockpaperscissors.data.GameDataState
 import com.game.rockpaperscissors.data.PlayerDataState
-import com.game.rockpaperscissors.data.local.database.GameDataDao
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -35,7 +30,8 @@ class NavigationViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PlayerDataState())
 
-    val isLoggedIn = state.value.allPlayer.isEmpty()
+    private val _isLoggedIn = MutableStateFlow(state.value.allPlayer.isNotEmpty())
+    val isLoggedIn = _isLoggedIn.asStateFlow()
 
     private val _isDatabaseLoaded = MutableStateFlow(false)
     val isDatabaseLoaded = _isDatabaseLoaded.asStateFlow()
@@ -47,15 +43,14 @@ class NavigationViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            checkDatabase()
-            _isReady.value = isDatabaseLoaded.value
+            delay(1000)
+
+            _isReady.value = true
+            _isLoggedIn.value = state.value.allPlayer.isNotEmpty()
         }
     }
 
-    private suspend fun checkDatabase() {
-        val count = dao.getCount()
-        _isDatabaseLoaded.value = count > 0
-    }
+
 
 
 }

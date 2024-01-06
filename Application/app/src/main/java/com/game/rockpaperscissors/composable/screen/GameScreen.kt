@@ -112,6 +112,7 @@ class GameScreen (
         onReset: () -> Unit
     ) {
         roundData.playerSelection = _playerSelection.currentSelection
+        roundData.enemySelection = _enemySelection.currentSelection
 
         var isVisible by remember {
             mutableStateOf(isShowWinText)
@@ -152,8 +153,9 @@ class GameScreen (
                 Spacer(modifier = Modifier.height(55.dp))
 
                 _enemySelection.Weapon(
-                    isSelectable = false,
-                    hide = !_playerSelection.isSelected,
+                    isSelectable = _enemyData.isSelectable,
+                    currentSelection = _enemyData.selection,
+                    hide = _enemyData.hide,
                     onClick = {
                         _enemyData = _enemyData.copy(
                             isSelected = _enemySelection.isSelected,
@@ -174,6 +176,7 @@ class GameScreen (
                 ) {
                     _playerSelection.Weapon(
                         isSelectable = _playerData.isSelectable,
+                        currentSelection = _playerData.selection,
                         hide = _playerData.hide,
                         onClick = {
                             _playerData = _playerData.copy(
@@ -252,7 +255,7 @@ class GameScreen (
     }
 
     fun printisReady(){
-//        Log.d("Screen.GameScreen.route","${_playerData.isSelected}")
+        Log.d("Screen.GameScreen.route","${_enemySelection.currentSelection}")
     }
 
 
@@ -379,6 +382,20 @@ class GameScreen (
         navController.popBackStack()
         navController.navigate(Screen.GameStatisticScreen.route)
         onEvent(GameDataEvent.CreateNewPlayer)
+    }
+
+    fun setEnemySelection(selection: SelectionType){
+        _enemySelection.currentSelection = selection
+    }
+    fun setPlayerSelection(selection: SelectionType){
+        _playerSelection.currentSelection = selection
+    }
+
+    fun setEnemySelection(isSelection: Boolean){
+        _enemySelection.isSelected = isSelection
+    }
+    fun setPlayerSelection(isSelection: Boolean){
+        _enemySelection.isSelected = isSelection
     }
 }
 

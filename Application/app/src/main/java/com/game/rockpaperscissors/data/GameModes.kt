@@ -39,7 +39,7 @@ var gameModes: List<GameModes> = mutableListOf(
         clickAction = {
 
         },
-        symbol = R.drawable.welcome_ilustration,
+        symbol = R.drawable.whithwurfel,
         rout = "${Screen.GameSettingScreen.route}/RANDOM",
         available = true
     ),
@@ -51,7 +51,7 @@ var gameModes: List<GameModes> = mutableListOf(
         clickAction = {
 
         },
-        symbol = R.drawable.welcome_ilustration,
+        symbol = R.drawable.white_multiplayer,
         rout = Screen.MainGame.route,
         available = false
     ),
@@ -62,7 +62,7 @@ var gameModes: List<GameModes> = mutableListOf(
         clickAction = {
 
         },
-        symbol = R.drawable.welcome_ilustration,
+        symbol = R.drawable.white_video_game,
         rout = Screen.MainGame.route,
         available = false
     ),
@@ -74,7 +74,7 @@ var gameModes: List<GameModes> = mutableListOf(
         clickAction = {
 
         },
-        symbol = R.drawable.welcome_ilustration,
+        symbol = R.drawable.white_microchip,
         rout = Screen.MainGame.route,
         available = false
     )

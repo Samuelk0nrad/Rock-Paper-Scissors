@@ -29,11 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.GameModes
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.gameModes
@@ -42,7 +45,7 @@ import com.game.rockpaperscissors.ui.theme.appColor
 
 
 @Composable
-fun HomeScreen (navController: NavController){
+fun HomeScreen (navController: NavController, profileImage: String){
 
     Column (
         modifier = Modifier
@@ -80,13 +83,21 @@ fun HomeScreen (navController: NavController){
                     .clickable {
                         navController.navigate(Screen.ProfileScreen.route)
                     }
-
                 ) {
+
                     Image(
                         modifier = Modifier.fillMaxSize(),
                         imageVector = Icons.Rounded.Person,
                         contentDescription = "Profile"
                     )
+
+                    AsyncImage(
+                        model = profileImage.toUri(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+
                 }
             }
         }
@@ -375,7 +386,7 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
                 contentAlignment = Alignment.Center
             ){
                 Image(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(0.6f),
                     painter = painterResource(id = mode.symbol),
                     contentDescription = "Welcome Illustration",
                 )

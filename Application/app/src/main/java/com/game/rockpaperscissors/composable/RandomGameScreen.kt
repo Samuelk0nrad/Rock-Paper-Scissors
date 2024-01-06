@@ -43,7 +43,10 @@ fun RandomGameScreen(
     }
 
     Log.d("Screen.GameScreen.route", "update")
+    Log.d("Screen.GameScreen.route", "${gameComposable.enemyData.selection}")
     gameComposable.printisReady()
+
+
 
     gameComposable.enemyData = gameComposable.enemyData.copy(
         hide = enemyHide,
@@ -83,10 +86,20 @@ fun RandomGameScreen(
     if (!enemyIsSelected) {
         enemySelection = gameComposable.currentRound.randomEnemySelection()
         enemyIsSelected = true
+        gameComposable.setEnemySelection(true)
+        gameComposable.setEnemySelection(enemySelection)
+
+//        gameComposable.enemyData = gameComposable.enemyData.copy(
+//            selection = enemySelection
+//        )
+
+        Log.d("Screen.GameScreen.route", "$enemySelection")
+        Log.d("Screen.GameScreen.route", "${gameComposable.enemyData.selection}")
 
     }
 
     if(gameComposable.playerData.isSelected){
+        enemyHide = false
         gameComposable.enemyData = gameComposable.enemyData.copy(hide = false)
         gameComposable.winner(
             onReset = {

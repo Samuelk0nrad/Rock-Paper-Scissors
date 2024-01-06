@@ -1,5 +1,9 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,13 +36,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
@@ -67,8 +75,14 @@ fun CreateProfileScreen(
         mutableStateOf("")
     }
 
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
 
-
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {uri -> if(uri != null) imageUri = uri; onEvent(PlayerDataEvent.SetUserImage(uri.toString()))}
+    )
 
     Column (
         modifier = Modifier
@@ -98,18 +112,33 @@ fun CreateProfileScreen(
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(90.dp))
-                    .background(appColor.onBackground),
+                    .background(appColor.onBackground)
+                    .clickable {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    },
                 contentAlignment = Alignment.Center
 
             ){
-                Icon(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(13.dp),
-                    imageVector = Icons.Rounded.CameraAlt,
-                    contentDescription = "Camara",
-                    tint = appColor.background
-                )
+
+                if(imageUri == null) {
+                    Icon(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(13.dp),
+                        imageVector = Icons.Rounded.CameraAlt,
+                        contentDescription = "Camara",
+                        tint = appColor.background
+                    )
+                } else{
+                    AsyncImage(
+                        model = imageUri,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
         }
 

@@ -22,12 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerData
@@ -121,6 +124,7 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
 
             ) {
 
+
                 Image(
                     modifier = Modifier
                         .fillMaxSize()
@@ -129,31 +133,13 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                     imageVector = Icons.Rounded.Person,
                     contentDescription = "Profile"
                 )
-                Box(
+                AsyncImage(
+                    model = state.allPlayer[0].userImage.toUri(),
+                    contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomEnd
-                ) {
+                    contentScale = ContentScale.Crop
+                )
 
-
-                    Box(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clip(RoundedCornerShape(30.dp))
-                            .clickable {
-
-
-                            }
-                            .background(appColor.background),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(22.dp),
-                            imageVector = Icons.Rounded.CameraAlt,
-                            contentDescription = "Camera",
-                            tint = appColor.onBackground
-                        )
-                    }
-                }
             }
         }
 

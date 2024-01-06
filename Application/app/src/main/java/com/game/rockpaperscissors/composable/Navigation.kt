@@ -45,25 +45,32 @@ import com.game.rockpaperscissors.ui.theme.appColor
 @Composable
 fun Navigation() {
 
-    val navViewModel = hiltViewModel<NavigationViewModel>()
-    val isLoggedIn = navViewModel.isLoggedIn
-
     val navController = rememberNavController()
 
 
-    NavHost(navController = navController, startDestination = if(isLoggedIn) Screen.HomeScreen.route else Screen.LogIn.route ){
+    val navViewModel = hiltViewModel<NavigationViewModel>()
+    val isLoggedIn by navViewModel.isLoggedIn.collectAsState()
+
+    val viewModel = hiltViewModel<PlayerViewModel>()
+    val state by viewModel.state.collectAsState()
+
+    val start: String
+
+    if(state.allPlayer.isNotEmpty()){
+        start = Screen.HomeScreen.route
+        Log.d("PlayerViewModel", "isNotEmpty: ${state.allPlayer.size}")
+    } else{
+        start = Screen.LogIn.route
+    }
+
+
+    NavHost(navController = navController, startDestination = start ){
 
         navigation(route = Screen.LogIn.route, startDestination = Screen.WelcomeScreen.route) {
             composable(route = Screen.WelcomeScreen.route) {
                 SetBarColor(appColor.background)
 
-                val viewModel = hiltViewModel<PlayerViewModel>()
-                val state by viewModel.state.collectAsState()
-                if(state.allPlayer.isNotEmpty()){
-                    navController.popBackStack()
-                    navController.navigate(Screen.HomeScreen.route)
-                    Log.d("PlayerViewModel", "isNotEmpty: ${state.allPlayer.size}")
-                }
+
 
 
                 WelcomeScreen(navController)
@@ -173,9 +180,16 @@ fun Navigation() {
         composable(route = Screen.HomeScreen.route){
             SetBarColor(appColor.secondaryContainer, appColor.background)
 
+            val viewModel = hiltViewModel<PlayerViewModel>()
+            val state by viewModel.state.collectAsState()
 
+            var profileImage = ""
 
-            HomeScreen(navController)
+            if(state.allPlayer.isNotEmpty()){
+                profileImage = state.allPlayer[0].userImage
+            }
+
+            HomeScreen(navController, profileImage)
         }
 
         composable(route = Screen.ProfileScreen.route){
