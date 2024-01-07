@@ -85,7 +85,7 @@ fun EditProfileScreen(
     }
 
     var fileName: String? by remember {
-        mutableStateOf(state.allPlayer[0].userImage)
+        mutableStateOf(null)
 
     }
 
@@ -95,12 +95,13 @@ fun EditProfileScreen(
     onEvent(PlayerDataEvent.SetGender(gender))
     onEvent(PlayerDataEvent.SetShowData(showData))
     onEvent(PlayerDataEvent.SetShowName(showName))
-    onEvent(PlayerDataEvent.SetUserImage(fileName!!))
+    if(state.userImage.isBlank()){
+        onEvent(PlayerDataEvent.SetUserImage(fileName!!))
 
-
-    var imageUri by remember {
-        mutableStateOf<Uri?>(null)
     }
+
+
+
 
 
 
@@ -108,7 +109,6 @@ fun EditProfileScreen(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {uri ->
             if(uri != null){
-                imageUri = uri
                 fileName = saveImageToInternalStorage(context = context, uri = uri, fileName = "profile_picture")
 
                 onEvent(PlayerDataEvent.SetUserImage(fileName!!))

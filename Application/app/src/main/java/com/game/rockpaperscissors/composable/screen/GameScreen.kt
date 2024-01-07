@@ -270,6 +270,8 @@ class GameScreen (
     private var isWaiting = false
     private val handler = android.os.Handler(Looper.getMainLooper())
 
+    private var isRoundAdded = true
+
     fun winner(onReset: () -> Unit) {
         if (isReset) {
             handler.removeCallbacksAndMessages(null)
@@ -299,21 +301,24 @@ class GameScreen (
 
             val win = currentRound.winner()
 
+
+
             when (win) {
                 WinTyp.Win -> {
                     statistics.playerWins++
-                    statistics.currentRound++
                     gameViewModel.updateWin()
+                    isRoundAdded = true
                 }
 
                 WinTyp.Lose -> {
                     statistics.enemyWins++
-                    statistics.currentRound++
                     gameViewModel.updateLose()
+                    isRoundAdded = true
                 }
 
                 WinTyp.Draw -> {
                     gameViewModel.updateDraw()
+                    isRoundAdded = false
                 }
             }
 
@@ -361,7 +366,10 @@ class GameScreen (
 
 
     private fun reset(onReset: () -> Unit) {
+        if(isRoundAdded)
+            statistics.currentRound++
         if (statistics.currentRound <= statistics.rounds) {
+
 
             Log.d("Restarafdsavt", "reset")
             isWaiting = false
@@ -380,6 +388,7 @@ class GameScreen (
             )
             onReset()
         } else{
+            statistics.currentRound--
             endGame()
         }
     }

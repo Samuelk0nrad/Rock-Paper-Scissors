@@ -14,7 +14,7 @@ val Pink40 = Color(0xFF7D5260)
 val Green = Color(0xFF86D87F)
 val Red = Color(0xFFD87F7F)
 
-val themeMod = AppTheme.DARK
+val themeMod = AppTheme.SYSTEM
 
 val currentNightMode = AppCompatDelegate.getDefaultNightMode()
 
@@ -35,14 +35,14 @@ val DarkAppColors = AppColors(
 
 val LightAppColors = AppColors(
     background = Color(0xFFD9D9D9),
-    secondaryContainer = Color(0xFF262626),
+    secondaryContainer = Color(0xFF4F5B43),
     onBackground = Color(0xFF161616),
     green = Color(0xFF86D87F),
     red = Color(0xFFD87F7F),
     purRed = Color(0xFFFF0000),
-    onSecondaryContainer = Color(0xFF343434),
-    secondary = Color(0xFF5D5D5D),
-    onSecondary = Color(0xFF9C9C9C),
+    onSecondaryContainer = Color(0xFF3F483D),
+    secondary = Color(0xFFA5C09E),
+    onSecondary = Color(0xFFBCBCDB),
 )
 
 val appColor: AppColors = when (themeMod) {

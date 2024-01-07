@@ -2,14 +2,12 @@ package com.game.rockpaperscissors.composable.screen
 
 import android.content.Context
 import android.net.Uri
-import android.view.View
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,6 +25,7 @@ import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -100,249 +102,303 @@ fun CreateProfileScreen(
         }
     )
 
-    Column (
+    var isBlank by remember {
+        mutableStateOf(false)
+    }
+
+    var isNameBlank by remember {
+        mutableStateOf(false)
+    }
+    var isUserNameBlank by remember {
+        mutableStateOf(false)
+    }
+    var isDateBlank by remember {
+        mutableStateOf(false)
+    }
+
+    if(isBlank){
+        isNameBlank = fullName == ""
+        isUserNameBlank = userName == ""
+        isDateBlank = birthDate == ""
+    }
+
+
+    var showName by remember {
+        mutableStateOf(true)
+    }
+
+    var showDate by remember {
+        mutableStateOf(true)
+    }
+
+    LazyColumn (
         modifier = Modifier
             .fillMaxSize()
             .background(appColor.background)
     ){
-        Spacer(modifier = Modifier.height(111.dp))
 
-        Text(
-            modifier = Modifier.padding(start = 31.dp),
-            text = "Create New Account",
-            fontSize = 32.sp,
-            fontFamily = Oswald,
-            fontWeight = FontWeight.Normal,
-            color = appColor.onBackground
-        )
+        item {
+            Spacer(modifier = Modifier.height(111.dp))
 
-        Spacer(modifier = Modifier.height(30.dp))
+            Text(
+                modifier = Modifier.padding(start = 31.dp),
+                text = "Create New Account",
+                fontSize = 32.sp,
+                fontFamily = Oswald,
+                fontWeight = FontWeight.Normal,
+                color = appColor.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+        }
+
+        item {
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(90.dp)
+                        .clip(RoundedCornerShape(90.dp))
+                        .background(appColor.onBackground)
+                        .clickable {
+                            photoPickerLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        },
+                    contentAlignment = Alignment.Center
+
+                ) {
+                    val imageFile: File? = fileName?.let { getImage(context, it) }
+
+
+                    Icon(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(13.dp),
+                        imageVector = Icons.Rounded.CameraAlt,
+                        contentDescription = "Camara",
+                        tint = appColor.background
+                    )
+                    if (imageFile != null) {
+                        AsyncImage(
+                            model = imageFile.toUri(),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
+            }
+        }
+
+        item {
+
+            Spacer(modifier = Modifier.height(43.dp))
+
+            CustomTextFiled(
+                value = /*fullName*/ state.fullName,
+                onValueChange = {
+                    fullName = it
+                    onEvent(PlayerDataEvent.SetFullName(it))
+                },
+                placeholder = "Full Name",
+                lineColor = if(isNameBlank) appColor.red else appColor.onBackground
+            )
+        }
+
+        item {
+
+
+            Spacer(modifier = Modifier.height(43.dp))
+
+            CustomTextFiled(
+                value = /*userName*/ state.userName,
+                onValueChange = {
+                    userName = it
+                    onEvent(PlayerDataEvent.SetUserName(it))
+                },
+                placeholder = "User Name",
+                lineColor = if(isUserNameBlank) appColor.red else appColor.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(43.dp))
+        }
+
+        item {
+            CustomTextFiled(
+                value = /*birthDate*/ state.birthData,
+                onValueChange = {
+                    birthDate = it
+                    onEvent(PlayerDataEvent.SetBirthData(it))
+                },
+                placeholder = "Birth Date",
+                modifier = Modifier.width(269.dp),
+                onlyNumbers = true,
+                lineColor = if(isDateBlank) appColor.red else appColor.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+        }
+
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 51.dp)
+            ) {
+
+                var gender by remember {
+                    mutableStateOf("---")
+                }
+                Text(
+                    modifier = Modifier
+                        .width(120.dp),
+                    fontFamily = Oswald,
+                    text = "Gender",
+                    fontWeight = FontWeight.ExtraLight,
+                    fontSize = 20.sp,
+                    letterSpacing = 1.sp,
+                    color = appColor.onBackground
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+
+                Spinner(
+                    itemList = listOf("---", "MALE", "FEMININE", "DIVERS"),
+                    onItemSelected = {
+                        gender = it
+
+                        onEvent(PlayerDataEvent.SetGender(it))
+
+                    },
+                    value = gender
+                )
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+        }
+
+        item {
 
 
 
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ){
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 51.dp, end = 51.dp)
+                    .clickable {
+                        showName = !showName
+                        onEvent(PlayerDataEvent.SetShowData(showName))
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = if (showName) Icons.Rounded.CheckBoxOutlineBlank else Icons.Rounded.CheckBox,
+                    contentDescription = "CheckBox",
+                    tint = appColor.onBackground
+                )
+
+                Spacer(modifier = Modifier.width(13.dp))
+
+                Text(
+                    modifier = Modifier.height(24.dp),
+                    text = "Don’t show the full name",
+                    fontSize = 15.sp,
+                    fontFamily = Oswald,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.75.sp,
+                    color = appColor.onBackground,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 51.dp, end = 51.dp)
+                    .clickable {
+                        showDate = !showDate
+                        onEvent(PlayerDataEvent.SetShowData(showDate))
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = if (showDate) Icons.Rounded.CheckBoxOutlineBlank else Icons.Rounded.CheckBox,
+                    contentDescription = "CheckBox",
+                    tint = appColor.onBackground
+                )
+
+
+                Spacer(modifier = Modifier.width(13.dp))
+
+                Text(
+                    modifier = Modifier.height(24.dp),
+                    text = "Don’t show the full birth date",
+                    fontSize = 15.sp,
+                    fontFamily = Oswald,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.75.sp,
+                    color = appColor.onBackground,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(30.dp))
+            
             Box(
                 modifier = Modifier
-                    .size(90.dp)
-                    .clip(RoundedCornerShape(90.dp))
-                    .background(appColor.onBackground)
-                    .clickable {
-                        photoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    },
-                contentAlignment = Alignment.Center
-
-            ){
-                val imageFile: File? = fileName?.let { getImage(context, it) }
-
-
-                Icon(
+                    .fillMaxSize()
+                    .padding(start = 24.dp, bottom = 64.dp, end = 24.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(13.dp),
-                    imageVector = Icons.Rounded.CameraAlt,
-                    contentDescription = "Camara",
-                    tint = appColor.background
-                )
-                if (imageFile != null) {
-                    AsyncImage(
-                        model = imageFile.toUri(),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(appColor.secondaryContainer)
+                        .fillMaxWidth()
+                        .clickable {
+                            if (state.fullName.isNotBlank() && state.userName.isNotBlank() && state.birthData.isNotBlank()) {
+                                nevController.navigate(Screen.HomeScreen.route)
+                            } else {
+                                isBlank = true
+                            }
+                            onEvent(PlayerDataEvent.CreateNewPlayer)
+
+                        }
+                        .padding(top = 10.dp, bottom = 10.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Create New Account",
+                        fontSize = 16.sp,
+                        fontFamily = Oswald,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center,
+                        color = appColor.onBackground
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(43.dp))
-
-        CustomTextFiled(
-            value = /*fullName*/ state.fullName,
-            onValueChange = {
-                fullName = it
-                onEvent(PlayerDataEvent.SetFullName(it))
-            },
-            placeholder = "Full Name"
-        )
-
-
-        Spacer(modifier = Modifier.height(43.dp))
-
-        CustomTextFiled(
-            value = /*userName*/ state.userName,
-            onValueChange = {
-                userName = it
-                onEvent(PlayerDataEvent.SetUserName(it))
-            },
-            placeholder = "User Name"
-        )
-
-        Spacer(modifier = Modifier.height(43.dp))
-
-
-        CustomTextFiled(
-            value = /*birthDate*/ state.birthData,
-            onValueChange = {
-                birthDate = it
-                onEvent(PlayerDataEvent.SetBirthData(it))
-            },
-            placeholder = "Birth Date",
-            modifier = Modifier.width(269.dp),
-            onlyNumbers = true
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 51.dp)
-        ){
-
-            var gender by remember {
-                mutableStateOf("---")
-            }
-            Text(
-                modifier = Modifier
-                    .width(120.dp),
-                fontFamily = Oswald,
-                text = "Gender",
-                fontWeight = FontWeight.ExtraLight,
-                fontSize = 20.sp,
-                letterSpacing = 1.sp,
-                color = appColor.onBackground
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-
-            Spinner(
-                itemList = listOf("---","MALE", "FEMININE", "DIVERS"),
-                onItemSelected = {
-                    gender = it
-
-                    onEvent(PlayerDataEvent.SetGender(it))
-
-                },
-                value = gender
-            )
-        }
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        var showName by remember {
-            mutableStateOf(true)
-        }
-
-        var showDate by remember {
-            mutableStateOf(true)
-        }
-
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 51.dp, end = 51.dp)
-                .clickable {
-                    showName = !showName
-                    onEvent(PlayerDataEvent.SetShowData(showName))
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Icon(
-                modifier = Modifier.size(24.dp),
-                imageVector = if(showName) Icons.Rounded.CheckBoxOutlineBlank else Icons.Rounded.CheckBox,
-                contentDescription = "CheckBox",
-                tint = appColor.onBackground
-            )
-
-            Spacer(modifier = Modifier.width(13.dp))
-
-            Text(
-                modifier = Modifier.height(24.dp),
-                text = "Don’t show the full name",
-                fontSize = 15.sp,
-                fontFamily = Oswald,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 0.75.sp,
-                color = appColor.onBackground,
-                textAlign = TextAlign.Center
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 51.dp, end = 51.dp)
-                .clickable {
-                    showDate = !showDate
-                    onEvent(PlayerDataEvent.SetShowData(showDate))
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Icon(
-                modifier = Modifier.size(24.dp),
-                imageVector = if(showDate) Icons.Rounded.CheckBoxOutlineBlank else Icons.Rounded.CheckBox,
-                contentDescription = "CheckBox",
-                tint = appColor.onBackground
-            )
-
-
-            Spacer(modifier = Modifier.width(13.dp))
-
-            Text(
-                modifier = Modifier.height(24.dp),
-                text = "Don’t show the full birth date",
-                fontSize = 15.sp,
-                fontFamily = Oswald,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 0.75.sp,
-                color = appColor.onBackground,
-                textAlign = TextAlign.Center
-            )
-        }
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 24.dp, bottom = 64.dp, end = 24.dp),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(appColor.secondaryContainer)
-                    .fillMaxWidth()
-                    .clickable {
-                        if (state.fullName.isNotBlank() && state.userName.isNotBlank() && state.birthData.isNotBlank()) {
-                            nevController.navigate(Screen.HomeScreen.route)
-                        }
-                        onEvent(PlayerDataEvent.CreateNewPlayer)
-
-                    }
-                    .padding(top = 10.dp, bottom = 10.dp)
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Create New Account",
-                    fontSize = 16.sp,
-                    fontFamily = Oswald,
-                    fontWeight = FontWeight.Normal,
-                    textAlign = TextAlign.Center,
-                    color = appColor.onBackground
-                )
-            }
+        item{
+            Spacer(modifier = Modifier.height(15.dp))
         }
     }
 }
+
 
 
 @Composable
@@ -351,8 +407,8 @@ fun CustomTextFiled(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
-    onlyNumbers: Boolean = false
-
+    onlyNumbers: Boolean = false,
+    lineColor: Color = appColor.onBackground
 ) {
     Box (
         modifier = modifier
@@ -374,7 +430,8 @@ fun CustomTextFiled(
             ),
             singleLine = true,
             keyboardOptions = if(!onlyNumbers) KeyboardOptions.Default
-                else KeyboardOptions(keyboardType = KeyboardType.Number)
+                else KeyboardOptions(keyboardType = KeyboardType.Number),
+            cursorBrush = SolidColor(appColor.onBackground)
         )
 
         if (value == "") {
@@ -397,7 +454,7 @@ fun CustomTextFiled(
                 modifier = Modifier
                     .height(1.dp)
                     .fillMaxWidth()
-                    .background(appColor.onBackground)
+                    .background(lineColor)
             )
         }
 
@@ -436,8 +493,9 @@ fun Spinner(
 
 
         Icon(
-            imageVector = Icons.Rounded.KeyboardArrowDown,
-            contentDescription = "Arrow Down"
+            imageVector = if(!expanded) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowUp,
+            contentDescription = "Arrow Down",
+            tint = appColor.onBackground
         )
 
 
