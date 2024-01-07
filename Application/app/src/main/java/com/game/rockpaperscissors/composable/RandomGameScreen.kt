@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,7 +18,8 @@ import com.game.rockpaperscissors.data.viewModel.GameViewModel
 fun RandomGameScreen(
     gameViewModel: GameViewModel,
     onEvent: (GameDataEvent) -> Unit,
-    navController: NavController
+    navController: NavController,
+    context: Context
 
 ){
 
@@ -78,7 +80,8 @@ fun RandomGameScreen(
                 selection = enemySelection,
                 isSelectable = false
             )
-        }
+        },
+        context = context
     )
 
 

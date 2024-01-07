@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,10 +39,11 @@ import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
+import java.io.File
 
 
 @Composable
-fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAcount:(PlayerDataEvent) -> Unit) {
+fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAcount:(PlayerDataEvent) -> Unit, context: Context) {
 
     Column(
         modifier = Modifier
@@ -121,24 +123,29 @@ fun ProfileScreen(navController: NavController, state: PlayerDataState, deleteAc
                     .padding(top = 46.dp)
                     .height(86.dp)
                     .width(86.dp)
+                    .clip(RoundedCornerShape(100.dp))
 
             ) {
+                val fileName = state.allPlayer[0].userImage
+
+                val imageFile: File? = getImage(context, fileName)
 
 
                 Image(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(100.dp))
                         .background(appColor.onBackground),
                     imageVector = Icons.Rounded.Person,
                     contentDescription = "Profile"
                 )
-                AsyncImage(
-                    model = state.allPlayer[0].userImage.toUri(),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
+                if (imageFile != null) {
+                    AsyncImage(
+                        model = imageFile.toUri(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
 
             }
         }
@@ -404,7 +411,33 @@ fun ProfileNames(name: String, title: String) {
 
 
 
+fun hideName(input: String): String {
+    val words = input.split(" ")
+    val result = StringBuilder()
 
+    for (word in words) {
+        if (word.isNotEmpty()) {
+            result.append(word[0]).append("...")
+        }
+    }
+
+    // Remove the trailing dots
+    result.deleteCharAt(result.length - 1)
+    result.deleteCharAt(result.length - 1)
+
+    return result.toString()
+}
+
+fun hideDate(input: String): String {
+    val reversedInput = input.reversed()
+    val dotIndex = reversedInput.indexOf('.')
+
+    return if (dotIndex != -1) {
+        reversedInput.substring(0, dotIndex + 1).reversed()
+    } else {
+        input
+    }
+}
 
 
 

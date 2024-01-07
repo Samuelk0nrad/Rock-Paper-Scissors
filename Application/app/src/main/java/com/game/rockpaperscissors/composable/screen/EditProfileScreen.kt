@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -41,19 +42,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
+import java.io.File
 
 
 @Composable
 fun EditProfileScreen(
     state: PlayerDataState,
     onEvent: (PlayerDataEvent) -> Unit,
-    nevController: NavController
+    nevController: NavController,
+    context: Context
 
 ) {
     var fullName by remember {
@@ -80,22 +84,40 @@ fun EditProfileScreen(
         mutableStateOf(state.allPlayer[0].showData)
     }
 
+    var fileName: String? by remember {
+        mutableStateOf(state.allPlayer[0].userImage)
+
+    }
+
     onEvent(PlayerDataEvent.SetFullName(fullName))
     onEvent(PlayerDataEvent.SetUserName(userName))
     onEvent(PlayerDataEvent.SetBirthData(birthDate))
     onEvent(PlayerDataEvent.SetGender(gender))
     onEvent(PlayerDataEvent.SetShowData(showData))
     onEvent(PlayerDataEvent.SetShowName(showName))
+    onEvent(PlayerDataEvent.SetUserImage(fileName!!))
 
 
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
 
+
+
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {uri -> if(uri != null) imageUri = uri; onEvent(PlayerDataEvent.SetUserImage(uri.toString()))}
+        onResult = {uri ->
+            if(uri != null){
+                imageUri = uri
+                fileName = saveImageToInternalStorage(context = context, uri = uri, fileName = "profile_picture")
+
+                onEvent(PlayerDataEvent.SetUserImage(fileName!!))
+
+            }
+        }
     )
+
+
 
 
     Column (
@@ -184,23 +206,31 @@ fun EditProfileScreen(
                     .height(86.dp)
                     .width(86.dp)
 
+
             ) {
 
+
+                val imageFile: File? = getImage(context, fileName)
+
+
                 Image(
+                    contentDescription = "Profile",
+                    imageVector = Icons.Rounded.Person,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(100.dp))
-                        .background(appColor.onBackground),
-                    imageVector = Icons.Rounded.Person,
-                    contentDescription = "Profile"
-                )
+                        .background(appColor.onBackground)
 
-                AsyncImage(
-                    model = imageUri,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
                 )
+                if (imageFile != null) {
+                    AsyncImage(
+                        model = imageFile.toUri(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                            .clip(RoundedCornerShape(100.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.BottomEnd

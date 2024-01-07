@@ -21,6 +21,8 @@ import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.game.rockpaperscissors.ui.theme.appColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = appColor.background
                 ) {
-                    Navigation()
+                    Navigation(context = getApplicationContext())
                 }
             }
         }

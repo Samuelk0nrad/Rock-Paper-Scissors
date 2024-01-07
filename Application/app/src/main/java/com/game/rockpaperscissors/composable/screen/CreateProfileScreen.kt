@@ -1,6 +1,8 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.content.Context
 import android.net.Uri
+import android.view.View
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,7 +46,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.PlayerDataState
@@ -52,14 +53,17 @@ import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 
 @Composable
 fun CreateProfileScreen(
     state: PlayerDataState,
     onEvent: (PlayerDataEvent) -> Unit,
-    nevController: NavController
-
+    nevController: NavController,
+    context: Context
 ) {
 
 
@@ -79,9 +83,21 @@ fun CreateProfileScreen(
         mutableStateOf<Uri?>(null)
     }
 
+    var fileName: String? by remember {
+        mutableStateOf(null)
+    }
+
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {uri -> if(uri != null) imageUri = uri; onEvent(PlayerDataEvent.SetUserImage(uri.toString()))}
+        onResult = {uri ->
+            if(uri != null){
+                imageUri = uri
+                fileName = saveImageToInternalStorage(context = context, uri = uri, fileName = "profile_picture")
+
+                onEvent(PlayerDataEvent.SetUserImage(fileName!!))
+
+            }
+        }
     )
 
     Column (
@@ -121,19 +137,20 @@ fun CreateProfileScreen(
                 contentAlignment = Alignment.Center
 
             ){
+                val imageFile: File? = fileName?.let { getImage(context, it) }
 
-                if(imageUri == null) {
-                    Icon(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(13.dp),
-                        imageVector = Icons.Rounded.CameraAlt,
-                        contentDescription = "Camara",
-                        tint = appColor.background
-                    )
-                } else{
+
+                Icon(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(13.dp),
+                    imageVector = Icons.Rounded.CameraAlt,
+                    contentDescription = "Camara",
+                    tint = appColor.background
+                )
+                if (imageFile != null) {
                     AsyncImage(
-                        model = imageUri,
+                        model = imageFile.toUri(),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -451,5 +468,38 @@ fun Spinner(
     }
 }
 
+
+
+fun saveImageToInternalStorage(context: Context, uri: Uri, fileName: String): String {
+    try {
+        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+        val file = File(context.filesDir, "image_$fileName.png")
+        val outputStream = FileOutputStream(file)
+        inputStream?.copyTo(outputStream)
+        inputStream?.close()
+        outputStream.close()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
+    return "image_$fileName.png"
+}
+
+fun getImage(context: Context, filename: String?): File? {
+
+    return if(filename != null) {
+        val filesDir = context.filesDir
+        val imageFile = File(filesDir, filename)
+
+        // Check if the file exists
+        if (imageFile.exists()) {
+            imageFile
+        } else {
+            null
+        }
+    } else{
+        null
+    }
+}
 
 

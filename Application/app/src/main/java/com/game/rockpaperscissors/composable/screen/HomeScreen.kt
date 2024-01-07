@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BarChart
+import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PersonPin
@@ -42,10 +44,11 @@ import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.gameModes
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
+import java.io.File
 
 
 @Composable
-fun HomeScreen (navController: NavController, profileImage: String){
+fun HomeScreen (navController: NavController, profileImage: String, context: Context){
 
     Column (
         modifier = Modifier
@@ -84,19 +87,22 @@ fun HomeScreen (navController: NavController, profileImage: String){
                         navController.navigate(Screen.ProfileScreen.route)
                     }
                 ) {
+                    val imageFile: File? = getImage(context, profileImage)
+
 
                     Image(
                         modifier = Modifier.fillMaxSize(),
                         imageVector = Icons.Rounded.Person,
                         contentDescription = "Profile"
                     )
-
-                    AsyncImage(
-                        model = profileImage.toUri(),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
+                    if (imageFile != null) {
+                        AsyncImage(
+                            model = imageFile.toUri(),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
 
                 }
             }

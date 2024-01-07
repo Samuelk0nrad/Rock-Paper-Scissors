@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,7 +44,7 @@ import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.appColor
 
 @Composable
-fun Navigation() {
+fun Navigation(context: Context) {
 
     val navController = rememberNavController()
 
@@ -85,7 +86,8 @@ fun Navigation() {
                 CreateProfileScreen(
                     state = state,
                     onEvent = viewModel::onEvent,
-                    nevController = navController
+                    nevController = navController,
+                    context = context
                 )
             }
         }
@@ -151,7 +153,8 @@ fun Navigation() {
                         gameMode = viewModel.gameMode,
                         gameViewModel = viewModel,
                         onEvent = gameDataViewModel::onEvent,
-                        navController = navController
+                        navController = navController,
+                        context = context
                     )
                 }
             }
@@ -171,7 +174,8 @@ fun Navigation() {
                 if (player != null) {
                     GamePlayerProfileScreen(
                         navController = navController,
-                        player = player
+                        player = player,
+                        context = context
                     )
                 }
             }
@@ -189,7 +193,7 @@ fun Navigation() {
                 profileImage = state.allPlayer[0].userImage
             }
 
-            HomeScreen(navController, profileImage)
+            HomeScreen(navController, profileImage, context)
         }
 
         composable(route = Screen.ProfileScreen.route){
@@ -205,7 +209,8 @@ fun Navigation() {
                     deleteAcount = {
                         viewModel.onEvent(it)
                         navController.navigate(Screen.LogIn.route)
-                    }
+                    },
+                    context = context
                 )
             }
 
@@ -219,7 +224,8 @@ fun Navigation() {
                 EditProfileScreen(
                     state = state,
                     onEvent = viewModel::onEvent,
-                    nevController = navController
+                    nevController = navController,
+                    context = context
                 )
             }
         }

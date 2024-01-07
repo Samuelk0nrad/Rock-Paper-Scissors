@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.GameModesEnum
@@ -11,7 +12,8 @@ fun SetingUpGameScreen(
     gameMode: GameModesEnum,
     gameViewModel: GameViewModel,
     onEvent: (GameDataEvent) -> Unit,
-    navController: NavController
+    navController: NavController,
+    context: Context
 ){
 
     when(gameMode){
@@ -19,7 +21,8 @@ fun SetingUpGameScreen(
             RandomGameScreen(
                 gameViewModel = gameViewModel,
                 onEvent = onEvent,
-                navController = navController
+                navController = navController,
+                context = context
             )
         }
         GameModesEnum.LOCAL_MULTIPLAYER -> TODO()

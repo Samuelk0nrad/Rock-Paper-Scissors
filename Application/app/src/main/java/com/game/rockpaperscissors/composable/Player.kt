@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,24 +22,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import coil.compose.AsyncImage
 import com.game.rockpaperscissors.R
+import com.game.rockpaperscissors.composable.screen.getImage
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
+import java.io.File
 
-@Preview
+
 @Composable
 fun Player(
-    profilePicture: Painter = painterResource(id = R.drawable.blank_profile_picture),
+    profilePicture: String,
     userName: String = "User Name",
     isBot: Boolean = true,
     level: Int = 41,
     isReady: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    context: Context
 
 ){
     Row(
@@ -55,10 +62,23 @@ fun Player(
                 .clip(CircleShape)
                 .size(98.dp)
         ){
+
+
+            val imageFile: File? = getImage(context, profilePicture)
+
+
             Image(
-                painter = profilePicture,
+                painter = painterResource(id = R.drawable.blank_profile_picture),
                 contentDescription = "Profile Picture"
             )
+            if (imageFile != null) {
+                AsyncImage(
+                    model = imageFile.toUri(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
 
         Spacer(modifier = Modifier.width(16.dp))

@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.content.Context
 import android.os.Looper
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -109,7 +110,8 @@ class GameScreen (
 
     @Composable
     fun CompGameScreen(
-        onReset: () -> Unit
+        onReset: () -> Unit,
+        context: Context
     ) {
         roundData.playerSelection = _playerSelection.currentSelection
         roundData.enemySelection = _enemySelection.currentSelection
@@ -148,7 +150,9 @@ class GameScreen (
                         gameViewModel.selectedPlayer = gameViewModel.enemy
 
                         navController.navigate(Screen.GamePlayerProfileScreen.route)
-                    }
+                    },
+                    context = context,
+                    profilePicture = gameViewModel.enemy.userImage
                 )
                 Spacer(modifier = Modifier.height(55.dp))
 
@@ -196,7 +200,9 @@ class GameScreen (
 
                         navController.navigate(Screen.GamePlayerProfileScreen.route)
                     },
-                    isBot = false
+                    isBot = false,
+                    context = context,
+                    profilePicture = gameViewModel.player.userImage
                 )
                 Spacer(modifier = Modifier.height(60.dp))
             }

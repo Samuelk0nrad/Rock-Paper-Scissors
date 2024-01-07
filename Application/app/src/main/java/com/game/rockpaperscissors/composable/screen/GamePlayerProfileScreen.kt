@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable.screen
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,21 +27,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
+import java.io.File
 
 @Composable
 fun GamePlayerProfileScreen(
     navController: NavController,
-    player: PlayerData
+    player: PlayerData,
+    context: Context
 ) {
 
 
@@ -94,26 +100,6 @@ fun GamePlayerProfileScreen(
                     )
                 }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 6.dp, end = 12.dp),
-                    contentAlignment = Alignment.TopEnd
-
-                ) {
-                    Icon(
-                        modifier = Modifier.clickable {
-
-                            navController.navigate(Screen.EditProfileScreen.route)
-
-                        },
-                        imageVector = Icons.Rounded.Edit,
-                        contentDescription = "Go Back",
-                        tint = appColor.onBackground
-                    )
-                }
-
-
             }
 
 
@@ -122,41 +108,29 @@ fun GamePlayerProfileScreen(
                     .padding(top = 46.dp)
                     .height(86.dp)
                     .width(86.dp)
+                    .clip(RoundedCornerShape(100.dp))
 
             ) {
+                val fileName = player.userImage
+
+                val imageFile: File? = getImage(context, fileName)
 
                 Image(
+                    contentDescription = "Profile",
+                    imageVector = Icons.Rounded.Person,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(100.dp))
-                        .background(appColor.onBackground),
-                    imageVector = Icons.Rounded.Person,
-                    contentDescription = "Profile"
+                        .background(appColor.onBackground)
                 )
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomEnd
-                ) {
 
 
-                    Box(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clip(RoundedCornerShape(30.dp))
-                            .clickable {
-
-
-                            }
-                            .background(appColor.background),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(22.dp),
-                            imageVector = Icons.Rounded.CameraAlt,
-                            contentDescription = "Camera",
-                            tint = appColor.onBackground
-                        )
-                    }
+                if (imageFile != null) {
+                    AsyncImage(
+                        model = imageFile.toUri(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
                 }
             }
         }
@@ -167,7 +141,7 @@ fun GamePlayerProfileScreen(
             item {
                 Spacer(modifier = Modifier.height(28.dp))
 
-                ProfileNames(name = player.name, title = "Full Name")
+                ProfileNames(name = if(player.showName) player.name else hideName(player.name), title = "Full Name")
             }
 
             item {
@@ -202,7 +176,7 @@ fun GamePlayerProfileScreen(
 
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = player.birthData,
+                            text = if(player.showData) player.birthData else hideDate(player.birthData),
                             fontSize = 20.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Bold,
