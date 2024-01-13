@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Looper
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,10 +13,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -23,11 +26,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.GameFunktions
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.composable.Player
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.composable.Selection
@@ -61,14 +67,16 @@ class GameScreen (
         selection = SelectionType.ROCK,
         isSelected = false,
         isSelectable = true,
-        hide = false
+        hide = false,
+        isOnToSelect = true
     ))
 
     private var _enemyData by mutableStateOf(PlayerPlayData(
         selection = SelectionType.ROCK,
         isSelected = false,
         isSelectable = true,
-        hide = false
+        hide = false,
+        isOnToSelect = false
     ))
 
     var playerData get() = _playerData
@@ -120,6 +128,17 @@ class GameScreen (
             mutableStateOf(isShowWinText)
         }
 
+        var enemyBackground by remember {
+            mutableIntStateOf(R.drawable.rot_farb_verlauf)
+        }
+        enemyBackground = if(_enemyData.isOnToSelect) R.drawable.gruen_farb_verlauf else R.drawable.rot_farb_verlauf
+
+
+        var playerBackground by remember {
+            mutableIntStateOf(R.drawable.gruen_farb_verlauf)
+        }
+
+        playerBackground = if(_playerData.isOnToSelect) R.drawable.gruen_farb_verlauf else R.drawable.rot_farb_verlauf
 
         isVisible = isShowWinText
 
@@ -133,6 +152,34 @@ class GameScreen (
                 .background(appColor.background)
         ) {
 
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ){
+                Image(
+                    modifier = Modifier.rotate(180f)
+                        .fillMaxWidth(),
+                    painter = painterResource(id = enemyBackground),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+//                    alpha = 0.5f
+                )
+
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomCenter
+                ){
+                    Image(
+                        modifier = Modifier.fillMaxWidth(),
+                        painter = painterResource(id = playerBackground),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+//                        alpha = 0.5f
+                    )
+
+                }
+            }
 
             //Enemy
             Column(

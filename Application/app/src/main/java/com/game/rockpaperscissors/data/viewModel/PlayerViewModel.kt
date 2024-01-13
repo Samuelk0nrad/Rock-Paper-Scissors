@@ -44,10 +44,7 @@ class PlayerViewModel @Inject constructor(
                 val showData = _state.value.showData
                 val showName = _state.value.showName
 
-                if (fullName.isBlank() ||
-                    userName.isBlank() ||
-                    birthData.isBlank()
-                    ){
+                if (fullName.isBlank() || userName.isBlank()){
 
                     Log.d("Room.databaseBuilder.PlayerDatabase","return")
                     return

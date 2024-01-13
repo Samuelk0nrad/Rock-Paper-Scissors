@@ -112,14 +112,10 @@ fun CreateProfileScreen(
     var isUserNameBlank by remember {
         mutableStateOf(false)
     }
-    var isDateBlank by remember {
-        mutableStateOf(false)
-    }
 
     if(isBlank){
         isNameBlank = fullName == ""
         isUserNameBlank = userName == ""
-        isDateBlank = birthDate == ""
     }
 
 
@@ -237,7 +233,7 @@ fun CreateProfileScreen(
                 placeholder = "Birth Date",
                 modifier = Modifier.width(269.dp),
                 onlyNumbers = true,
-                lineColor = if(isDateBlank) appColor.red else appColor.onBackground
+                lineColor = appColor.onBackground
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -370,7 +366,7 @@ fun CreateProfileScreen(
                         .background(appColor.secondaryContainer)
                         .fillMaxWidth()
                         .clickable {
-                            if (state.fullName.isNotBlank() && state.userName.isNotBlank() && state.birthData.isNotBlank()) {
+                            if (state.fullName.isNotBlank() && state.userName.isNotBlank()) {
                                 nevController.navigate(Screen.HomeScreen.route)
                             } else {
                                 isBlank = true
@@ -501,6 +497,7 @@ fun Spinner(
 
 
         DropdownMenu(
+            modifier = Modifier.background(appColor.onSecondaryContainer),
             expanded = expanded,
             onDismissRequest = {
                 expanded = false

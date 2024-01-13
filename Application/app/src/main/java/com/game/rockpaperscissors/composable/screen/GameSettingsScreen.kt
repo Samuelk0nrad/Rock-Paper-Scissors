@@ -60,6 +60,10 @@ fun GameSettingScreen(
             gameViewModel.enemy = enemy
         }
         GameModesEnum.LOCAL_MULTIPLAYER -> {
+            val i = (enemyData.indices).random()
+
+            val enemy = enemyData[i]
+            gameViewModel.enemy = enemy
 
         }
         GameModesEnum.ONLINE_MULTIPLAYER -> {

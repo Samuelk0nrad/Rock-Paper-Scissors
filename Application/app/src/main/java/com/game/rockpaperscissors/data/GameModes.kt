@@ -52,8 +52,8 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.white_multiplayer,
-        rout = Screen.MainGame.route,
-        available = false
+        rout = "${Screen.GameSettingScreen.route}/LOCAL_MULTIPLAYER",
+        available = true
     ),
     GameModes(
         name = "Online Multiplayer",

@@ -54,7 +54,6 @@ fun VsPlayer(
         modifier = Modifier
             .fillMaxWidth()
             .height(115.dp)
-            .background(appColor.background)
     ){
         Box(
             modifier = Modifier

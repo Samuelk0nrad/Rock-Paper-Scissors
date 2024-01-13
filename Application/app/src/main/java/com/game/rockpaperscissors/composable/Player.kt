@@ -52,7 +52,6 @@ fun Player(
         modifier = Modifier
             .width(220.dp)
             .height(98.dp)
-            .background(appColor.background)
             .clickable {
                 onClick()
             }

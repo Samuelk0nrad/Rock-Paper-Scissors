@@ -265,8 +265,7 @@ class Selection {
         Box(
             modifier = Modifier
                 .width(width.dp)
-                .height(163.dp)
-                .background(appColor.background),
+                .height(163.dp),
             contentAlignment = Alignment.TopCenter
         ){
 

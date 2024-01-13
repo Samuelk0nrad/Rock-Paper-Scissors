@@ -25,7 +25,14 @@ fun SetingUpGameScreen(
                 context = context
             )
         }
-        GameModesEnum.LOCAL_MULTIPLAYER -> TODO()
+        GameModesEnum.LOCAL_MULTIPLAYER -> {
+            LocalMultiplayerGameScreen(
+                gameViewModel = gameViewModel,
+                onEvent = onEvent,
+                navController = navController,
+                context = context
+            )
+        }
         GameModesEnum.ONLINE_MULTIPLAYER -> TODO()
         GameModesEnum.AI_MODE -> TODO()
     }

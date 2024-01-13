@@ -332,7 +332,8 @@ fun EditProfileScreen(
                     onEvent(PlayerDataEvent.SetGender(it))
 
                 },
-                value = gender
+                value = gender,
+
             )
         }
 
