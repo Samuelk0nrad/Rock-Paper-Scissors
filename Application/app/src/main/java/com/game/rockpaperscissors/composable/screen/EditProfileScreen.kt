@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.Check
@@ -39,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -95,9 +97,8 @@ fun EditProfileScreen(
     onEvent(PlayerDataEvent.SetGender(gender))
     onEvent(PlayerDataEvent.SetShowData(showData))
     onEvent(PlayerDataEvent.SetShowName(showName))
-    if(state.userImage.isBlank()){
+    if(state.userImage.isBlank() && fileName != null){
         onEvent(PlayerDataEvent.SetUserImage(fileName!!))
-
     }
 
 
@@ -297,7 +298,7 @@ fun EditProfileScreen(
             },
             placeholder = "Birth Date",
             modifier = Modifier.width(269.dp),
-            onlyNumbers = true
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
         Spacer(modifier = Modifier.height(63.dp))

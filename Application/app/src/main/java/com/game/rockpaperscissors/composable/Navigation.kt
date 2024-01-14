@@ -5,9 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,16 +21,19 @@ import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.SetBarColor
 import com.game.rockpaperscissors.composable.screen.CreateProfileScreen
 import com.game.rockpaperscissors.composable.screen.EditProfileScreen
+import com.game.rockpaperscissors.composable.screen.FriendsScreen
 import com.game.rockpaperscissors.composable.screen.GamePlayerProfileScreen
-import com.game.rockpaperscissors.composable.screen.GameScreen
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
 import com.game.rockpaperscissors.composable.screen.GameSettingScreen
 import com.game.rockpaperscissors.composable.screen.GameStatisticScreen
 import com.game.rockpaperscissors.composable.screen.HomeScreen
+import com.game.rockpaperscissors.composable.screen.LoginScreen
 import com.game.rockpaperscissors.composable.screen.ModeStatisticScreen
 import com.game.rockpaperscissors.composable.screen.ProfileScreen
 import com.game.rockpaperscissors.composable.screen.RoundStatisticScreen
+import com.game.rockpaperscissors.composable.screen.SignUpScreen
 import com.game.rockpaperscissors.composable.screen.StatisticScreen
+import com.game.rockpaperscissors.composable.screen.StartScreen
 import com.game.rockpaperscissors.composable.screen.WelcomeScreen
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
@@ -67,14 +68,12 @@ fun Navigation(context: Context) {
 
     NavHost(navController = navController, startDestination = start ){
 
-        navigation(route = Screen.LogIn.route, startDestination = Screen.WelcomeScreen.route) {
-            composable(route = Screen.WelcomeScreen.route) {
+        navigation(route = Screen.LogIn.route, startDestination = Screen.StartScreen.route) {
+            composable(route = Screen.StartScreen.route) {
                 SetBarColor(appColor.background)
 
 
-
-
-                WelcomeScreen(navController)
+                StartScreen(navController)
             }
 
             composable(route = Screen.CreateNewAccountScreen.route) {
@@ -88,6 +87,24 @@ fun Navigation(context: Context) {
                     onEvent = viewModel::onEvent,
                     nevController = navController,
                     context = context
+                )
+            }
+
+            composable(route = Screen.LoginScreen.route){
+                LoginScreen(
+                    navController = navController
+                )
+            }
+
+            composable(route = Screen.SignUpScreen.route){
+                SignUpScreen(
+                    navController = navController
+                )
+            }
+
+            composable(route = Screen.WelcomeScreen.route){
+                WelcomeScreen(
+                    navController = navController
                 )
             }
         }
@@ -291,6 +308,10 @@ fun Navigation(context: Context) {
                 if (roundData != null) {
                     RoundStatisticScreen(navController = navController, round = roundData)
                 }
+            }
+
+            composable(route = Screen.FriendsScreen.route){
+                FriendsScreen()
             }
         }
     }

@@ -2,7 +2,7 @@ package com.game.rockpaperscissors.data
 
 sealed class Screen(val route: String){
 
-    object WelcomeScreen : Screen("welcome_screen")
+    object StartScreen : Screen("welcome_screen")
     object CreateNewAccountScreen : Screen("create_new_account_screen")
 
     object MainGame : Screen("main_game")
@@ -18,4 +18,8 @@ sealed class Screen(val route: String){
     object RoundStatisticScreen : Screen("round_statistic_screen")
     object MainStatistic: Screen("main_statistic")
     object GamePlayerProfileScreen: Screen("game_player_profile_screen")
+    object FriendsScreen: Screen("friends_screen")
+    object WelcomeScreen: Screen("friends_screen")
+    object LoginScreen: Screen("login_screen")
+    object SignUpScreen: Screen("sign_up_screen")
 }

@@ -289,6 +289,8 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
                                     .height(size.dp)
                                     .clickable {
 
+                                        navController.navigate(Screen.FriendsScreen.route)
+
 
                                     }
                                     .background(appColor.secondaryContainer),

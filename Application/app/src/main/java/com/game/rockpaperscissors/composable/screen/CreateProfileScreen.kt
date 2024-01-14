@@ -44,7 +44,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -232,7 +235,7 @@ fun CreateProfileScreen(
                 },
                 placeholder = "Birth Date",
                 modifier = Modifier.width(269.dp),
-                onlyNumbers = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 lineColor = appColor.onBackground
             )
 
@@ -403,12 +406,14 @@ fun CustomTextFiled(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
-    onlyNumbers: Boolean = false,
-    lineColor: Color = appColor.onBackground
+    lineColor: Color = appColor.onBackground,
+    startPadding: Dp = 51.dp,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     Box (
         modifier = modifier
-            .padding(start = 51.dp, end = 51.dp)
+            .padding(start = startPadding, end = startPadding)
             .height(35.dp),
         contentAlignment = Alignment.Center
     ){
@@ -424,9 +429,9 @@ fun CustomTextFiled(
                 letterSpacing = 1.sp,
                 color = appColor.onBackground
             ),
+            visualTransformation = visualTransformation,
             singleLine = true,
-            keyboardOptions = if(!onlyNumbers) KeyboardOptions.Default
-                else KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = keyboardOptions,
             cursorBrush = SolidColor(appColor.onBackground)
         )
 
