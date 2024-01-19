@@ -43,9 +43,12 @@ import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
 import com.game.rockpaperscissors.data.viewModel.NavigationViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.appColor
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun Navigation(context: Context) {
+fun Navigation(
+    context: Context,
+) {
 
     val navController = rememberNavController()
 
@@ -56,58 +59,8 @@ fun Navigation(context: Context) {
     val viewModel = hiltViewModel<PlayerViewModel>()
     val state by viewModel.state.collectAsState()
 
-    val start: String
 
-    if(state.allPlayer.isNotEmpty()){
-        start = Screen.HomeScreen.route
-        Log.d("PlayerViewModel", "isNotEmpty: ${state.allPlayer.size}")
-    } else{
-        start = Screen.LogIn.route
-    }
-
-
-    NavHost(navController = navController, startDestination = start ){
-
-        navigation(route = Screen.LogIn.route, startDestination = Screen.StartScreen.route) {
-            composable(route = Screen.StartScreen.route) {
-                SetBarColor(appColor.background)
-
-
-                StartScreen(navController)
-            }
-
-            composable(route = Screen.CreateNewAccountScreen.route) {
-                SetBarColor(colorSystem = appColor.background)
-
-                val viewModel = hiltViewModel<PlayerViewModel>()
-                val state by viewModel.state.collectAsState()
-
-                CreateProfileScreen(
-                    state = state,
-                    onEvent = viewModel::onEvent,
-                    nevController = navController,
-                    context = context
-                )
-            }
-
-            composable(route = Screen.LoginScreen.route){
-                LoginScreen(
-                    navController = navController
-                )
-            }
-
-            composable(route = Screen.SignUpScreen.route){
-                SignUpScreen(
-                    navController = navController
-                )
-            }
-
-            composable(route = Screen.WelcomeScreen.route){
-                WelcomeScreen(
-                    navController = navController
-                )
-            }
-        }
+    NavHost(navController = navController, startDestination = Screen.HomeScreen.route ){
 
         navigation(
             route = Screen.MainGame.route,

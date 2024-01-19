@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.composable.screen
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -34,12 +35,15 @@ import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview
 @Composable
 fun SignUpScreen(
-    navController: NavController
+    navController: NavController,
+    auth: FirebaseAuth,
+    signUp: (String, String) -> Unit
 ) {
 
     var eMail by remember{
@@ -106,6 +110,8 @@ fun SignUpScreen(
                     .background(appColor.secondaryContainer)
                     .fillMaxWidth()
                     .clickable {
+
+
                            navController.navigate(Screen.HomeScreen.route)
                     }
                     .padding(top = 10.dp, bottom = 10.dp)
@@ -134,6 +140,9 @@ fun SignUpScreen(
                     letterSpacing = 0.65.sp,
                 )
                 Text(
+                    modifier = Modifier.clickable {
+                        navController.navigate(Screen.LoginScreen.route)
+                    },
                     text = "Login",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
@@ -181,8 +190,3 @@ fun SignUpScreen(
 
 
 }
-
-
-
-
-

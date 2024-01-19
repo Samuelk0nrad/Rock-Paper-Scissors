@@ -7,6 +7,7 @@ import com.game.rockpaperscissors.data.local.database.GameDataDao
 import com.game.rockpaperscissors.data.local.database.GameDatabase
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
 import com.game.rockpaperscissors.data.local.database.PlayerDatabase
+import com.game.rockpaperscissors.firebase.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,4 +62,16 @@ object AppModule {
     @Singleton
     @Named("enemyDao")
     fun provideEnemyDbDao(enemyDatabase: EnemyDatabase) : PlayerDataDao = enemyDatabase.dao
+
+    @Provides
+    @Singleton
+    fun provideContext(@ApplicationContext appContext: Context) : Context = appContext
+
+    @Provides
+    @Singleton
+    fun provideUserRepository() : UserRepository {
+        return UserRepository
+    }
+
+
 }

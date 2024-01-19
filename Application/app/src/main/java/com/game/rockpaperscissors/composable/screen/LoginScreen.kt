@@ -45,7 +45,8 @@ import com.game.rockpaperscissors.ui.theme.appColor
 //@Preview
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    logIn: (String, String) -> Unit
 ) {
 
     var eMail by remember{
@@ -158,6 +159,9 @@ fun LoginScreen(
                     letterSpacing = 0.65.sp,
                 )
                 Text(
+                    modifier = Modifier.clickable {
+                        navController.navigate(Screen.SignUpScreen.route)
+                    },
                     text = "Sign Up",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
