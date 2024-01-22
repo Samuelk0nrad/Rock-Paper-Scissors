@@ -1,8 +1,6 @@
 package com.game.rockpaperscissors.data.viewModel
 
-
-import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,10 +12,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class FirebaseViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val context: Context
 ) : ViewModel() {
 
 
@@ -37,12 +35,7 @@ class FirebaseViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _loginResult.value = UserResult.Error(e.localizedMessage ?: "Unexpected error occurred.")
-
-                Toast.makeText(
-                    context,
-                    "Authentication failed.",
-                    Toast.LENGTH_SHORT,
-                ).show()
+                Log.d("currentUser", "Ellasdlfkj")
             }
         }
     }
@@ -59,14 +52,14 @@ class FirebaseViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
+                Log.d("currentUser", "Ellasdlfkj")
                 _loginResult.value = UserResult.Error(e.localizedMessage ?: "Unexpected error occurred.")
-                Toast.makeText(
-                    context,
-                    "Authentication failed.",
-                    Toast.LENGTH_SHORT,
-                ).show()
             }
         }
     }
 }
+
+
+
+
 

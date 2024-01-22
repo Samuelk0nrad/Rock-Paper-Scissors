@@ -1,6 +1,8 @@
 package com.game.rockpaperscissors.firebase
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -14,9 +16,12 @@ class FirebaseUserRepository @Inject constructor(
         return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             val user = result.user?.toMyAppUser() ?: throw NullPointerException("User is null")
+            Log.d("currentUser", "Workt!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             UserResult.Success(user)
         } catch (e: Exception) {
+            Log.d("currentUser", "loginUserEmailliukjgmnhgfb")
             UserResult.Error(e.localizedMessage ?: "Authentication failed.")
+
         }
     }
 
@@ -24,9 +29,15 @@ class FirebaseUserRepository @Inject constructor(
         return try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user?.toMyAppUser() ?: throw NullPointerException("User is null")
+            Log.d("currentUser", "Workt!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             UserResult.Success(user)
         } catch (e: Exception) {
+            Log.d("currentUser", "${e.localizedMessage}")
+
             UserResult.Error(e.localizedMessage ?: "Authentication failed.")
+
+
+
         }
     }
 

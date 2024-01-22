@@ -58,6 +58,7 @@ import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
+import com.google.firebase.auth.FirebaseUser
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -68,12 +69,21 @@ fun CreateProfileScreen(
     state: PlayerDataState,
     onEvent: (PlayerDataEvent) -> Unit,
     nevController: NavController,
-    context: Context
+    context: Context,
+    user: FirebaseUser?
 ) {
 
+    var displayName : String = ""
 
-    var fullName by remember {
-        mutableStateOf("")
+    if(user != null){
+        if(user.displayName != null){
+            displayName = user.displayName!!
+        }
+    }
+
+
+    var fullName: String by remember {
+        mutableStateOf(displayName)
     }
 
     var userName by remember {

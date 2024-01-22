@@ -7,7 +7,9 @@ import com.game.rockpaperscissors.data.local.database.GameDataDao
 import com.game.rockpaperscissors.data.local.database.GameDatabase
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
 import com.game.rockpaperscissors.data.local.database.PlayerDatabase
+import com.game.rockpaperscissors.firebase.FirebaseUserRepository
 import com.game.rockpaperscissors.firebase.UserRepository
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,10 +69,25 @@ object AppModule {
     @Singleton
     fun provideContext(@ApplicationContext appContext: Context) : Context = appContext
 
+
+
     @Provides
     @Singleton
-    fun provideUserRepository() : UserRepository {
-        return UserRepository
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseUserRepository(auth: FirebaseAuth): FirebaseUserRepository {
+        return FirebaseUserRepository(auth)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(auth: FirebaseAuth): UserRepository {
+        return FirebaseUserRepository(auth)
     }
 
 
