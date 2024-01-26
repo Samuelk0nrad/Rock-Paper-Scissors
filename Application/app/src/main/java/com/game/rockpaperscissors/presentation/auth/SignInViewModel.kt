@@ -4,6 +4,7 @@ import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.MyAppUser
 import com.game.rockpaperscissors.presentation.auth.UserRepository
 import com.game.rockpaperscissors.presentation.auth.UserResult
+import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.SignInResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -24,13 +25,15 @@ class SignInViewModel @Inject constructor(
         password.value = newPassword
     }
 
-    fun onSignUpClick(goToScreen: () -> Unit, errorHandling: (UserResult<MyAppUser>) -> Unit) {
+    fun onSignUpClick(goToScreen: () -> Unit, errorHandling: (SignInResult) -> Unit) {
         launchCatching {
+
+
             val res = accountService.signInEMail(email.value, password.value)
 
             errorHandling(res)
 
-            if(res is UserResult.Success) {
+            if(res.errorMessage == null) {
                 goToScreen()
             }
         }

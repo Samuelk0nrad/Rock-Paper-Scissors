@@ -1,10 +1,12 @@
 package com.game.rockpaperscissors.presentation.auth
 
 import android.net.Uri
+import android.util.Log
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.MyAppUser
 import com.game.rockpaperscissors.presentation.auth.UserRepository
 import com.game.rockpaperscissors.presentation.auth.UserResult
+import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.SignInResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -40,21 +42,36 @@ class SignUpViewModel @Inject constructor(
         confirmPassword.value = newConfirmPassword
     }
 
-    fun onSignUpClick(goToScreen: () -> Unit, errorHandling: (UserResult<MyAppUser>) -> Unit) {
+    fun onSignUpClick(goToScreen: () -> Unit, errorHandling: (String?) -> Unit, onValueChange: (Boolean) -> Unit = {}) {
         launchCatching {
+            onValueChange(true)
+
+            var errorMessage: String? = null
+
+
             if (password.value != confirmPassword.value) {
-                throw Exception("Passwords do not match")
+                errorMessage = "Passwords do not match"
+                errorHandling(errorMessage)
+                onValueChange(false)
             }
 
 
-            val res = accountService.signUpEMail(email.value, password.value)
+            val res = accountService.signUpEMail(email.value, password.value,userName.value,null)
 
-            errorHandling(res)
+            res.errorMessage?.let { Log.d("currentUser --SUVM", it) }
 
             accountService.updateDisplayName(userName = userName.value)
+            onValueChange(false)
 
 
-            if(res is UserResult.Success) {
+
+            if(errorMessage == null) {
+                errorMessage = res.errorMessage
+            }
+
+            errorHandling(errorMessage)
+
+            if(res.errorMessage == null) {
                 goToScreen()
             }
         }

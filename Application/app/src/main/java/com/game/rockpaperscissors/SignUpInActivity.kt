@@ -29,7 +29,6 @@ import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.SignInViewModel
 import com.game.rockpaperscissors.presentation.auth.SignUpViewModel
-import com.game.rockpaperscissors.presentation.auth.ThirdPartySignIn
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.GoogleAuthUiClient
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.game.rockpaperscissors.ui.theme.appColor
@@ -90,31 +89,25 @@ class SignUpInActivity : ComponentActivity() {
                         composable(route = Screen.LoginScreen.route) {
 
                             val viewModel = hiltViewModel<SignInViewModel>()
-                            val thirdPartySignIn = hiltViewModel<ThirdPartySignIn>()
 
                             SignInScreen(
                                 navController = navController,
                                 viewModel = viewModel,
-                                thirdPartySignIn = thirdPartySignIn
                             )
                         }
                         composable(route = Screen.SignUpScreen.route) {
 
                             val viewModel = hiltViewModel<SignUpViewModel>()
-                            val thirdPartySignIn = hiltViewModel<ThirdPartySignIn>()
 
                             SignUpScreen(
                                 navController = navController,
                                 auth = auth,
                                 context = applicationContext,
                                 viewModel = viewModel,
-                                thirdPartySignIn = thirdPartySignIn
                             )
 
                         }
                         composable(route = Screen.WelcomeScreen.route) {
-
-                            val thirdPartySignIn = hiltViewModel<ThirdPartySignIn>()
 
 
                             val googleSignInViewModel = viewModel<AuthViewModel>()
@@ -159,7 +152,6 @@ class SignUpInActivity : ComponentActivity() {
 
                             WelcomeScreen(
                                 navController = navController,
-                                thirdPartySignIn = thirdPartySignIn,
                                 onGoogleSignIn = {
                                     lifecycleScope.launch {
                                         val signInIntentSender = googleAuthUiClient.signIn()

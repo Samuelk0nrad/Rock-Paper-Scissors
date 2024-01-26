@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.auth.SignInViewModel
-import com.game.rockpaperscissors.presentation.auth.ThirdPartySignIn
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 
@@ -40,7 +39,6 @@ import com.game.rockpaperscissors.ui.theme.appColor
 fun SignInScreen(
     navController: NavController,
     viewModel: SignInViewModel,
-    thirdPartySignIn: ThirdPartySignIn
 ) {
 
 
@@ -199,7 +197,7 @@ fun SignInScreen(
 
             Spacer(modifier = Modifier.height(35.dp))
 
-            SocialLogin(thirdPartySignIn){
+            SocialLogin{
                 navController.navigate(Screen.LogedAlreadyIn.route)
             }
         }

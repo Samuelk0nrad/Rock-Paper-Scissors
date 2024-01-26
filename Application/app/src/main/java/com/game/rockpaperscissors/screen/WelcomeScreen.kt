@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
-import com.game.rockpaperscissors.presentation.auth.ThirdPartySignIn
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 
@@ -40,7 +39,6 @@ import com.game.rockpaperscissors.ui.theme.appColor
 @Composable
 fun WelcomeScreen(
     navController: NavController,
-    thirdPartySignIn: ThirdPartySignIn,
     onGoogleSignIn: () -> Unit
 ) {
 
@@ -180,7 +178,7 @@ fun WelcomeScreen(
             
             Spacer(modifier = Modifier.height(35.dp))
 
-            SocialLogin(thirdPartySignIn){
+            SocialLogin{
                 when(it){
                     "Google" -> onGoogleSignIn()
                     "X" -> TODO()
@@ -194,7 +192,7 @@ fun WelcomeScreen(
 
 
 @Composable
-fun SocialLogin(viewModel: ThirdPartySignIn, onClick: (String) -> Unit){
+fun SocialLogin(onClick: (String) -> Unit){
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
@@ -207,9 +205,9 @@ fun SocialLogin(viewModel: ThirdPartySignIn, onClick: (String) -> Unit){
         Spacer(modifier = Modifier.width(34.dp))
 
         SocialLog("X", painterResource(id = R.drawable.twitter)) {
-            viewModel.onSignInXClick {
-                onClick("X")
-            }
+
+            onClick("X")
+
         }
 
 
@@ -217,18 +215,18 @@ fun SocialLogin(viewModel: ThirdPartySignIn, onClick: (String) -> Unit){
 
 
         SocialLog("GitHub", painterResource(id = R.drawable.github)) {
-            viewModel.onSignInGithubClick {
-                onClick("GitHub")
-            }
+
+            onClick("GitHub")
+
         }
 
 
         Spacer(modifier = Modifier.width(34.dp))
 
         SocialLog("Apple", painterResource(id = R.drawable.apple)) {
-            viewModel.onSignInAppleClick {
-                onClick("Apple")
-            }
+
+            onClick("Apple")
+
         }
     }
 }

@@ -81,15 +81,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseUserRepository(@ApplicationContext context: Context, signInClient: SignInClient): FirebaseUserRepository {
-        return FirebaseUserRepository(context, signInClient)
+    fun provideFirebaseUserRepository(@ApplicationContext context: Context): FirebaseUserRepository {
+        return FirebaseUserRepository(context)
     }
 
 
     @Provides
     @Singleton
-    fun provideUserRepository(@ApplicationContext context: Context, signInClient: SignInClient): UserRepository {
-        return FirebaseUserRepository(context, signInClient)
+    fun provideUserRepository(@ApplicationContext context: Context): UserRepository {
+        return FirebaseUserRepository(context)
     }
 
     @Provides

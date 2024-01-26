@@ -21,8 +21,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CameraAlt
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +49,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.auth.SignUpViewModel
-import com.game.rockpaperscissors.presentation.auth.ThirdPartySignIn
+
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 import com.google.firebase.auth.FirebaseAuth
@@ -60,13 +62,16 @@ fun SignUpScreen(
     auth: FirebaseAuth,
     context: Context,
     viewModel: SignUpViewModel,
-    thirdPartySignIn: ThirdPartySignIn
 ) {
+
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
 
 
     val user = auth.currentUser
 
-/*    var userNameError by remember {
+    var userNameError by remember {
         mutableStateOf(false)
     }
 
@@ -75,6 +80,10 @@ fun SignUpScreen(
     }
 
     var passwordError by remember {
+        mutableStateOf(false)
+    }
+
+    var confiermPasswordError by remember {
         mutableStateOf(false)
     }
 
@@ -87,19 +96,16 @@ fun SignUpScreen(
     }
 
     var eMailEText by remember {
-        mutableStateOf("ergp iwlehrgölksdf ölksdjfg")
+        mutableStateOf("")
     }
 
     var passwordEText by remember {
         mutableStateOf("")
     }
 
-//    eMailEText = ""
-//    passwordEText = ""
-//    userNameEText = ""
-//    passwordError = false
-//    eMailError = false
-//    userNameError = false*/
+    var confirePasswordEText by remember {
+        mutableStateOf("")
+    }
 
 
 
@@ -306,60 +312,75 @@ fun SignUpScreen(
 
                 CustomTextFiled(
                     userName.value,
-                    onValueChange = { viewModel.updateEmail(it) },
+                    onValueChange = {
+                        viewModel.updateUserName(it)
+                        userNameError = false
+                        userNameEText = ""
+
+                    },
                     placeholder = "User Name",
                     startPadding = 0.dp,
-                   // lineColor = if(userNameError) appColor.red else appColor.onBackground
+                    lineColor = if(userNameError) appColor.red else appColor.onBackground
                 )
-                /*Text(
+                Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = userNameEText,
                     fontSize = 12.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.ExtraLight,
                     color = appColor.red
-                )*/
+                )
 
                 Spacer(modifier = Modifier.height(33.dp))
 
 
                 CustomTextFiled(
                     email.value,
-                    onValueChange = { viewModel.updateEmail(it) },
+                    onValueChange = {
+
+                        viewModel.updateEmail(it)
+                        eMailError = false
+                        eMailEText = ""
+
+                    },
                     placeholder = "E-Mail",
                     startPadding = 0.dp,
-                    //lineColor = if(eMailError) appColor.red else appColor.onBackground
+                    lineColor = if(eMailError) appColor.red else appColor.onBackground
                 )
-                /*Text(
+                Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = eMailEText,
                     fontSize = 12.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.ExtraLight,
                     color = appColor.red
-                )*/
+                )
 
                 Spacer(modifier = Modifier.height(33.dp))
 
 
                 CustomTextFiled(
                     password.value,
-                    onValueChange = { viewModel.updatePassword(it) },
+                    onValueChange = {
+                        viewModel.updatePassword(it)
+                        passwordError = false
+                        passwordEText = ""
+                    },
                     placeholder = "password",
                     startPadding = 0.dp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = PasswordVisualTransformation(),
-                    //lineColor = if(passwordError) appColor.red else appColor.onBackground
+                    lineColor = if(passwordError) appColor.red else appColor.onBackground
                 )
 
-                /*Text(
+                Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = passwordEText,
+                    text = errorText,
                     fontSize = 12.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.ExtraLight,
                     color = appColor.red
-                )*/
+                )
 
 
                 Spacer(modifier = Modifier.height(33.dp))
@@ -367,17 +388,29 @@ fun SignUpScreen(
 
                 CustomTextFiled(
                     confirmPassword.value,
-                    onValueChange = { viewModel.updateConfirmPassword(it) },
+                    onValueChange = {
+                        viewModel.updateConfirmPassword(it)
+                        confiermPasswordError = false
+                        confirePasswordEText = ""
+                    },
                     placeholder = "Confirm Password",
                     startPadding = 0.dp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = PasswordVisualTransformation(),
-                    //lineColor = if(passwordError) appColor.red else appColor.onBackground
+                    lineColor = if(confiermPasswordError) appColor.red else appColor.onBackground
+                )
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = confirePasswordEText,
+                    fontSize = 12.sp,
+                    fontFamily = Oswald,
+                    fontWeight = FontWeight.ExtraLight,
+                    color = appColor.red
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                /*Text(
+                Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = passwordEText,
                     fontSize = 18.sp,
@@ -385,7 +418,7 @@ fun SignUpScreen(
                     fontWeight = FontWeight.Light,
                     textAlign = TextAlign.Center,
                     color = appColor.red
-                )*/
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -404,8 +437,74 @@ fun SignUpScreen(
                                     navController.navigate(Screen.LogedAlreadyIn.route)
                                 },
                                 errorHandling = {
+                                    when(it){
+                                        "Passwords do not match" -> {
+                                            confiermPasswordError = true
+                                            confirePasswordEText = it
+                                        }
+                                        "The email address is already in use by another account." -> {
+                                            eMailError = true
+                                            eMailEText = "The email address is already in use"
+                                        }
+                                        "Given String is empty or null" -> {
+                                            if(email.value == ""){
+                                                eMailError = true
+                                                eMailEText = ""
+                                            }
 
-                                }
+                                            if(password.value == ""){
+                                                passwordError = true
+                                                passwordEText = ""
+                                            }
+                                        }
+                                        "The email address is badly formatted." -> {
+                                            eMailError = true
+                                            eMailEText = "The email address is badly formatted."
+
+                                        }
+                                        "The given password is invalid. [ Password should be at least 6 characters ]" -> {
+
+                                            passwordError = true
+                                            passwordEText = "Password should be at least 6 characters"
+                                        }
+                                        "The user account has been disabled by an administrator." -> {
+
+                                            errorText = it
+                                        }
+                                        "The provided custom claim attributes are invalid." -> {
+
+
+                                            errorText = it
+                                        }
+
+                                        "This operation is not allowed. You must enable this service in the console." -> {
+
+
+                                            errorText = it
+                                        }
+
+                                        "We have blocked all requests from this device due to unusual activity. Try again later." -> {
+
+
+                                            errorText = it
+                                        }
+
+                                        "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
+
+                                            errorText = it
+                                        }
+
+                                        "An unknown error occurred." -> {
+
+                                            errorText = it
+                                        }
+                                        null -> {}
+                                        else -> {
+                                            errorText = it
+                                        }
+                                    }
+                                },
+                                onValueChange = { isLoading = it }
                             )
                         }
                         .padding(top = 10.dp, bottom = 10.dp)
@@ -483,9 +582,20 @@ fun SignUpScreen(
 
                 Spacer(modifier = Modifier.height(35.dp))
 
-                SocialLogin(thirdPartySignIn){
+                SocialLogin{
                     navController.navigate(Screen.LogedAlreadyIn.route)
                 }
+            }
+        }
+
+        if(isLoading){
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(appColor.background.copy(alpha = 0.3f)),
+                contentAlignment = Alignment.Center
+            ){
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
             }
         }
     }

@@ -1,22 +1,21 @@
 package com.game.rockpaperscissors.presentation.auth
 
-import android.content.Intent
-import android.content.IntentSender
 import android.net.Uri
 import com.game.rockpaperscissors.data.User
+import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.SignInResult
+import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
 import kotlinx.coroutines.flow.Flow
 
 
 interface UserRepository {
-    val currentUser: Flow<User?>
-    val currentUserId: String
+    val currentUser: UserData?
+    val signInResult: SignInResult
     fun hasUser(): Boolean
-    suspend fun signInEMail(email: String, password: String) : UserResult<MyAppUser>
-    suspend fun signUpEMail(email: String, password: String) : UserResult<MyAppUser>
-    suspend fun signInGoogle(intent: Intent)
-    suspend fun signInGoogleIntent() : IntentSender?
+    suspend fun signInEMail(email: String, password: String) : SignInResult
+    suspend fun signUpEMail(email: String, password: String, userName: String, profilePicture: String?) : SignInResult
     suspend fun updateDisplayName(userName: String)
-    suspend fun updateProfilePic(userName: Uri)
+    suspend fun updateProfilePic(userName: String)
+
     suspend fun signOut()
     suspend fun deleteAccount()
 }

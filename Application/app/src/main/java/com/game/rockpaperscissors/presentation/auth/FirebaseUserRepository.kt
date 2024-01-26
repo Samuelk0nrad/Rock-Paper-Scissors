@@ -7,6 +7,8 @@ import android.net.Uri
 import android.util.Log
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.User
+import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.SignInResult
+import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.Firebase
@@ -25,101 +27,117 @@ import javax.inject.Inject
 
 class FirebaseUserRepository @Inject constructor(
     val context: Context,
-    val oneTapClient: SignInClient
 ) : UserRepository {
 
-    override val currentUser: Flow<User?>
-        get() = callbackFlow {
-            val listener =
-                FirebaseAuth.AuthStateListener { auth ->
-                    this.trySend(auth.currentUser?.let { User(it.uid) })
-                }
-            Firebase.auth.addAuthStateListener(listener)
-            awaitClose { Firebase.auth.removeAuthStateListener(listener) }
+    override val currentUser: UserData?
+        get(){
+
+            val user = Firebase.auth.currentUser
+            val res = user?.let {
+                UserData(
+                    userId = user.uid,
+                    username = user.displayName,
+                    profilePictureUrl = user.photoUrl.toString()
+
+                )
+            }
+            return res
         }
 
-    override val currentUserId: String
-        get() = Firebase.auth.currentUser?.uid.orEmpty()
+    override val signInResult: SignInResult = SignInResult(
+        data = Firebase.auth.currentUser?.run {
+            UserData(
+                userId = uid,
+                username = displayName,
+                profilePictureUrl = photoUrl?.toString()
+            )
+        },
+        errorMessage = null
+    )
 
     override fun hasUser(): Boolean {
         return Firebase.auth.currentUser != null
     }
 
-    override suspend fun signInEMail(email: String, password: String) : UserResult<MyAppUser> {
+    override suspend fun signInEMail(email: String, password: String) : SignInResult {
         return try {
-            val result = Firebase.auth.signInWithEmailAndPassword(email, password).await()
-            val user = result.user?.toMyAppUser() ?: throw NullPointerException("User is null")
+            Firebase.auth.signInWithEmailAndPassword(email, password).await()
             Log.d("currentUser", "Workt!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            UserResult.Success(user)
-        } catch (e: Exception) {
-            Log.d("currentUser", "loginUserEmailliukjgmnhgfb")
-            UserResult.Error(e.localizedMessage ?: "Authentication failed.")
-
-        }
-    }
-
-    override suspend fun signUpEMail(email: String, password: String) : UserResult<MyAppUser> {
-        return try {
-            val result = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
-            val user = result.user?.toMyAppUser() ?: throw NullPointerException("User is null")
-            Log.d("currentUser", "Workt!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            UserResult.Success(user)
-        } catch (e: Exception) {
-            Log.d("currentUser", "${e.localizedMessage}")
-
-            UserResult.Error(e.localizedMessage ?: "Authentication failed.")
-        }
-    }
-
-    override suspend fun signInGoogle(intent: Intent) {
-        val credential = oneTapClient.getSignInCredentialFromIntent(intent)
-        val googleIdToken = credential.googleIdToken
-        val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
-
-        try {
-            Firebase.auth.signInWithCredential(googleCredentials).await().user
-        }catch (e: Exception){
-            e.printStackTrace()
-            if(e is CancellationException) throw e
-        }
-    }
-
-    override suspend fun signInGoogleIntent(): IntentSender?{
-        val reslt = try {
-            oneTapClient.beginSignIn(
-                buildSignInRequest()
-            ).await()
-        } catch (e: Exception){
-            e.printStackTrace()
-            if(e is CancellationException) throw e
-            null
-
-        }
-
-        return reslt?.pendingIntent?.intentSender
-    }
-    private fun buildSignInRequest(): BeginSignInRequest{
-        return BeginSignInRequest.builder()
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setServerClientId(context.getString(R.string.firebase_web_client_id))
-                    .setFilterByAuthorizedAccounts(true)
-                    .build()
+            val firebaseUser = Firebase.auth.currentUser ?: throw NullPointerException("User is null")
+            SignInResult(
+                data = firebaseUser.run {
+                    UserData(
+                        userId = uid,
+                        username = displayName,
+                        profilePictureUrl = photoUrl?.toString()
+                    )
+                },
+                errorMessage = null
             )
-            .setAutoSelectEnabled(true)
-            .build()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if(e is CancellationException) throw e
+            SignInResult(
+                data = null,
+                errorMessage = e.message
+            )
+
+        }
+    }
+
+    override suspend fun signUpEMail(email: String, password: String, userName: String, profilePicture: String?) : SignInResult {
+        return try {
+            Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+            Log.d("currentUser", "Workt!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            val firebaseUser = Firebase.auth.currentUser ?: throw NullPointerException("User is null")
+
+            //updateDisplayName(userName)
+
+
+
+            //if(profilePicture != null)
+            //    updateProfilePic(profilePicture)
+
+
+
+            SignInResult(
+                data = firebaseUser.run {
+                    UserData(
+                        userId = uid,
+                        username = displayName,
+                        profilePictureUrl = photoUrl?.toString()
+                    )
+                },
+                errorMessage = null
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if(e is CancellationException) throw e
+
+            e.message?.let { Log.d("currentUser --FUR", it) }
+            SignInResult(
+                data = null,
+                errorMessage = e.message
+            )
+        }
     }
 
     override suspend fun updateDisplayName(userName: String) {
-        val profileUpdates = userProfileChangeRequest {
-            displayName = userName
-        }
 
-        Firebase.auth.currentUser!!.updateProfile(profileUpdates).await()
+        try {
+            val profileUpdates = userProfileChangeRequest {
+                displayName = userName
+            }
+            Firebase.auth.currentUser!!.updateProfile(profileUpdates).await()
+
+        }catch (e: Exception){
+            e.printStackTrace()
+            e.message?.let { Log.d("currentUser --DNFUR", it) }
+
+        }
     }
 
-    override suspend fun updateProfilePic(userName: Uri) {
+    override suspend fun updateProfilePic(userName: String) {
         TODO("Not yet implemented")
     }
 
