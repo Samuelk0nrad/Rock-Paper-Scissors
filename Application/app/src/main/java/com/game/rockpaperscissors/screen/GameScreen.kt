@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
 import android.content.Context
 import android.os.Looper

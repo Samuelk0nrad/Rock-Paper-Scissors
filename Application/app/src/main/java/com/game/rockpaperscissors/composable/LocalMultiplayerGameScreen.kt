@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
-import com.game.rockpaperscissors.composable.screen.GameScreen
+import com.game.rockpaperscissors.screen.GameScreen
 import com.game.rockpaperscissors.data.PlayerPlayData
 import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.local.database.GameDataEvent

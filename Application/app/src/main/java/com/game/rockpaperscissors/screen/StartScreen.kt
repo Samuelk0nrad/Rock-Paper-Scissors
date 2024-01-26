@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

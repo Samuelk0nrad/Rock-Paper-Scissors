@@ -7,8 +7,10 @@ import com.game.rockpaperscissors.data.local.database.GameDataDao
 import com.game.rockpaperscissors.data.local.database.GameDatabase
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
 import com.game.rockpaperscissors.data.local.database.PlayerDatabase
-import com.game.rockpaperscissors.firebase.FirebaseUserRepository
-import com.game.rockpaperscissors.firebase.UserRepository
+import com.game.rockpaperscissors.presentation.auth.FirebaseUserRepository
+import com.game.rockpaperscissors.presentation.auth.UserRepository
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -79,16 +81,20 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseUserRepository(auth: FirebaseAuth): FirebaseUserRepository {
-        return FirebaseUserRepository(auth)
+    fun provideFirebaseUserRepository(@ApplicationContext context: Context, signInClient: SignInClient): FirebaseUserRepository {
+        return FirebaseUserRepository(context, signInClient)
     }
 
 
     @Provides
     @Singleton
-    fun provideUserRepository(auth: FirebaseAuth): UserRepository {
-        return FirebaseUserRepository(auth)
+    fun provideUserRepository(@ApplicationContext context: Context, signInClient: SignInClient): UserRepository {
+        return FirebaseUserRepository(context, signInClient)
     }
+
+    @Provides
+    @Singleton
+    fun provideSignInClient(@ApplicationContext context: Context): SignInClient = Identity.getSignInClient(context)
 
 
 }

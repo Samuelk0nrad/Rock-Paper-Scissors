@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.game.rockpaperscissors.R
-import com.game.rockpaperscissors.composable.screen.getImage
+import com.game.rockpaperscissors.screen.getImage
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 import java.io.File

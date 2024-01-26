@@ -1,7 +1,6 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
 import android.content.Context
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts

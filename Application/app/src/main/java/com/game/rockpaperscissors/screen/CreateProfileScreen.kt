@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
 import android.content.Context
 import android.net.Uri
@@ -44,7 +44,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp

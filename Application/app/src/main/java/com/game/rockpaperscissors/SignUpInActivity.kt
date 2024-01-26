@@ -1,42 +1,58 @@
 package com.game.rockpaperscissors
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.game.rockpaperscissors.composable.screen.CreateProfileScreen
-import com.game.rockpaperscissors.composable.screen.LoginScreen
-import com.game.rockpaperscissors.composable.screen.SignUpScreen
-import com.game.rockpaperscissors.composable.screen.StartScreen
-import com.game.rockpaperscissors.composable.screen.VerificationScreen
-import com.game.rockpaperscissors.composable.screen.WelcomeScreen
+import com.game.rockpaperscissors.screen.SignInScreen
+import com.game.rockpaperscissors.screen.SignUpScreen
+import com.game.rockpaperscissors.screen.StartScreen
+import com.game.rockpaperscissors.screen.WelcomeScreen
 import com.game.rockpaperscissors.data.Screen
-import com.game.rockpaperscissors.data.viewModel.FirebaseViewModel
-import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
+import com.game.rockpaperscissors.presentation.auth.AuthViewModel
+import com.game.rockpaperscissors.presentation.auth.SignInViewModel
+import com.game.rockpaperscissors.presentation.auth.SignUpViewModel
+import com.game.rockpaperscissors.presentation.auth.ThirdPartySignIn
+import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.GoogleAuthUiClient
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.game.rockpaperscissors.ui.theme.appColor
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignUpInActivity : ComponentActivity() {
 
 
     private lateinit var auth: FirebaseAuth
+
+
+    private val googleAuthUiClient by lazy {
+        GoogleAuthUiClient(
+            context = applicationContext,
+            oneTapClient = Identity.getSignInClient(applicationContext)
+        )
+    }
 
 
 
@@ -65,54 +81,103 @@ class SignUpInActivity : ComponentActivity() {
                             SetBarColor(appColor.background)
                             StartScreen(navController)
                         }
-                        composable(route = Screen.CreateNewAccountScreen.route) {
-                            SetBarColor(colorSystem = appColor.background)
-                            val viewModel = hiltViewModel<PlayerViewModel>()
-                            val state by viewModel.state.collectAsState()
-                            CreateProfileScreen(
-                                state = state,
-                                onEvent = viewModel::onEvent,
-                                nevController = navController,
-                                context = applicationContext,
-                                auth.currentUser
-                            )
+                        composable(route = Screen.MainActivity.route) {
+
+                            val intent = Intent(applicationContext, MainActivity::class.java)
+                            startActivity(intent)
+
                         }
                         composable(route = Screen.LoginScreen.route) {
 
-                            val firebaseViewModel by viewModels<FirebaseViewModel>()
+                            val viewModel = hiltViewModel<SignInViewModel>()
+                            val thirdPartySignIn = hiltViewModel<ThirdPartySignIn>()
 
-
-
-
-                            LoginScreen(
+                            SignInScreen(
                                 navController = navController,
-                                firebaseViewModel::loginUserEmail
+                                viewModel = viewModel,
+                                thirdPartySignIn = thirdPartySignIn
                             )
                         }
                         composable(route = Screen.SignUpScreen.route) {
 
-                            val firebaseViewModel by viewModels<FirebaseViewModel>()
-
-
+                            val viewModel = hiltViewModel<SignUpViewModel>()
+                            val thirdPartySignIn = hiltViewModel<ThirdPartySignIn>()
 
                             SignUpScreen(
                                 navController = navController,
                                 auth = auth,
                                 context = applicationContext,
-                                firebaseViewModel = firebaseViewModel
+                                viewModel = viewModel,
+                                thirdPartySignIn = thirdPartySignIn
                             )
+
                         }
                         composable(route = Screen.WelcomeScreen.route) {
+
+                            val thirdPartySignIn = hiltViewModel<ThirdPartySignIn>()
+
+
+                            val googleSignInViewModel = viewModel<AuthViewModel>()
+                            val state by googleSignInViewModel.state.collectAsStateWithLifecycle()
+
+                            LaunchedEffect(key1 = Unit) {
+                                if(googleAuthUiClient.getSignedInUser() != null) {
+                                    navController.navigate("profile")
+                                }
+                            }
+
+                            val launcher = rememberLauncherForActivityResult(
+                                contract = ActivityResultContracts.StartIntentSenderForResult(),
+                                onResult = { result ->
+                                    if(result.resultCode == RESULT_OK) {
+                                        lifecycleScope.launch {
+                                            val signInResult = googleAuthUiClient.signInWithIntent(
+                                                intent = result.data ?: return@launch
+                                            )
+                                            googleSignInViewModel.onSignInResult(signInResult)
+                                        }
+                                    }
+                                }
+                            )
+
+                            LaunchedEffect(key1 = state.isSignInSuccessful) {
+                                if(state.isSignInSuccessful) {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Sign in successful",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+
+                                    navController.navigate("profile")
+                                    googleSignInViewModel.resetState()
+                                }
+                            }
+
+
+
+
+
                             WelcomeScreen(
-                                navController = navController
+                                navController = navController,
+                                thirdPartySignIn = thirdPartySignIn,
+                                onGoogleSignIn = {
+                                    lifecycleScope.launch {
+                                        val signInIntentSender = googleAuthUiClient.signIn()
+                                        launcher.launch(
+                                            IntentSenderRequest.Builder(
+                                                signInIntentSender ?: return@launch
+                                            ).build()
+                                        )
+                                    }
+                                }
                             )
                         }
                         composable(route = Screen.LogedAlreadyIn.route){
 
                             val user = auth.currentUser
 
-                            Log.d("currentUser","$user : user")
-                            Log.d("currentUser","${user?.isEmailVerified} : user")
+                            Log.d("currentUser --","$user : user")
+                            Log.d("currentUser --","${user?.isEmailVerified} : user")
 
                             if(user == null){
                                 Toast.makeText(
@@ -122,30 +187,8 @@ class SignUpInActivity : ComponentActivity() {
                                 ).show()
 
                                 navController.navigate(Screen.WelcomeScreen.route)
-                            }else if(!user.isEmailVerified){
-
-                                user.sendEmailVerification()
-                                    .addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            Log.d("currentUser", "Email sent.")
-                                        }
-                                    }
-
-                                VerificationScreen(
-                                    reSendEmail = {
-                                        user.sendEmailVerification()
-                                            .addOnCompleteListener { task ->
-                                                if (task.isSuccessful) {
-                                                    Log.d("currentUser", "Email sent.")
-                                                }
-                                            }
-                                    },
-                                    verifyLater = {
-                                        navController.navigate(Screen.CreateNewAccountScreen.route)
-                                    }
-                                )
                             } else{
-                                navController.navigate(Screen.CreateNewAccountScreen.route)
+                                navController.navigate(Screen.MainActivity.route)
                             }
                         }
                     }
@@ -169,6 +212,8 @@ class SignUpInActivity : ComponentActivity() {
             Log.d("currentUser", "NOT isSign In")
         }
     }
+
+
 }
 
 

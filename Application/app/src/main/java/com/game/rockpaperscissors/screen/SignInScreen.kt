@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,55 +10,42 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
+import com.game.rockpaperscissors.presentation.auth.SignInViewModel
+import com.game.rockpaperscissors.presentation.auth.ThirdPartySignIn
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview
 @Composable
-fun LoginScreen(
+fun SignInScreen(
     navController: NavController,
-    logIn: (String, String) -> Unit
+    viewModel: SignInViewModel,
+    thirdPartySignIn: ThirdPartySignIn
 ) {
 
-    var eMail by remember{
-        mutableStateOf("")
-    }
 
-    var password by remember{
-        mutableStateOf("")
-    }
-
-
-
+    val email = viewModel.email.collectAsState()
+    val password = viewModel.password.collectAsState()
 
     Scaffold (
         modifier = Modifier
@@ -86,8 +73,8 @@ fun LoginScreen(
 
 
             CustomTextFiled(
-                eMail,
-                onValueChange = { eMail = it },
+                email.value,
+                onValueChange = { viewModel.updateEmail(it) },
                 placeholder = "E-Mail",
                 startPadding = 0.dp
             )
@@ -95,8 +82,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(43.dp))
 
             CustomTextFiled(
-                password,
-                onValueChange = { password = it },
+                password.value,
+                onValueChange = { viewModel.updatePassword(it) },
                 placeholder = "password",
                 startPadding = 0.dp,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -131,7 +118,16 @@ fun LoginScreen(
                     .background(appColor.secondaryContainer)
                     .fillMaxWidth()
                     .clickable {
-                           navController.navigate(Screen.HomeScreen.route)
+
+                        viewModel.onSignUpClick(
+                            goToScreen = {
+                                navController.navigate(Screen.LogedAlreadyIn.route)
+                            },
+                            errorHandling = {
+
+                            }
+                        )
+
                     }
                     .padding(top = 10.dp, bottom = 10.dp)
             ) {
@@ -203,7 +199,9 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(35.dp))
 
-            SocialLogin()
+            SocialLogin(thirdPartySignIn){
+                navController.navigate(Screen.LogedAlreadyIn.route)
+            }
         }
     }
 }

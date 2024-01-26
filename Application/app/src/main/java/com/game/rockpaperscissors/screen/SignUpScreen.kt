@@ -1,16 +1,14 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,80 +46,62 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.Screen
-import com.game.rockpaperscissors.data.local.database.PlayerDataEvent
-import com.game.rockpaperscissors.data.viewModel.FirebaseViewModel
-import com.game.rockpaperscissors.firebase.UserResult
+import com.game.rockpaperscissors.presentation.auth.SignUpViewModel
+import com.game.rockpaperscissors.presentation.auth.ThirdPartySignIn
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
-//@Preview
 @Composable
 fun SignUpScreen(
     navController: NavController,
     auth: FirebaseAuth,
     context: Context,
-    firebaseViewModel: FirebaseViewModel
+    viewModel: SignUpViewModel,
+    thirdPartySignIn: ThirdPartySignIn
 ) {
 
 
     val user = auth.currentUser
 
-
-
-    when(val loginResult = firebaseViewModel.loginResult.value){
-        is UserResult.Error -> {
-            when(loginResult.errorMessage){
-                "The email address is already in use by another account." -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-                "Given String is empty or null" -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-                "The email address is badly formatted." -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-                "The given password is invalid. [ Password should be at least 6 characters ]" -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-                "The user account has been disabled by an administrator." -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-                "The provided custom claim attributes are invalid." -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-
-                "This operation is not allowed. You must enable this service in the console." -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-
-                "We have blocked all requests from this device due to unusual activity. Try again later." -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-
-                "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-
-                "An unknown error occurred." -> {
-                    Log.d("currentUser -- login Result", loginResult.errorMessage)
-                }
-            }
-
-
-        }
-        is UserResult.Success -> {
-
-        }
-        UserResult.UnitSuccess -> {
-
-        }
-        null -> {
-
-        }
+/*    var userNameError by remember {
+        mutableStateOf(false)
     }
+
+    var eMailError by remember {
+        mutableStateOf(false)
+    }
+
+    var passwordError by remember {
+        mutableStateOf(false)
+    }
+
+    var errorText by remember {
+        mutableStateOf("")
+    }
+
+    var userNameEText by remember {
+        mutableStateOf("")
+    }
+
+    var eMailEText by remember {
+        mutableStateOf("ergp iwlehrgölksdf ölksdjfg")
+    }
+
+    var passwordEText by remember {
+        mutableStateOf("")
+    }
+
+//    eMailEText = ""
+//    passwordEText = ""
+//    userNameEText = ""
+//    passwordError = false
+//    eMailError = false
+//    userNameError = false*/
+
+
 
     if(user != null) {
         navController.navigate(Screen.LogedAlreadyIn.route)
@@ -128,17 +109,103 @@ fun SignUpScreen(
 
 
 
-    var eMail by remember{
-        mutableStateOf("")
-    }
+    //loginResult = firebaseViewModel.loginResult.value
 
-    var password by remember{
-        mutableStateOf("")
-    }
+    val email = viewModel.email.collectAsState()
+    val password = viewModel.password.collectAsState()
+    val confirmPassword = viewModel.confirmPassword.collectAsState()
+    val userName = viewModel.userName.collectAsState()
+    val profilePic = viewModel.profilePicUri.collectAsState()
 
-    var userName by remember{
-        mutableStateOf("")
-    }
+
+
+
+/*    when(loginResult){
+//        is UserResult.Error -> {
+//            when((loginResult as UserResult.Error).errorMessage){
+//                "The email address is already in use by another account." -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//                    eMailError = true
+//                    eMailEText = "The email address is already in use"
+//                }
+//                "Given String is empty or null" -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//                    if(eMail == ""){
+//                        eMailError = true
+//                        eMailEText = ""
+//                    }
+//
+//                    if(password == ""){
+//                        passwordError = true
+//                        passwordEText = ""
+//                    }
+//                }
+//                "The email address is badly formatted." -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//
+//                    eMailError = true
+//                    eMailEText = "The email address is badly formatted."
+//
+//                }
+//                "The given password is invalid. [ Password should be at least 6 characters ]" -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//                    passwordError = true
+//                    passwordEText = "Password should be at least 6 characters"
+//                }
+//                "The user account has been disabled by an administrator." -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//                    errorText = "The user account has been disabled by an administrator."
+//                }
+//                "The provided custom claim attributes are invalid." -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//                    errorText = (loginResult as UserResult.Error).errorMessage
+//                }
+//
+//                "This operation is not allowed. You must enable this service in the console." -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//                    errorText = (loginResult as UserResult.Error).errorMessage
+//                }
+//
+//                "We have blocked all requests from this device due to unusual activity. Try again later." -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//                    errorText = (loginResult as UserResult.Error).errorMessage
+//                }
+//
+//                "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//                    errorText = (loginResult as UserResult.Error).errorMessage
+//                }
+//
+//                "An unknown error occurred." -> {
+//                    Log.d("currentUser -- login Result", (loginResult as UserResult.Error).errorMessage)
+//
+//                    errorText = (loginResult as UserResult.Error).errorMessage
+//                }
+//            }
+//
+//
+//        }
+//        is UserResult.Success -> {
+//
+//            Log.d("currentUser -- login Result", "UserResult.Success")
+//
+//        }
+//        UserResult.UnitSuccess -> {
+//            Log.d("currentUser -- login Result", "UserResult.UnitSuccess")
+//        }
+//        null -> {
+//            Log.d("currentUser -- login Result", "null")
+//        }
+//    }*/
+
 
 
 
@@ -155,6 +222,7 @@ fun SignUpScreen(
         onResult = {uri ->
             if(uri != null){
                 imageUri = uri
+                viewModel.updateProfilePic(uri)
                 fileName = saveImageToInternalStorage(context = context, uri = uri, fileName = "profile_picture")
             }
         }
@@ -170,8 +238,12 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(appColor.background)
-                .padding(top = 94.dp, start = 31.dp, end = 31.dp),
+                .padding(top = 0.dp, start = 31.dp, end = 31.dp),
         ) {
+
+            item {
+                Spacer(modifier = Modifier.height(94.dp))
+            }
 
             item {
                 Text(
@@ -228,44 +300,95 @@ fun SignUpScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(38.dp))
-
-
             }
-
-
-
 
             item {
 
                 CustomTextFiled(
-                    userName,
-                    onValueChange = { userName = it },
+                    userName.value,
+                    onValueChange = { viewModel.updateEmail(it) },
                     placeholder = "User Name",
-                    startPadding = 0.dp
+                    startPadding = 0.dp,
+                   // lineColor = if(userNameError) appColor.red else appColor.onBackground
                 )
+                /*Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = userNameEText,
+                    fontSize = 12.sp,
+                    fontFamily = Oswald,
+                    fontWeight = FontWeight.ExtraLight,
+                    color = appColor.red
+                )*/
 
-                Spacer(modifier = Modifier.height(43.dp))
+                Spacer(modifier = Modifier.height(33.dp))
 
 
                 CustomTextFiled(
-                    eMail,
-                    onValueChange = { eMail = it },
+                    email.value,
+                    onValueChange = { viewModel.updateEmail(it) },
                     placeholder = "E-Mail",
-                    startPadding = 0.dp
+                    startPadding = 0.dp,
+                    //lineColor = if(eMailError) appColor.red else appColor.onBackground
                 )
+                /*Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = eMailEText,
+                    fontSize = 12.sp,
+                    fontFamily = Oswald,
+                    fontWeight = FontWeight.ExtraLight,
+                    color = appColor.red
+                )*/
 
-                Spacer(modifier = Modifier.height(43.dp))
+                Spacer(modifier = Modifier.height(33.dp))
 
 
                 CustomTextFiled(
-                    password,
-                    onValueChange = { password = it },
+                    password.value,
+                    onValueChange = { viewModel.updatePassword(it) },
                     placeholder = "password",
                     startPadding = 0.dp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    visualTransformation = PasswordVisualTransformation()
+                    visualTransformation = PasswordVisualTransformation(),
+                    //lineColor = if(passwordError) appColor.red else appColor.onBackground
                 )
-                Spacer(modifier = Modifier.height(42.dp))
+
+                /*Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = passwordEText,
+                    fontSize = 12.sp,
+                    fontFamily = Oswald,
+                    fontWeight = FontWeight.ExtraLight,
+                    color = appColor.red
+                )*/
+
+
+                Spacer(modifier = Modifier.height(33.dp))
+
+
+                CustomTextFiled(
+                    confirmPassword.value,
+                    onValueChange = { viewModel.updateConfirmPassword(it) },
+                    placeholder = "Confirm Password",
+                    startPadding = 0.dp,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    visualTransformation = PasswordVisualTransformation(),
+                    //lineColor = if(passwordError) appColor.red else appColor.onBackground
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                /*Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = passwordEText,
+                    fontSize = 18.sp,
+                    fontFamily = Oswald,
+                    fontWeight = FontWeight.Light,
+                    textAlign = TextAlign.Center,
+                    color = appColor.red
+                )*/
+
+                Spacer(modifier = Modifier.height(16.dp))
+
             }
 
             item {
@@ -276,7 +399,14 @@ fun SignUpScreen(
                         .background(appColor.secondaryContainer)
                         .fillMaxWidth()
                         .clickable {
-                            firebaseViewModel.signUpUserEmail(eMail, password)
+                            viewModel.onSignUpClick(
+                                goToScreen = {
+                                    navController.navigate(Screen.LogedAlreadyIn.route)
+                                },
+                                errorHandling = {
+
+                                }
+                            )
                         }
                         .padding(top = 10.dp, bottom = 10.dp)
                 ) {
@@ -293,12 +423,6 @@ fun SignUpScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
             }
-
-
-
-
-
-
 
 
             item {
@@ -359,12 +483,12 @@ fun SignUpScreen(
 
                 Spacer(modifier = Modifier.height(35.dp))
 
-                SocialLogin()
-
+                SocialLogin(thirdPartySignIn){
+                    navController.navigate(Screen.LogedAlreadyIn.route)
+                }
             }
         }
     }
-
-
 }
+
 

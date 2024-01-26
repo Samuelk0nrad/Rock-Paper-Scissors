@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,12 +26,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
+import com.game.rockpaperscissors.presentation.auth.ThirdPartySignIn
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 
@@ -39,7 +39,9 @@ import com.game.rockpaperscissors.ui.theme.appColor
 //@Preview
 @Composable
 fun WelcomeScreen(
-    navController: NavController
+    navController: NavController,
+    thirdPartySignIn: ThirdPartySignIn,
+    onGoogleSignIn: () -> Unit
 ) {
 
     Scaffold (
@@ -178,35 +180,56 @@ fun WelcomeScreen(
             
             Spacer(modifier = Modifier.height(35.dp))
 
-            SocialLogin()
+            SocialLogin(thirdPartySignIn){
+                when(it){
+                    "Google" -> onGoogleSignIn()
+                    "X" -> TODO()
+                    "GitHub" -> TODO()
+                    "Apple" -> TODO()
+                }
+            }
         }
     }
 }
 
-@Preview
+
 @Composable
-fun SocialLogin(){
+fun SocialLogin(viewModel: ThirdPartySignIn, onClick: (String) -> Unit){
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ){
-        SocialLog("Google", painterResource(id = R.drawable.googl)) {}
+        SocialLog("Google", painterResource(id = R.drawable.googl)) {
+            onClick("Google")
+        }
 
 
         Spacer(modifier = Modifier.width(34.dp))
 
-        SocialLog("X", painterResource(id = R.drawable.twitter)) {}
+        SocialLog("X", painterResource(id = R.drawable.twitter)) {
+            viewModel.onSignInXClick {
+                onClick("X")
+            }
+        }
 
 
         Spacer(modifier = Modifier.width(34.dp))
 
 
-        SocialLog("GitHub", painterResource(id = R.drawable.github)) {}
+        SocialLog("GitHub", painterResource(id = R.drawable.github)) {
+            viewModel.onSignInGithubClick {
+                onClick("GitHub")
+            }
+        }
 
 
         Spacer(modifier = Modifier.width(34.dp))
 
-        SocialLog("Apple", painterResource(id = R.drawable.apple)) {}
+        SocialLog("Apple", painterResource(id = R.drawable.apple)) {
+            viewModel.onSignInAppleClick {
+                onClick("Apple")
+            }
+        }
     }
 }
 
@@ -216,7 +239,7 @@ fun SocialLog(text: String, printer: Painter, click: () -> Unit) {
     Column (
         Modifier.clickable {
             click()
-        }
+        }.clip(RoundedCornerShape(14.dp))
     ){
         Box(
             modifier = Modifier

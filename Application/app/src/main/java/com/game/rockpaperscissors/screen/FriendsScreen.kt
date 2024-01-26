@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
 import androidx.compose.runtime.Composable
 import com.google.firebase.crashlytics.FirebaseCrashlytics

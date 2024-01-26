@@ -19,22 +19,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.SetBarColor
-import com.game.rockpaperscissors.composable.screen.CreateProfileScreen
-import com.game.rockpaperscissors.composable.screen.EditProfileScreen
-import com.game.rockpaperscissors.composable.screen.FriendsScreen
-import com.game.rockpaperscissors.composable.screen.GamePlayerProfileScreen
+import com.game.rockpaperscissors.screen.EditProfileScreen
+import com.game.rockpaperscissors.screen.FriendsScreen
+import com.game.rockpaperscissors.screen.GamePlayerProfileScreen
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
-import com.game.rockpaperscissors.composable.screen.GameSettingScreen
-import com.game.rockpaperscissors.composable.screen.GameStatisticScreen
-import com.game.rockpaperscissors.composable.screen.HomeScreen
-import com.game.rockpaperscissors.composable.screen.LoginScreen
-import com.game.rockpaperscissors.composable.screen.ModeStatisticScreen
-import com.game.rockpaperscissors.composable.screen.ProfileScreen
-import com.game.rockpaperscissors.composable.screen.RoundStatisticScreen
-import com.game.rockpaperscissors.composable.screen.SignUpScreen
-import com.game.rockpaperscissors.composable.screen.StatisticScreen
-import com.game.rockpaperscissors.composable.screen.StartScreen
-import com.game.rockpaperscissors.composable.screen.WelcomeScreen
+import com.game.rockpaperscissors.screen.GameSettingScreen
+import com.game.rockpaperscissors.screen.GameStatisticScreen
+import com.game.rockpaperscissors.screen.HomeScreen
+import com.game.rockpaperscissors.screen.ModeStatisticScreen
+import com.game.rockpaperscissors.screen.ProfileScreen
+import com.game.rockpaperscissors.screen.RoundStatisticScreen
+import com.game.rockpaperscissors.screen.StatisticScreen
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
@@ -43,7 +38,6 @@ import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
 import com.game.rockpaperscissors.data.viewModel.NavigationViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.appColor
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun Navigation(

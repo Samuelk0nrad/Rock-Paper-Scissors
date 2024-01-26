@@ -57,11 +57,13 @@ class MainActivity : ComponentActivity() {
         }
 
 
-
+        Log.d("currentUser", "Main Activity")
 
 
         setContent {
             RockPaperScissorsTheme {
+
+                Log.d("currentUser", "Main Activity")
                 SetBarColor(colorSystem = appColor.background)
                 // A surface container using the 'background' color from the theme
                 Surface(

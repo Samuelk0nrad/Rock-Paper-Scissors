@@ -1,6 +1,5 @@
-package com.game.rockpaperscissors.composable.screen
+package com.game.rockpaperscissors.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +35,6 @@ import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.data.viewModel.GameViewModel
-import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 
