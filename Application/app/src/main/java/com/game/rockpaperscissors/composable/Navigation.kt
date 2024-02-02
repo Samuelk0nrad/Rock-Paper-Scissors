@@ -1,11 +1,13 @@
 package com.game.rockpaperscissors.composable
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,24 +21,27 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.SetBarColor
-import com.game.rockpaperscissors.screen.EditProfileScreen
-import com.game.rockpaperscissors.screen.FriendsScreen
-import com.game.rockpaperscissors.screen.GamePlayerProfileScreen
-import com.game.rockpaperscissors.data.viewModel.GameViewModel
-import com.game.rockpaperscissors.screen.GameSettingScreen
-import com.game.rockpaperscissors.screen.GameStatisticScreen
-import com.game.rockpaperscissors.screen.HomeScreen
-import com.game.rockpaperscissors.screen.ModeStatisticScreen
-import com.game.rockpaperscissors.screen.ProfileScreen
-import com.game.rockpaperscissors.screen.RoundStatisticScreen
-import com.game.rockpaperscissors.screen.StatisticScreen
+import com.game.rockpaperscissors.SignUpInActivity
+import com.game.rockpaperscissors.presentation.screen.edit_profile.EditProfileScreen
+import com.game.rockpaperscissors.presentation.screen.FriendsScreen
+import com.game.rockpaperscissors.presentation.screen.game.profile.GamePlayerProfileScreen
+import com.game.rockpaperscissors.presentation.screen.game.GameViewModel
+import com.game.rockpaperscissors.presentation.screen.game.settings.GameSettingScreen
+import com.game.rockpaperscissors.presentation.screen.game.statistics.GameStatisticScreen
+import com.game.rockpaperscissors.presentation.screen.HomeScreen
+import com.game.rockpaperscissors.presentation.screen.ModeStatisticScreen
+import com.game.rockpaperscissors.presentation.screen.profile.ProfileScreen
+import com.game.rockpaperscissors.presentation.screen.RoundStatisticScreen
+import com.game.rockpaperscissors.presentation.screen.StatisticScreen
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
-import com.game.rockpaperscissors.data.viewModel.EnemyViewModel
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
-import com.game.rockpaperscissors.data.viewModel.NavigationViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
+import com.game.rockpaperscissors.presentation.screen.edit_profile.EditProfileViewModel
+import com.game.rockpaperscissors.presentation.screen.game.SettingUpGameScreen
+import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameViewModel
+import com.game.rockpaperscissors.presentation.screen.profile.ProfileViewModel
 import com.game.rockpaperscissors.ui.theme.appColor
 
 @Composable
@@ -45,14 +50,6 @@ fun Navigation(
 ) {
 
     val navController = rememberNavController()
-
-
-    val navViewModel = hiltViewModel<NavigationViewModel>()
-    val isLoggedIn by navViewModel.isLoggedIn.collectAsState()
-
-    val viewModel = hiltViewModel<PlayerViewModel>()
-    val state by viewModel.state.collectAsState()
-
 
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route ){
 
@@ -69,58 +66,36 @@ fun Navigation(
 
                 val gameViewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
 
-
                 val modeString: String? = entry.arguments?.getString("mode")
                 val mode: GameModesEnum = enumValueOf(modeString!!)
 
-                val viewModel = hiltViewModel<PlayerViewModel>()
-                val state by viewModel.state.collectAsState()
-
-                val enemyViewModel = hiltViewModel<EnemyViewModel>()
-                val enemyState by enemyViewModel.state.collectAsState()
 
 
-                val enemy = enemyState.allPlayer
-
-
-                if(state.allPlayer.isNotEmpty() && enemy.isNotEmpty()) {
-                    val player = state.allPlayer[0]
-
-
-                    Log.d("PlayerViewModel", "EnemyViewModel: ${enemy.size}" )
-                    GameSettingScreen(
-                        navController = navController,
-                        gameViewModel = gameViewModel,
-                        mode = mode,
-                        playerData = player,
-                        enemyData = enemy
-                    )
-                }
-
+                GameSettingScreen(
+                    navController = navController,
+                    gameViewModel = gameViewModel,
+                    mode = mode,
+                )
             }
             composable(route = Screen.GameScreen.route){ entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
 
                 SetBarColor(appColor.background)
 
-                val dbViewModel = hiltViewModel<PlayerViewModel>()
-                val playerState by dbViewModel.state.collectAsState()
-
                 val gameDataViewModel = hiltViewModel<GameDataViewModel>()
-                val gameState by gameDataViewModel.state.collectAsState()
+                val onlineMultiplayerGameViewModel = hiltViewModel<OnlineMultiplayerGameViewModel>()
 
 
 
+                SettingUpGameScreen(
+                    gameMode = viewModel.gameMode,
+                    gameViewModel = viewModel,
+                    onEvent = gameDataViewModel::onEvent,
+                    navController = navController,
+                    context = context,
+                    onlineMultiplayerGameViewModel = onlineMultiplayerGameViewModel
+                )
 
-                if(playerState.allPlayer.isNotEmpty()){
-                    SetingUpGameScreen(
-                        gameMode = viewModel.gameMode,
-                        gameViewModel = viewModel,
-                        onEvent = gameDataViewModel::onEvent,
-                        navController = navController,
-                        context = context
-                    )
-                }
             }
             composable(route = Screen.GameStatisticScreen.route){ entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
@@ -133,15 +108,13 @@ fun Navigation(
                 SetBarColor(appColor.secondaryContainer, appColor.background)
 
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
-                val player = viewModel.selectedPlayer
 
-                if (player != null) {
-                    GamePlayerProfileScreen(
-                        navController = navController,
-                        player = player,
-                        context = context
-                    )
-                }
+
+                GamePlayerProfileScreen(
+                    navController = navController,
+                    viewModel = viewModel
+                )
+
             }
         }
 
@@ -163,35 +136,29 @@ fun Navigation(
         composable(route = Screen.ProfileScreen.route){
             SetBarColor(colorStatus = appColor.secondaryContainer, colorNavigation = appColor.background)
 
-            val viewModel = hiltViewModel<PlayerViewModel>()
-            val state by viewModel.state.collectAsState()
-
-            if(state.allPlayer.isNotEmpty()) {
-                ProfileScreen(
-                    navController = navController,
-                    state = state,
-                    deleteAcount = {
-                        viewModel.onEvent(it)
-                        navController.navigate(Screen.LogIn.route)
-                    },
-                    context = context
-                )
+            val viewModel = hiltViewModel<ProfileViewModel>()
+            if(viewModel.userData.collectAsState().value == null){
+                viewModel.updateUserData()
+                Log.d("currentUser ---df---","${viewModel.userData.collectAsState().value?.email}")
             }
 
+            ProfileScreen(
+                navController = navController,
+                viewModel = viewModel,
+                context = context
+            )
         }
 
         composable(route = Screen.EditProfileScreen.route){
             SetBarColor(colorStatus = appColor.secondaryContainer, colorNavigation = appColor.background)
-            val viewModel = hiltViewModel<PlayerViewModel>()
-            val state by viewModel.state.collectAsState()
-            if(state.allPlayer.isNotEmpty()) {
-                EditProfileScreen(
-                    state = state,
-                    onEvent = viewModel::onEvent,
-                    nevController = navController,
-                    context = context
-                )
-            }
+            val viewModel = hiltViewModel<EditProfileViewModel>()
+
+            EditProfileScreen(
+                navController = navController,
+                context = context,
+                viewModel = viewModel
+            )
+
         }
         
         navigation(route = Screen.MainStatistic.route, startDestination = Screen.StatisticScreen.route){
@@ -259,6 +226,11 @@ fun Navigation(
 
             composable(route = Screen.FriendsScreen.route){
                 FriendsScreen()
+            }
+            composable(route = Screen.SignInActivity.route){
+                val intent = Intent(context, SignUpInActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(context, intent, null)
             }
         }
     }

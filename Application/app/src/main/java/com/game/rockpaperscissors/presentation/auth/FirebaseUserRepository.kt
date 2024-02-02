@@ -37,7 +37,8 @@ class FirebaseUserRepository @Inject constructor(
                 UserData(
                     userId = user.uid,
                     username = user.displayName,
-                    profilePictureUrl = user.photoUrl.toString()
+                    profilePictureUrl = user.photoUrl.toString(),
+                    email = user.email
 
                 )
             }
@@ -49,7 +50,8 @@ class FirebaseUserRepository @Inject constructor(
             UserData(
                 userId = uid,
                 username = displayName,
-                profilePictureUrl = photoUrl?.toString()
+                profilePictureUrl = photoUrl?.toString(),
+                email = email
             )
         },
         errorMessage = null
@@ -69,7 +71,8 @@ class FirebaseUserRepository @Inject constructor(
                     UserData(
                         userId = uid,
                         username = displayName,
-                        profilePictureUrl = photoUrl?.toString()
+                        profilePictureUrl = photoUrl?.toString(),
+                        email = email
                     )
                 },
                 errorMessage = null
@@ -105,7 +108,8 @@ class FirebaseUserRepository @Inject constructor(
                     UserData(
                         userId = uid,
                         username = displayName,
-                        profilePictureUrl = photoUrl?.toString()
+                        profilePictureUrl = photoUrl?.toString(),
+                        email = email
                     )
                 },
                 errorMessage = null
@@ -137,8 +141,57 @@ class FirebaseUserRepository @Inject constructor(
         }
     }
 
+    override suspend fun updateEmail(email: String) {
+
+        try {
+
+            Firebase.auth.currentUser!!.updateEmail("user@example.com")
+
+        }catch (e:Exception){
+
+        }
+    }
+
     override suspend fun updateProfilePic(userName: String) {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun resetPassword(email: String) : SignInResult {
+        return  try{
+
+            Firebase.auth.sendPasswordResetEmail(email)
+
+            SignInResult(
+                data = null,
+                errorMessage = null
+            )
+
+        }catch (e: Exception){
+            e.printStackTrace()
+            e.message?.let { Log.d("currentUser --DNFURP", it) }
+            SignInResult(
+                data = null,
+                errorMessage = e.message
+            )
+        }
+    }
+
+    override suspend fun deleteUser(): SignInResult {
+        val user = Firebase.auth.currentUser!!
+
+        return try {
+            user.delete().await()
+            SignInResult(
+                data = null,
+                errorMessage = null
+            )
+        }catch (e: Exception){
+            SignInResult(
+                data = null,
+                errorMessage = e.message
+            )
+
+        }
     }
 
     override suspend fun signOut() {

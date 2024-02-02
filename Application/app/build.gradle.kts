@@ -145,6 +145,7 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics-ktx:18.6.1")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.firebase:firebase-database")
 }
 
 ksp {

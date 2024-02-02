@@ -63,8 +63,8 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.white_video_game,
-        rout = Screen.MainGame.route,
-        available = false
+        rout = "${Screen.GameSettingScreen.route}/ONLINE_MULTIPLAYER",
+        available = true
     ),
 
     GameModes(

@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors
 
+import android.util.Log
 import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.SelectionTypeComparable
 import com.game.rockpaperscissors.data.WinTyp
@@ -62,6 +63,9 @@ class GameFunktions {
 
         val yourSelection = SelectionTypeComparable(ySelect)
         val enemySelection = SelectionTypeComparable(eSelect)
+
+        Log.d("GameSelection", "player: $ySelect, enemy: $eSelect ==> ${yourSelection.compareTo(enemySelection)}")
+
 
         return yourSelection.compareTo(enemySelection)
     }

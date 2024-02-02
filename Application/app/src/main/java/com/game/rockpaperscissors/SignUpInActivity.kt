@@ -21,15 +21,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.game.rockpaperscissors.screen.SignInScreen
-import com.game.rockpaperscissors.screen.SignUpScreen
-import com.game.rockpaperscissors.screen.StartScreen
-import com.game.rockpaperscissors.screen.WelcomeScreen
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
-import com.game.rockpaperscissors.presentation.auth.SignInViewModel
-import com.game.rockpaperscissors.presentation.auth.SignUpViewModel
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.GoogleAuthUiClient
+import com.game.rockpaperscissors.presentation.screen.StartScreen
+import com.game.rockpaperscissors.presentation.screen.WelcomeScreen
+import com.game.rockpaperscissors.presentation.screen.reset_passwort.ResetPasswordScreen
+import com.game.rockpaperscissors.presentation.screen.reset_passwort.ResetPasswordViewModel
+import com.game.rockpaperscissors.presentation.screen.sign_in.SignInScreen
+import com.game.rockpaperscissors.presentation.screen.sign_in.SignInViewModel
+import com.game.rockpaperscissors.presentation.screen.sign_up.SignUpScreen
+import com.game.rockpaperscissors.presentation.screen.sign_up.SignUpViewModel
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.game.rockpaperscissors.ui.theme.appColor
 import com.google.android.gms.auth.api.identity.Identity
@@ -95,6 +97,14 @@ class SignUpInActivity : ComponentActivity() {
                                 viewModel = viewModel,
                             )
                         }
+                        composable(route = Screen.ResetPasswordScreen.route){
+                            val viewModel = hiltViewModel<ResetPasswordViewModel>()
+
+                            ResetPasswordScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
+                        }
                         composable(route = Screen.SignUpScreen.route) {
 
                             val viewModel = hiltViewModel<SignUpViewModel>()
@@ -146,10 +156,6 @@ class SignUpInActivity : ComponentActivity() {
                                 }
                             }
 
-
-
-
-
                             WelcomeScreen(
                                 navController = navController,
                                 onGoogleSignIn = {
@@ -161,7 +167,8 @@ class SignUpInActivity : ComponentActivity() {
                                             ).build()
                                         )
                                     }
-                                }
+                                },
+                                context = applicationContext
                             )
                         }
                         composable(route = Screen.LogedAlreadyIn.route){

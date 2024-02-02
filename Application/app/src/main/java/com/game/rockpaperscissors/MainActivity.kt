@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
         }
 
 
-        Log.d("currentUser", "Main Activity")
+        Log.d("currentUser", "Main Activity ${auth.currentUser?.uid}")
 
 
         setContent {
