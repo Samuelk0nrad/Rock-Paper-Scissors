@@ -23,7 +23,7 @@ import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.SetBarColor
 import com.game.rockpaperscissors.SignUpInActivity
 import com.game.rockpaperscissors.presentation.screen.edit_profile.EditProfileScreen
-import com.game.rockpaperscissors.presentation.screen.FriendsScreen
+import com.game.rockpaperscissors.presentation.screen.friends.FriendsScreen
 import com.game.rockpaperscissors.presentation.screen.game.profile.GamePlayerProfileScreen
 import com.game.rockpaperscissors.presentation.screen.game.GameViewModel
 import com.game.rockpaperscissors.presentation.screen.game.settings.GameSettingScreen
@@ -225,7 +225,9 @@ fun Navigation(
             }
 
             composable(route = Screen.FriendsScreen.route){
-                FriendsScreen()
+                FriendsScreen(
+                    navController = navController
+                )
             }
             composable(route = Screen.SignInActivity.route){
                 val intent = Intent(context, SignUpInActivity::class.java)

@@ -125,7 +125,7 @@ fun SignInScreen(
                         eMailError = false
                         eMailEText = ""
                         errorText = ""
-                    },
+                    }, 
                     placeholder = "E-Mail or Username",
                     startPadding = 0.dp,
                     lineColor = if(eMailError) appColor.red else appColor.onBackground,
