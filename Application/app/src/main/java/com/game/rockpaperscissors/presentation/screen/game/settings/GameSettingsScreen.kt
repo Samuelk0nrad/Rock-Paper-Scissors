@@ -26,11 +26,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.local.database.PlayerData
@@ -107,7 +109,7 @@ fun GameSettingScreen(
             }
 
             Text(
-                text = "Game Settings",
+                text = stringResource(id = R.string.game_settings),
                 fontSize = 20.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
@@ -230,7 +232,7 @@ fun GameSettingScreen(
                 ) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Start",
+                        text = stringResource(id = R.string.start),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,

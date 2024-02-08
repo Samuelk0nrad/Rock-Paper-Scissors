@@ -21,10 +21,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.composable.BarGraph
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.screen.game.GameViewModel
@@ -55,7 +57,7 @@ fun GameStatisticScreen(
                 contentAlignment = Alignment.TopCenter
             ) {
                 Text(
-                    text = "Game Statistics",
+                    text = stringResource(id = R.string.game_statistics),
                     fontSize = 20.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -64,10 +66,12 @@ fun GameStatisticScreen(
                 )
             }
 
+            val barName = listOf(stringResource(id = R.string.rock), stringResource(id = R.string.paper), stringResource(
+                id = R.string.scissors
+            ))
             LazyColumn(
             modifier = Modifier.height(lazyHeight)
             ) {
-                val barName = listOf("Rock", "Paper", "Scissors")
                 item {
                     WinStatistic(
                         win = viewModel.win.collectAsState().value,
@@ -82,7 +86,7 @@ fun GameStatisticScreen(
                         barPadding = 64.dp,
                         height = 362,
                         name = barName,
-                        title = "Your Selection"
+                        title = stringResource(id = R.string.your_selection)
                     )
                 }
                 item {
@@ -92,7 +96,7 @@ fun GameStatisticScreen(
                         height = 362,
                         barPadding = 64.dp,
                         modifier = Modifier.padding(28.dp),
-                        title = "Enemy Selection"
+                        title = stringResource(id = R.string.enemy_selection)
                     )
                 }
             }
@@ -136,7 +140,7 @@ fun WinStatistic(
     ) {
 
         Text(
-            text = if(isWin) "Win" else "Lose",
+            text = if(isWin) stringResource(id = R.string.win) else stringResource(id = R.string.lose),
             fontFamily = Oswald,
             fontSize = 50.sp,
             fontWeight = FontWeight.Bold,
@@ -155,7 +159,7 @@ fun WinStatistic(
             Row {
                 Text(
                     modifier = Modifier.width(width),
-                    text = "Lose: $lose",
+                    text = "${stringResource(id = R.string.lose)}: $lose",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -165,7 +169,7 @@ fun WinStatistic(
 
                 Text(
                     modifier = Modifier.width(width),
-                    text = "Win: $win",
+                    text = ": $win",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -174,7 +178,7 @@ fun WinStatistic(
 
 
                 Text(
-                    text = "Draw: $draw",
+                    text = "${stringResource(id = R.string.draw)}: $draw",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,

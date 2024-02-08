@@ -24,11 +24,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.screen.CustomTextFiled
 import com.game.rockpaperscissors.ui.theme.Oswald
@@ -82,7 +84,7 @@ fun ResetPasswordScreen(
                 Spacer(modifier = Modifier.height(125.dp))
 
                 Text(
-                    text = "Forgot password",
+                    text = stringResource(id = R.string.forgot_password),
                     fontSize = 30.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -108,7 +110,7 @@ fun ResetPasswordScreen(
                         eMailEText = ""
                         errorText = ""
                     },
-                    placeholder = "E-Mail",
+                    placeholder = stringResource(id = R.string.e_mail),
                     startPadding = 0.dp,
                     lineColor = if(eMailError) appColor.red else appColor.onBackground
                 )
@@ -128,7 +130,7 @@ fun ResetPasswordScreen(
 
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = if(isSend) "Successful sent the E-Mail" else errorText,
+                    text = if(isSend) stringResource(id = R.string.successful_sent_the_e_mail) else errorText,
                     fontSize = 18.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Light,
@@ -148,7 +150,7 @@ fun ResetPasswordScreen(
                         .fillMaxWidth()
                         .clickable {
 
-                            if(!isSend) {
+                            if (!isSend) {
 
                                 viewModel.onSignInClick(
                                     goToScreen = {
@@ -213,7 +215,7 @@ fun ResetPasswordScreen(
 
                                     }
                                 )
-                            }else{
+                            } else {
                                 navController.navigate(Screen.LoginScreen.route)
                             }
                         }
@@ -221,7 +223,9 @@ fun ResetPasswordScreen(
                 ) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = if(isSend) "go to LogIn" else "send reset password e-mail",
+                        text = if(isSend) stringResource(id = R.string.go_to_log_in) else stringResource(
+                            id = R.string.send_reset_password_e_mail
+                        ),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,

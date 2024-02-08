@@ -20,7 +20,7 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val accountService: UserRepository,
     context: Context
-) : AuthViewModel() {
+) : AuthViewModel(context) {
 
     val email = MutableStateFlow("")
     val password = MutableStateFlow("")

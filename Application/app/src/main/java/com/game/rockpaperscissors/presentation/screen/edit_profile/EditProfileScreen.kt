@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.screen.CustomTextFiled
 import com.game.rockpaperscissors.ui.theme.Oswald
@@ -127,7 +129,7 @@ fun EditProfileScreen(
                     contentAlignment = Alignment.TopCenter
                 ) {
                     Text(
-                        text = "Your Profile",
+                        text = stringResource(id = R.string.your_profile) ,
                         fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
@@ -153,7 +155,7 @@ fun EditProfileScreen(
                                         navController.popBackStack()
                                         navController.navigate(Screen.ProfileScreen.route)
                                     },
-                                    onValueChange = {isLoading = it}
+                                    onValueChange = { isLoading = it }
                                 )
                             },
                         imageVector = Icons.Rounded.Check,
@@ -239,7 +241,7 @@ fun EditProfileScreen(
             onValueChange = {
                 viewModel.updateUserName(it)
             },
-            placeholder = "User Name"
+            placeholder = stringResource(id = R.string.user_name)
         )
 
         Spacer(modifier = Modifier.height(53.dp))
@@ -250,11 +252,11 @@ fun EditProfileScreen(
             onValueChange = {
                 viewModel.updateEmail(it)
             },
-            placeholder = "E-mail",
             keyboardOptions =  KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
-            )
+            ),
+            placeholder = stringResource(id = R.string.e_mail)
         )
 
 
@@ -277,7 +279,7 @@ fun EditProfileScreen(
                     Toast
                         .makeText(
                             context,
-                            "Send successful a reset password E-mail",
+                            R.string.send_successful_a_reset_password_e_mail,
                             Toast.LENGTH_LONG
                         )
                         .show()
@@ -285,7 +287,7 @@ fun EditProfileScreen(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Change Password",
+                text = stringResource(id = R.string.change_password),
                 fontSize = 16.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.SemiBold,

@@ -23,4 +23,5 @@ sealed class Screen(val route: String){
     object MainActivity : Screen("main_activity")
     object ResetPasswordScreen : Screen("reset_password_screen")
     object SignInActivity : Screen("sign_in_activity")
+    object Setting : Screen("setting_screen")
 }

@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.presentation.screen.edit_profile
 
+import android.content.Context
 import android.util.Log
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.UserRepository
@@ -14,9 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
-    private val userRepository: UserRepository
-
-) : AuthViewModel() {
+    private val userRepository: UserRepository,
+    context: Context
+) : AuthViewModel(context) {
     private val _userData: MutableStateFlow<UserData?> = MutableStateFlow(
         Firebase.auth.currentUser?.let {
             UserData(

@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.presentation.screen.reset_passwort
 
+import android.content.Context
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,8 +9,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
-    private val accountService: UserRepository
-): AuthViewModel() {
+    private val accountService: UserRepository,
+    context: Context
+): AuthViewModel(context) {
     val email = MutableStateFlow("")
 
     fun updateEmail(newEmail: String) {

@@ -26,11 +26,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.composable.BarGraph
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.Screen
@@ -108,13 +111,13 @@ fun ModeStatisticScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBackIos,
-                    contentDescription = "Go Back",
+                    contentDescription = stringResource(id = R.string.go_back),
                     tint = appColor.onBackground
                 )
             }
 
             Text(
-                text = "$mode Statistics",
+                text = "$mode ${stringResource(id = R.string.statistics)}",
                 fontSize = 20.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
@@ -140,7 +143,7 @@ fun ModeStatisticScreen(
             ) {
                 Text(
                     modifier = Modifier.height(28.dp),
-                    text = "Last",
+                    text = stringResource(id = R.string.last),
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -159,7 +162,7 @@ fun ModeStatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(if(displayDate != 7) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate != 7) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
@@ -167,7 +170,7 @@ fun ModeStatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(28.dp)
-                    .background(if(displayDate == 7) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 7) appColor.onSecondaryContainer else appColor.background)
                     .clickable {
                         displayDate = 7
                     },
@@ -175,7 +178,7 @@ fun ModeStatisticScreen(
             ) {
                 Text(
                     modifier = Modifier.height(28.dp),
-                    text = "7 days",
+                    text = "7 ${stringResource(id = R.string.days)}",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -191,7 +194,7 @@ fun ModeStatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(if(displayDate == 90) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 90) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
@@ -199,7 +202,7 @@ fun ModeStatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(28.dp)
-                    .background(if(displayDate == 30) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 30) appColor.onSecondaryContainer else appColor.background)
                     .clickable {
                         displayDate = 30
                     },
@@ -207,7 +210,7 @@ fun ModeStatisticScreen(
             ) {
                 Text(
                     modifier = Modifier.height(28.dp),
-                    text = "30 days",
+                    text = "30 ${stringResource(id = R.string.days)}",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -222,7 +225,7 @@ fun ModeStatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(if(displayDate == 7) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 7) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
@@ -230,7 +233,7 @@ fun ModeStatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(28.dp)
-                    .background(if(displayDate == 90) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 90) appColor.onSecondaryContainer else appColor.background)
                     .clickable {
                         displayDate = 90
                     },
@@ -238,7 +241,7 @@ fun ModeStatisticScreen(
             ) {
                 Text(
                     modifier = Modifier.height(28.dp),
-                    text = "90 days",
+                    text = "90 ${stringResource(id = R.string.days)}",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -303,7 +306,7 @@ fun ModeStatisticScreen(
                     values = listOf(yRock.toFloat(), yPaper.toFloat(), yScissors.toFloat()),
                     name = listOf("Rock", "Paper", "Scissors"),
                     height = 302,
-                    title = "Your Selection:"
+                    title = "${stringResource(id = R.string.your_selection)}:"
                 )
             }
 
@@ -316,7 +319,7 @@ fun ModeStatisticScreen(
                     values = listOf(eRock.toFloat(), ePaper.toFloat(), eScissors.toFloat()),
                     name = listOf("Rock", "Paper", "Scissors"),
                     height = 302,
-                    title = "Enemy Selection:"
+                    title = "${stringResource(id = R.string.enemy_selection)}:"
                 )
             }
 
@@ -326,7 +329,7 @@ fun ModeStatisticScreen(
                 Spacer(modifier = Modifier.height(44.dp))
 
                 Text(
-                    text = "All Rounds:",
+                    text = "${stringResource(id = R.string.all_rounds)}:",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = Oswald,

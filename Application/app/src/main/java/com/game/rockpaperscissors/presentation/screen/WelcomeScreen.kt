@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -58,7 +59,7 @@ fun WelcomeScreen(
         ) {
 
             Text(
-                text = "Welcome",
+                text = stringResource(id = R.string.welcome),
                 fontSize = 30.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
@@ -68,7 +69,7 @@ fun WelcomeScreen(
 
             Text(
                 modifier = Modifier.height(62.dp),
-                text = "Please login or sign up to continue\nusing our app.",
+                text = stringResource(id = R.string.please_login_or_sign_up),
                 fontSize = 16.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Light,
@@ -108,7 +109,7 @@ fun WelcomeScreen(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Create New Account",
+                    text = stringResource(id = R.string.create_new_account),
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -121,7 +122,7 @@ fun WelcomeScreen(
 
             Text(
                 modifier = Modifier.height(35.dp),
-                text = "Do you have already a account?",
+                text = stringResource(id = R.string.do_you_have_already_a_account),
                 fontSize = 16.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Light,
@@ -142,7 +143,7 @@ fun WelcomeScreen(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Login",
+                    text = stringResource(id = R.string.login),
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -169,7 +170,7 @@ fun WelcomeScreen(
                     modifier = Modifier
                         .background(appColor.background)
                         .padding(horizontal = 12.dp),
-                    text = "OR",
+                    text = stringResource(id = R.string.or),
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Light,

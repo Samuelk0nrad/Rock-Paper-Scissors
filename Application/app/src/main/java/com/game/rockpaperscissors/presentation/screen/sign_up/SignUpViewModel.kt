@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val accountService: UserRepository,
     context: Context
-) : AuthViewModel() {
+) : AuthViewModel(context) {
 
     private val TAG = "currentUser"
 

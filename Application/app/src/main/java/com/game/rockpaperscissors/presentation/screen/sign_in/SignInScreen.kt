@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.screen.CustomTextFiled
 import com.game.rockpaperscissors.presentation.screen.SocialLogin
@@ -100,7 +102,7 @@ fun SignInScreen(
                 Spacer(modifier = Modifier.height(125.dp))
 
                 Text(
-                    text = "Login",
+                    text = stringResource(id = R.string.login),
                     fontSize = 30.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -126,7 +128,7 @@ fun SignInScreen(
                         eMailEText = ""
                         errorText = ""
                     }, 
-                    placeholder = "E-Mail or Username",
+                    placeholder = stringResource(id = R.string.e_mail_or_user_name),
                     startPadding = 0.dp,
                     lineColor = if(eMailError) appColor.red else appColor.onBackground,
                     keyboardOptions =  KeyboardOptions(
@@ -152,7 +154,7 @@ fun SignInScreen(
                         errorText = ""
 
                     },
-                    placeholder = "password",
+                    placeholder = stringResource(id = R.string.password),
                     startPadding = 0.dp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = PasswordVisualTransformation(),
@@ -171,11 +173,12 @@ fun SignInScreen(
                 Spacer(modifier = Modifier.height(5.dp))
 
                 Text(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .clickable {
                             navController.navigate(Screen.ResetPasswordScreen.route)
                         },
-                    text = "Forgot password?",
+                    text = stringResource(id = R.string.forgot_password) + "?",
                     fontSize = 13.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -216,45 +219,56 @@ fun SignInScreen(
                                     navController.navigate(Screen.LogedAlreadyIn.route)
                                 },
                                 errorHandling = { error: String? ->
-                                    when(error){
+                                    when (error) {
                                         "Given String is empty or null" -> {
-                                            if(email.value == ""){
+                                            if (email.value == "") {
                                                 eMailError = true
                                                 eMailEText = ""
                                             }
-                                            if(password.value == ""){
+                                            if (password.value == "") {
                                                 passwordError = true
                                                 passwordEText = ""
                                             }
                                         }
+
                                         "The supplied auth credential is incorrect, malformed or has expired." -> {
                                             errorText = "Invalid email or username or password."
                                         }
-                                        "The email address is badly formatted."-> {
+
+                                        "The email address is badly formatted." -> {
                                             eMailError = true
                                             eMailEText = error
                                         }
-                                        "The email address or password is incorrect." ->{
+
+                                        "The email address or password is incorrect." -> {
                                             errorText = error
                                         }
-                                        "There is no user record corresponding to this identifier. The user may have been deleted." ->{
+
+                                        "There is no user record corresponding to this identifier. The user may have been deleted." -> {
                                             errorText = error
                                         }
+
                                         "The user account has been disabled by an administrator." -> {
                                             errorText = error
                                         }
+
                                         "We have blocked all requests from this device due to unusual activity. Try again later." -> {
                                             errorText = error
                                         }
+
                                         "The provided custom claim attributes are invalid." -> {
-                                            errorText= error
+                                            errorText = error
                                         }
+
                                         "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
-                                            errorText = "Network error. Check your connection and try again."
+                                            errorText =
+                                                "Network error. Check your connection and try again."
                                         }
+
                                         "An unknown error occurred." -> {
                                             errorText = error
                                         }
+
                                         null -> {}
                                         else -> {
                                             errorText = error
@@ -272,7 +286,7 @@ fun SignInScreen(
                 ) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Login",
+                        text = stringResource(id = R.string.login),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
@@ -288,7 +302,7 @@ fun SignInScreen(
 
                 Row {
                     Text(
-                        text = "Don't have an account? ",
+                        text = stringResource(id = R.string.dont_have_an_account),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
@@ -300,7 +314,7 @@ fun SignInScreen(
                         modifier = Modifier.clickable {
                             navController.navigate(Screen.SignUpScreen.route)
                         },
-                        text = "Sign Up",
+                        text = stringResource(id = R.string.sign_up),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
@@ -331,7 +345,7 @@ fun SignInScreen(
                         modifier = Modifier
                             .background(appColor.background)
                             .padding(horizontal = 12.dp),
-                        text = "OR",
+                        text = stringResource(id = R.string.or),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Light,

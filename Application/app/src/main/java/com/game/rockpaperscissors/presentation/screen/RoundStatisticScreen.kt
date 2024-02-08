@@ -18,10 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.composable.BarGraph
 import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.WinTyp
@@ -88,12 +90,12 @@ fun RoundStatisticScreen(
                     .height(50.dp)
                     .background(appColor.secondaryContainer)
                     .clickable {
-                               navController.popBackStack()
+                        navController.popBackStack()
                     },
                 contentAlignment = Alignment.TopCenter
             ) {
                 Text(
-                    text = "#${round.id} Statistics",
+                    text = "#${round.id} ${stringResource(id = R.string.statistics)}",
                     fontSize = 20.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -116,10 +118,12 @@ fun RoundStatisticScreen(
                 }
             }
 
+            val barName = listOf(stringResource(id = R.string.rock), stringResource(id = R.string.paper), stringResource(
+                id = R.string.scissors
+            ))
             LazyColumn(
                 modifier = Modifier.height(lazyHeight)
             ) {
-                val barName = listOf("Rock", "Paper", "Scissors")
                 item {
                     WinStatistic(
                         win = win,
@@ -134,7 +138,7 @@ fun RoundStatisticScreen(
                         barPadding = 64.dp,
                         height = 362,
                         name = barName,
-                        title = "Your Selection"
+                        title = stringResource(id = R.string.your_selection)
                     )
                 }
                 item {
@@ -144,7 +148,7 @@ fun RoundStatisticScreen(
                         height = 362,
                         barPadding = 64.dp,
                         modifier = Modifier.padding(28.dp),
-                        title = "Enemy Selection"
+                        title = stringResource(id = R.string.enemy_selection)
                     )
                 }
             }

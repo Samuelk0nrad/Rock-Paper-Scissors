@@ -2,10 +2,11 @@ package com.game.rockpaperscissors.data
 
 import android.util.Log
 import com.game.rockpaperscissors.R
+import com.game.rockpaperscissors.UiText
 
 data class GameModes(
-    val name: String,
-    val description: String,
+    val name: UiText,
+    val description: UiText,
     var number: Int,
     val clickAction: () -> Unit,
     val symbol: Int,
@@ -33,8 +34,8 @@ data class GameModes(
 
 var gameModes: List<GameModes> = mutableListOf(
     GameModes(
-        name = "Random",
-        description = "Play agens a random selector",
+        name = UiText.StringResource(R.string.random),
+        description = UiText.StringResource(R.string.random_description),
         number = 1,
         clickAction = {
 
@@ -45,8 +46,8 @@ var gameModes: List<GameModes> = mutableListOf(
     ),
 
     GameModes(
-        name = "Local Multiplayer",
-        description = "Play With a ",
+        name = UiText.StringResource(R.string.local_multiplayer),
+        description = UiText.StringResource(R.string.local_multiplayer_description),
         number = 2,
         clickAction = {
 
@@ -56,8 +57,8 @@ var gameModes: List<GameModes> = mutableListOf(
         available = true
     ),
     GameModes(
-        name = "Online Multiplayer",
-        description = "Play with other player",
+        name = UiText.StringResource(R.string.online_multiplayer),
+        description = UiText.StringResource(R.string.online_multiplayer_description),
         number = 3,
         clickAction = {
 
@@ -68,8 +69,8 @@ var gameModes: List<GameModes> = mutableListOf(
     ),
 
     GameModes(
-        name = "AI Mode",
-        description = "Play With a Computer AI",
+        name = UiText.StringResource(R.string.ai_mode),
+        description = UiText.StringResource(R.string.ai_mode_description),
         number = 4,
         clickAction = {
 

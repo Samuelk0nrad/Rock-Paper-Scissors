@@ -39,6 +39,7 @@ import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.presentation.screen.edit_profile.EditProfileViewModel
+import com.game.rockpaperscissors.presentation.screen.friends.FriendsViewModel
 import com.game.rockpaperscissors.presentation.screen.game.SettingUpGameScreen
 import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameViewModel
 import com.game.rockpaperscissors.presentation.screen.profile.ProfileViewModel
@@ -121,16 +122,14 @@ fun Navigation(
         composable(route = Screen.HomeScreen.route){
             SetBarColor(appColor.secondaryContainer, appColor.background)
 
-            val viewModel = hiltViewModel<PlayerViewModel>()
-            val state by viewModel.state.collectAsState()
+            val viewModel = hiltViewModel<ProfileViewModel>()
 
-            var profileImage = ""
+            viewModel.updateUserData()
 
-            if(state.allPlayer.isNotEmpty()){
-                profileImage = state.allPlayer[0].userImage
-            }
+            val pic = viewModel.userData.collectAsState().value?.username
 
-            HomeScreen(navController, profileImage, context)
+
+            HomeScreen(navController, pic?:"")
         }
 
         composable(route = Screen.ProfileScreen.route){
@@ -224,9 +223,16 @@ fun Navigation(
                 }
             }
 
+            composable(route = Screen.Setting.route){
+
+            }
+
             composable(route = Screen.FriendsScreen.route){
+                val viewModel = hiltViewModel<FriendsViewModel>()
+
                 FriendsScreen(
-                    navController = navController
+                    navController = navController,
+                    viewModel = viewModel
                 )
             }
             composable(route = Screen.SignInActivity.route){

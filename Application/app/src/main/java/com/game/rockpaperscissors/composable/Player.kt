@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -105,7 +106,7 @@ fun Player(
 
                 Text(
                     modifier = Modifier.padding(top = 30.dp),
-                    text = "Level:  $level",
+                    text = "${stringResource(id = R.string.level)}:  $level",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -119,7 +120,7 @@ fun Player(
             ) {
                 if (isReady) {
                     Text(
-                        text = "Ready",
+                        text = stringResource(id = R.string.ready),
                         fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
@@ -128,7 +129,7 @@ fun Player(
                     )
                 } else {
                     Text(
-                        text = "Not Ready",
+                        text = stringResource(id = R.string.not_ready),
                         fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,

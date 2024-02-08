@@ -1,6 +1,5 @@
 package com.game.rockpaperscissors.presentation.screen.profile
 
-import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -32,16 +31,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.game.rockpaperscissors.data.Screen
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 import java.io.File
@@ -104,7 +104,7 @@ fun ProfileScreen(
                     contentAlignment = Alignment.TopCenter
                 ) {
                     Text(
-                        text = "Your Profile",
+                        text = stringResource(id = R.string.your_profile),
                         fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
@@ -173,7 +173,7 @@ fun ProfileScreen(
 
                 ProfileNames(
                     name = email,
-                    title = "E-Mail",
+                    title = stringResource(id = R.string.e_mail),
                     style = LocalTextStyle.current.copy(
                         fontSize = 13.sp,
                         fontFamily = Oswald,
@@ -188,7 +188,7 @@ fun ProfileScreen(
             item {
                 Spacer(modifier = Modifier.height(36.dp))
 
-                ProfileNames(name = userName, title = "User Name")
+                ProfileNames(name = userName, title = stringResource(id = R.string.user_name))
             }
 
 
@@ -222,7 +222,7 @@ fun ProfileScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "All",
+                                text = stringResource(id = R.string.all),
                                 fontSize = 16.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Light,
@@ -235,7 +235,7 @@ fun ProfileScreen(
                                 tint = appColor.onBackground
                             )
                             Text(
-                                text = "Statistics",
+                                text = stringResource(id = R.string.statistics),
                                 fontSize = 16.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Bold,
@@ -259,7 +259,7 @@ fun ProfileScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "Your",
+                                text = stringResource(id = R.string.your),
                                 fontSize = 16.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Light,
@@ -272,7 +272,7 @@ fun ProfileScreen(
                                 tint = appColor.onBackground
                             )
                             Text(
-                                text = "Friends",
+                                text = stringResource(id = R.string.friends),
                                 fontSize = 16.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Bold,
@@ -301,16 +301,18 @@ fun ProfileScreen(
                                     }
                                 )
 
-                                Toast.makeText(
-                                    context,
-                                    "Send successful a reset password E-mail",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "Send successful a reset password E-mail",
+                                        Toast.LENGTH_LONG
+                                    )
+                                    .show()
                             },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Change Password",
+                            text = stringResource(id = R.string.change_password),
                             fontSize = 16.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.SemiBold,
@@ -343,7 +345,7 @@ fun ProfileScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Log Out",
+                            text = stringResource(id = R.string.log_out),
                             fontSize = 16.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.SemiBold,
@@ -380,7 +382,7 @@ fun ProfileScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Delete Account",
+                            text = stringResource(id = R.string.delete_account),
                             fontSize = 16.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Light,
@@ -451,38 +453,6 @@ fun ProfileNames(
                 .width(178.dp)
                 .background(appColor.onBackground)
         )
-    }
-
-
-}
-
-
-
-fun hideName(input: String): String {
-    val words = input.split(" ")
-    val result = StringBuilder()
-
-    for (word in words) {
-        if (word.isNotEmpty()) {
-            result.append(word[0]).append("...")
-        }
-    }
-
-    // Remove the trailing dots
-    result.deleteCharAt(result.length - 1)
-    result.deleteCharAt(result.length - 1)
-
-    return result.toString()
-}
-
-fun hideDate(input: String): String {
-    val reversedInput = input.reversed()
-    val dotIndex = reversedInput.indexOf('.')
-
-    return if (dotIndex != -1) {
-        reversedInput.substring(0, dotIndex + 1).reversed()
-    } else {
-        input
     }
 }
 

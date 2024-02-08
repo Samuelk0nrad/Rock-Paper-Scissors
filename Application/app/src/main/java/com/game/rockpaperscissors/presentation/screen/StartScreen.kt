@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,7 +37,8 @@ fun StartScreen(
     navController: NavController
 ){
     Scaffold (
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(appColor.background)
     ){padding->
         Column(
@@ -48,7 +50,7 @@ fun StartScreen(
         ) {
 
             Text(
-                text = "RockPaperScissors",
+                text = stringResource(id = R.string.app_name),
                 fontSize = 30.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
@@ -60,7 +62,7 @@ fun StartScreen(
             Spacer(modifier = Modifier.height(13.dp))
 
             Text(
-                text = "Play the classic game of\n rock, paper, scissors",
+                text = stringResource(id = R.string.play_the_classic_game),
                 fontSize = 16.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Light,
@@ -103,7 +105,7 @@ fun StartScreen(
                 ) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Start",
+                        text = stringResource(id = R.string.start),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,

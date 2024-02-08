@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,8 +47,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.screen.CustomTextFiled
 import com.game.rockpaperscissors.presentation.screen.SocialLogin
@@ -166,7 +169,7 @@ fun SignUpScreen(
 
             item {
                 Text(
-                    text = "Sign Up",
+                    text = stringResource(id = R.string.sign_up),
                     fontSize = 30.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -231,7 +234,7 @@ fun SignUpScreen(
                         userNameEText = ""
 
                     },
-                    placeholder = "User Name",
+                    placeholder = stringResource(id = R.string.user_name),
                     startPadding = 0.dp,
                     lineColor = if(userNameError) appColor.red else appColor.onBackground
                 )
@@ -283,7 +286,7 @@ fun SignUpScreen(
                         passwordError = false
                         passwordEText = ""
                     },
-                    placeholder = "password",
+                    placeholder = stringResource(id = R.string.password),
                     startPadding = 0.dp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = PasswordVisualTransformation(),
@@ -310,7 +313,7 @@ fun SignUpScreen(
                         confirmPasswordError = false
                         confinePasswordEText = ""
                     },
-                    placeholder = "Confirm Password",
+                    placeholder = stringResource(id = R.string.confirm_password),
                     startPadding = 0.dp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = PasswordVisualTransformation(),
@@ -353,65 +356,80 @@ fun SignUpScreen(
                                     navController.navigate(Screen.LogedAlreadyIn.route)
                                 },
                                 errorHandling = {
-                                    when(it){
+                                    when (it) {
                                         "Given String is Empty User Name" -> {
                                             userNameError = true
                                             userNameEText = ""
                                         }
+
                                         "Passwords do not match" -> {
                                             confirmPasswordError = true
                                             confinePasswordEText = it
                                         }
+
                                         "The email address is already in use by another account." -> {
                                             eMailError = true
                                             eMailEText = "The email address is already in use"
                                         }
+
                                         "Given String is empty or null" -> {
-                                            if(email.value == ""){
+                                            if (email.value == "") {
                                                 eMailError = true
                                                 eMailEText = ""
                                             }
 
-                                            if(password.value == ""){
+                                            if (password.value == "") {
                                                 passwordError = true
                                                 passwordEText = ""
                                             }
                                         }
+
                                         "The email address is badly formatted." -> {
                                             eMailError = true
                                             eMailEText = "The email address is badly formatted."
 
                                         }
+
                                         "The given password is invalid. [ Password should be at least 6 characters ]" -> {
                                             passwordError = true
-                                            passwordEText = "Password should be at least 6 characters"
+                                            passwordEText =
+                                                "Password should be at least 6 characters"
                                         }
+
                                         "The user account has been disabled by an administrator." -> {
                                             errorText = it
                                         }
+
                                         "The provided custom claim attributes are invalid." -> {
                                             errorText = it
                                         }
+
                                         "This operation is not allowed. You must enable this service in the console." -> {
                                             errorText = it
                                         }
+
                                         "We have blocked all requests from this device due to unusual activity. Try again later." -> {
                                             errorText = it
                                         }
+
                                         "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
                                             errorText = it
                                         }
+
                                         "An unknown error occurred." -> {
                                             errorText = it
                                         }
-                                        "User Name already exists" ->{
+
+                                        "User Name already exists" -> {
                                             userNameError = true
                                             userNameEText = it
                                         }
+
                                         "user name contains illegible letters" -> {
                                             userNameError = true
                                             userNameEText = it
                                         }
+
                                         null -> {}
                                         else -> {
                                             errorText = it
@@ -425,7 +443,7 @@ fun SignUpScreen(
                 ) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Sign Up",
+                        text = stringResource(id = R.string.sign_up),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
@@ -442,7 +460,7 @@ fun SignUpScreen(
             item {
                 Row {
                     Text(
-                        text = "You already have an account? ",
+                        text = stringResource(id = R.string.you_already_have_an_account),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
@@ -454,7 +472,7 @@ fun SignUpScreen(
                         modifier = Modifier.clickable {
                             navController.navigate(Screen.LoginScreen.route)
                         },
-                        text = "Login",
+                        text = stringResource(id = R.string.login),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Normal,
@@ -485,7 +503,7 @@ fun SignUpScreen(
                         modifier = Modifier
                             .background(appColor.background)
                             .padding(horizontal = 12.dp),
-                        text = "OR",
+                        text = stringResource(id = R.string.login),
                         fontSize = 16.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Light,

@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.presentation.screen.profile
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -18,9 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
 
-    private val userRepository: UserRepository
-
-): AuthViewModel() {
+    private val userRepository: UserRepository,
+    context: Context
+): AuthViewModel(context) {
 
 
     private val _userData: MutableStateFlow<UserData?> = MutableStateFlow(null)

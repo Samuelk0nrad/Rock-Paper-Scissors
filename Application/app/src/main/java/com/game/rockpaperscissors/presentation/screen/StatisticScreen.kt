@@ -30,11 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.navigation.NavController
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.composable.BarGraph
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.Screen
@@ -145,13 +148,13 @@ fun StatisticScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBackIos,
-                    contentDescription = "Go Back",
+                    contentDescription = stringResource(id = R.string.go_back),
                     tint = appColor.onBackground
                 )
             }
 
             Text(
-                text = "Statistics",
+                text = stringResource(id = R.string.statistics),
                 fontSize = 20.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
@@ -177,7 +180,7 @@ fun StatisticScreen(
             ) {
                 Text(
                     modifier = Modifier.height(28.dp),
-                    text = "Last",
+                    text = stringResource(id = R.string.last),
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -196,7 +199,7 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(if(displayDate != 7) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate != 7) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
@@ -204,7 +207,7 @@ fun StatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(28.dp)
-                    .background(if(displayDate == 7) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 7) appColor.onSecondaryContainer else appColor.background)
                     .clickable {
                         displayDate = 7
                     },
@@ -212,7 +215,7 @@ fun StatisticScreen(
             ) {
                 Text(
                     modifier = Modifier.height(28.dp),
-                    text = "7 days",
+                    text = "7 ${stringResource(id = R.string.days)}",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -228,7 +231,7 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(if(displayDate == 90) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 90) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
@@ -236,7 +239,7 @@ fun StatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(28.dp)
-                    .background(if(displayDate == 30) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 30) appColor.onSecondaryContainer else appColor.background)
                     .clickable {
                         displayDate = 30
                     },
@@ -244,7 +247,7 @@ fun StatisticScreen(
             ) {
                 Text(
                     modifier = Modifier.height(28.dp),
-                    text = "30 days",
+                    text = "30 ${stringResource(id = R.string.days)}",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -259,7 +262,7 @@ fun StatisticScreen(
                 modifier = Modifier
                     .width(1.dp)
                     .height(18.dp)
-                    .background(if(displayDate == 7) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 7) appColor.onSecondaryContainer else appColor.background)
             )
 
             Box(
@@ -267,7 +270,7 @@ fun StatisticScreen(
                     .clip(RoundedCornerShape(4.dp))
                     .width(76.dp)
                     .height(28.dp)
-                    .background(if(displayDate == 90) appColor.onSecondaryContainer else appColor.background)
+                    .background(if (displayDate == 90) appColor.onSecondaryContainer else appColor.background)
                     .clickable {
                         displayDate = 90
                     },
@@ -275,7 +278,7 @@ fun StatisticScreen(
             ) {
                 Text(
                     modifier = Modifier.height(28.dp),
-                    text = "90 days",
+                    text = "90 ${stringResource(id = R.string.days)}",
                     fontSize = 15.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,
@@ -288,6 +291,10 @@ fun StatisticScreen(
         }
 
         Spacer(modifier = Modifier.height(15.dp))
+
+        val barName = listOf(stringResource(id = R.string.rock), stringResource(id = R.string.paper), stringResource(
+            id = R.string.scissors
+        ))
 
         LazyColumn(
             modifier = Modifier
@@ -331,6 +338,9 @@ fun StatisticScreen(
                 }
             }
 */
+
+
+
             item {
                 Spacer(modifier = Modifier.height(53.dp))
             }
@@ -338,9 +348,9 @@ fun StatisticScreen(
             item {
                 BarGraph(
                     values = listOf(yRock.toFloat(), yPaper.toFloat(), yScissors.toFloat()),
-                    name = listOf("Rock", "Paper", "Scissors"),
+                    name = barName,
                     height = 302,
-                    title = "Your Selection:"
+                    title = "${stringResource(id = R.string.your_selection)}:"
                 )
             }
 
@@ -351,9 +361,9 @@ fun StatisticScreen(
             item {
                 BarGraph(
                     values = listOf(eRock.toFloat(), ePaper.toFloat(), eScissors.toFloat()),
-                    name = listOf("Rock", "Paper", "Scissors"),
+                    name = barName,
                     height = 302,
-                    title = "Enemy Selection:"
+                    title = "${stringResource(id = R.string.enemy_selection)}:"
                 )
             }
 
@@ -362,7 +372,7 @@ fun StatisticScreen(
                 Spacer(modifier = Modifier.height(44.dp))
 
                 Text(
-                    text = "Modes:",
+                    text = "${stringResource(id = R.string.modes)}:",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = Oswald,
@@ -391,7 +401,7 @@ fun StatisticScreen(
                 Spacer(modifier = Modifier.height(44.dp))
 
                 Text(
-                    text = "All Rounds:",
+                    text = "${stringResource(id = R.string.all_rounds)}:",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = Oswald,
@@ -488,7 +498,7 @@ fun AllRounds(
         ) {
             Text(
                 modifier = Modifier.padding(bottom = 5.dp),
-                text = "Rounds: ",
+                text = "${stringResource(id = R.string.rounds)}: ",
                 fontSize = 13.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Normal,
@@ -522,7 +532,7 @@ fun AllRounds(
                 ) {
                     Text(
                         modifier = Modifier.width(70.dp),
-                        text = "You",
+                        text = stringResource(id = R.string.your),
                         fontSize = 10.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.SemiBold,
@@ -558,7 +568,7 @@ fun AllRounds(
                 Column {
                     Text(
                         modifier = Modifier.width(70.dp),
-                        text = "Enemy",
+                        text = stringResource(id = R.string.enemy),
                         fontSize = 10.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.SemiBold,
@@ -658,7 +668,7 @@ fun Modes(
 
                     Box(modifier = Modifier.padding(top = 62.dp)){
                         Text(
-                            text = "Times",
+                            text = stringResource(id = R.string.times),
                             fontSize = 10.sp,
                             fontFamily = Oswald,
                             fontWeight = FontWeight.Medium,
@@ -692,7 +702,7 @@ fun Modes(
                             contentAlignment = Alignment.BottomEnd
                         ){
                             Text(
-                                text = "Win:",
+                                text = "${stringResource(id = R.string.win)}:",
                                 fontSize = 10.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Light,
@@ -728,7 +738,7 @@ fun Modes(
                             contentAlignment = Alignment.BottomEnd
                         ){
                             Text(
-                                text = "Lose:",
+                                text = "${stringResource(id = R.string.lose)}:",
                                 fontSize = 10.sp,
                                 fontFamily = Oswald,
                                 fontWeight = FontWeight.Light,

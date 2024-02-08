@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BarChart
@@ -32,12 +33,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.GameModes
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.data.gameModes
@@ -47,7 +50,7 @@ import java.io.File
 
 
 @Composable
-fun HomeScreen (navController: NavController, profileImage: String, context: Context){
+fun HomeScreen (navController: NavController, profileImage: String){
 
     Column (
         modifier = Modifier
@@ -62,7 +65,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
             contentAlignment = Alignment.TopCenter
         ) {
             Text(
-                text = "Game Statistics",
+                text = stringResource(id = R.string.home),
                 fontSize = 20.sp,
                 fontFamily = Oswald,
                 fontWeight = FontWeight.Bold,
@@ -81,24 +84,22 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
             ) {
                 Box(modifier = Modifier
                     .size(45.dp)
-                    .clip(RoundedCornerShape(30.dp))
+                    .clip(CircleShape)
                     .clickable {
                         navController.navigate(Screen.ProfileScreen.route)
                     }
                 ) {
-                    val imageFile: File? = getImage(context, profileImage)
-
-
                     Image(
                         modifier = Modifier.fillMaxSize(),
                         imageVector = Icons.Rounded.Person,
                         contentDescription = "Profile"
                     )
-                    if (imageFile != null) {
+                    if (profileImage != "") {
                         AsyncImage(
-                            model = imageFile.toUri(),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
+                            model = profileImage,
+                            contentDescription = "Profile picture",
+                            modifier = Modifier
+                                .size(150.dp),
                             contentScale = ContentScale.Crop
                         )
                     }
@@ -112,7 +113,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
             item {
                 Text(
                     modifier = Modifier.padding(start = 38.dp, bottom = 6.dp, top = 36.dp),
-                    text = "Your Last Plays: ",
+                    text = "${stringResource(id = R.string.your_last_plays)}: ",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.SemiBold,
@@ -186,7 +187,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "Your",
+                                    text = stringResource(id = R.string.your),
                                     fontSize = 16.sp,
                                     fontFamily = Oswald,
                                     fontWeight = FontWeight.Light,
@@ -206,7 +207,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
                                 contentAlignment = Alignment.BottomCenter
                             ) {
                                 Text(
-                                    text = "Profile",
+                                    text = stringResource(id = R.string.profile),
                                     fontSize = 16.sp,
                                     fontFamily = Oswald,
                                     fontWeight = FontWeight.Bold,
@@ -237,7 +238,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "All",
+                                    text = stringResource(id = R.string.all),
                                     fontSize = 16.sp,
                                     fontFamily = Oswald,
                                     fontWeight = FontWeight.Light,
@@ -258,7 +259,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
                                 contentAlignment = Alignment.BottomCenter
                             ) {
                                 Text(
-                                    text = "Statistics",
+                                    text = stringResource(id = R.string.statistics),
                                     fontSize = 16.sp,
                                     fontFamily = Oswald,
                                     fontWeight = FontWeight.Bold,
@@ -296,7 +297,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "Your",
+                                    text = stringResource(id = R.string.your),
                                     fontSize = 16.sp,
                                     fontFamily = Oswald,
                                     fontWeight = FontWeight.Light,
@@ -316,7 +317,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
                                 contentAlignment = Alignment.BottomCenter
                             ) {
                                 Text(
-                                    text = "Friends",
+                                    text = stringResource(id = R.string.friends),
                                     fontSize = 16.sp,
                                     fontFamily = Oswald,
                                     fontWeight = FontWeight.Bold,
@@ -346,7 +347,7 @@ fun HomeScreen (navController: NavController, profileImage: String, context: Con
             item { 
                 Text(
                     modifier = Modifier.padding(start = 38.dp, bottom = 6.dp),
-                    text = "Game Modes:",
+                    text = "${stringResource(id = R.string.game_modes)}:",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.SemiBold,
@@ -403,7 +404,7 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
 
             Column {
                 Text(
-                    text = mode.name,
+                    text = mode.name.asString(),
                     fontSize = 20.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
@@ -411,7 +412,7 @@ fun DisplayMods(mode: GameModes, navController: NavController) {
                     color = appColor.onBackground
                 )
                 Text(
-                    text = mode.description,
+                    text = mode.description.asString(),
                     fontSize = 14.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,

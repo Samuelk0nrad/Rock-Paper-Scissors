@@ -151,7 +151,9 @@ class SignUpInActivity : ComponentActivity() {
                                         Toast.LENGTH_LONG
                                     ).show()
 
-                                    navController.navigate("profile")
+                                    googleSignInViewModel.uploadUserData()
+
+                                    navController.navigate(Screen.MainActivity.route)
                                     googleSignInViewModel.resetState()
                                 }
                             }

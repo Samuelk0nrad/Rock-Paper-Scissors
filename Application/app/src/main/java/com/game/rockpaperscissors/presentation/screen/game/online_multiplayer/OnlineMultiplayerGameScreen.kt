@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,14 +20,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import com.game.rockpaperscissors.data.PlayerPlayData
-import com.game.rockpaperscissors.data.Screen
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.SelectionType
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
@@ -190,7 +188,7 @@ fun GameLoading(navController: NavController, exitLogic: () -> Unit){
     ){
         Text(
             modifier = Modifier.padding(top = 160.dp),
-            text = "Searching For A Player",
+            text = stringResource(id = R.string.searching_for_a_player),
             fontFamily = Oswald,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
@@ -223,7 +221,7 @@ fun GameLoading(navController: NavController, exitLogic: () -> Unit){
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Exit",
+                    text = stringResource(id = R.string.exit),
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Normal,

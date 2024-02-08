@@ -1,6 +1,5 @@
 package com.game.rockpaperscissors.presentation.screen.game.profile
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,24 +23,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import com.game.rockpaperscissors.data.local.database.PlayerData
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.presentation.screen.game.GameViewModel
-import com.game.rockpaperscissors.presentation.screen.getImage
 import com.game.rockpaperscissors.presentation.screen.profile.ProfileNames
-import com.game.rockpaperscissors.presentation.screen.profile.ProfileViewModel
-import com.game.rockpaperscissors.presentation.screen.profile.hideDate
-import com.game.rockpaperscissors.presentation.screen.profile.hideName
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
-import java.io.File
 
 @Composable
 fun GamePlayerProfileScreen(
@@ -94,7 +85,7 @@ fun GamePlayerProfileScreen(
                     contentAlignment = Alignment.TopCenter
                 ) {
                     Text(
-                        text = "$userName Profile",
+                        text = "$userName ${stringResource(id = R.string.profile)}",
                         fontSize = 20.sp,
                         fontFamily = Oswald,
                         fontWeight = FontWeight.Bold,
@@ -144,13 +135,13 @@ fun GamePlayerProfileScreen(
             item {
                 Spacer(modifier = Modifier.height(28.dp))
 
-                ProfileNames(name = userName, title = "Full Name")
+                ProfileNames(name = userName, title = stringResource(id = R.string.full_name))
             }
 
             item {
                 Spacer(modifier = Modifier.height(36.dp))
 
-                ProfileNames(name = userName, title = "User Name")
+                ProfileNames(name = userName, title = stringResource(id = R.string.user_name))
             }
         }
     }
