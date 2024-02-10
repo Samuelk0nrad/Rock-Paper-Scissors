@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_EXPRESSION")
-
 package com.game.rockpaperscissors.presentation.screen.friends
 
 import android.util.Log

@@ -48,7 +48,7 @@ fun Player(
     Row(
         modifier = Modifier
             .width(220.dp)
-            .height(98.dp)
+            .height(120.dp)
             .clickable {
                 onClick()
             }
@@ -59,21 +59,20 @@ fun Player(
                 .size(98.dp)
         ){
 
-
             Image(
-                modifier = Modifier.fillMaxSize(),
-                imageVector = Icons.Rounded.Person,
-                contentDescription = "Profile"
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = ""
             )
-            if (profilePicture != "") {
-                AsyncImage(
-                    model = profilePicture,
-                    contentDescription = "Profile picture",
-                    modifier = Modifier
-                        .size(150.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
+            
+            AsyncImage(
+                model = profilePicture,
+                contentDescription = "Profile picture",
+                placeholder = painterResource(id = R.drawable.profile),
+                modifier = Modifier
+                    .size(150.dp),
+                contentScale = ContentScale.Crop
+            )
+
         }
 
         Spacer(modifier = Modifier.width(16.dp))

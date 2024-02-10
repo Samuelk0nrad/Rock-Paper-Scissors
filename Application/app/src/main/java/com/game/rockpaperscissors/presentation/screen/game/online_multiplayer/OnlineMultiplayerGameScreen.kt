@@ -60,7 +60,8 @@ fun OnlineMultiplayerGameScreen(
         hasFunctionBeenCalled = true
     }
 
-    gameViewModel.updateEnemy(viewModel.enemy.collectAsState().value ?: UserData(
+    gameViewModel.updateEnemy(viewModel.enemy.collectAsState().value
+        ?: UserData(
         userId = "",
         username = "Noname",
         profilePictureUrl = null,

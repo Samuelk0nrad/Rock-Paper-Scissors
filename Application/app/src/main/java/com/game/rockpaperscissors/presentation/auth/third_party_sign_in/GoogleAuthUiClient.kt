@@ -46,6 +46,9 @@ class GoogleAuthUiClient(
                         profilePictureUrl = photoUrl?.toString(),
                         email = email
                     )
+
+
+
                 },
                 errorMessage = null
             )

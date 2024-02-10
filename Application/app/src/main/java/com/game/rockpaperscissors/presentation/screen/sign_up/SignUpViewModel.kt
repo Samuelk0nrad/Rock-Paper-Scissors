@@ -25,7 +25,7 @@ class SignUpViewModel @Inject constructor(
     val password = MutableStateFlow("")
     val confirmPassword = MutableStateFlow("")
     val userName = MutableStateFlow("")
-    val profilePicUri: MutableStateFlow<Uri?> = MutableStateFlow(null)
+    val profilePicUri: MutableStateFlow<Uri> = MutableStateFlow(Uri.parse("android.resource://" + context.packageName + "/" + R.drawable.profile))
 
 
     private var storage = FirebaseStorage.getInstance()
@@ -202,7 +202,7 @@ class SignUpViewModel @Inject constructor(
 
     private fun uploadProfilePic(callback: (uri: String?, error: String?) -> Unit){
         if(profilePicUri.value == null){
-            callback(null, null)
+            callback(null, "profilePic is null")
             Log.d(TAG, "profilePic is null")
             return
 

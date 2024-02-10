@@ -248,6 +248,11 @@ class FriendsViewModel @Inject constructor (
 
         userFriendsRef.child(_player.value?.username ?: "").child("addTime").setValue(ServerValue.TIMESTAMP)
         playerFriendsRef.child(userName).child("addTime").setValue(ServerValue.TIMESTAMP)
+            .addOnSuccessListener {
+                getAllFriends{_, _ -> }
+                getRequestsFriends{_, _ -> }
+
+            }
 
 
 

@@ -332,7 +332,7 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
                         userId = it.child("userId").getValue(String::class.java) ?:"",
                         username = playerName,
                         email = null,
-                        profilePictureUrl = it.child("profile_picture").getValue(String::class.java)
+                        profilePictureUrl = it.child("profilePicture").getValue(String::class.java)
                     )
                 }
                 Log.d(TAG, "Successful get Enemy Data")
