@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.GoogleAuthUiClient
+import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
 import com.game.rockpaperscissors.presentation.screen.StartScreen
 import com.game.rockpaperscissors.presentation.screen.WelcomeScreen
 import com.game.rockpaperscissors.presentation.screen.reset_passwort.ResetPasswordScreen
@@ -138,6 +139,8 @@ class SignUpInActivity : ComponentActivity() {
                                                 intent = result.data ?: return@launch
                                             )
                                             googleSignInViewModel.onSignInResult(signInResult)
+                                            Log.d("Auth", "onResult")
+                                            googleSignInViewModel.uploadUserData(signInResult.data ?: UserData("asöldfkj",null,null,null))
                                         }
                                     }
                                 }
@@ -150,8 +153,6 @@ class SignUpInActivity : ComponentActivity() {
                                         "Sign in successful",
                                         Toast.LENGTH_LONG
                                     ).show()
-
-                                    googleSignInViewModel.uploadUserData()
 
                                     navController.navigate(Screen.MainActivity.route)
                                     googleSignInViewModel.resetState()

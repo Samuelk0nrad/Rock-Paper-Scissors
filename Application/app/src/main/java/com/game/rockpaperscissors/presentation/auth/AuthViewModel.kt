@@ -26,6 +26,8 @@ open class AuthViewModel @Inject constructor(
     context: Context
 ) : ViewModel() {
 
+    private val TAG = "Auth"
+
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
 
@@ -40,9 +42,6 @@ open class AuthViewModel @Inject constructor(
         _state.update { SignInState() }
     }
 
-
-
-
     fun launchCatching(block: suspend CoroutineScope.() -> Unit) =
         viewModelScope.launch(
             CoroutineExceptionHandler { _, throwable ->
@@ -56,34 +55,19 @@ open class AuthViewModel @Inject constructor(
     }
 
     private val database: DatabaseReference = Firebase.database(context.getString(R.string.firebase_realtime_database)).reference
-    private val _player: MutableStateFlow<UserData?> = MutableStateFlow(
-        Firebase.auth.currentUser?.let {
-            UserData(
-                userId = it.uid,
-                username = it.displayName,
-                email = it.email,
-                profilePictureUrl = it.photoUrl?.toString()
-            )
-        }
-    )
-
-    fun uploadUserData(){
-        if(_player.value == null){
-            return
-        }else if(_player.value?.username == null || _player.value?.username == ""){
-            return
-        }
+    fun uploadUserData(userData: UserData){
+        Log.d(TAG, "uploading User Data")
 
 
-        val userRef = database.child("users").child(_player.value?.username ?:"")
+        val userRef = database.child("users").child(userData.username ?: "noName")
 
 
         userRef.get()
             .addOnSuccessListener {
                 if(!it.exists()){
-                    userRef.child("userId").setValue(_player.value?.userId)
-                    userRef.child("profilePicture").setValue(_player.value?.profilePictureUrl)
-                    userRef.child("email").setValue(_player.value?.email)
+                    userRef.child("userId").setValue(userData.userId)
+                    userRef.child("profilePicture").setValue(userData.profilePictureUrl)
+                    userRef.child("email").setValue(userData.email)
                 }
             }
     }

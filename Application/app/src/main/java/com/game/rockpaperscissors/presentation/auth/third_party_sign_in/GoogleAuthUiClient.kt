@@ -3,6 +3,7 @@ package com.game.rockpaperscissors.presentation.auth.third_party_sign_in
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.util.Log
 import com.game.rockpaperscissors.R
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
@@ -38,6 +39,8 @@ class GoogleAuthUiClient(
         val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
         return try {
             val user = auth.signInWithCredential(googleCredentials).await().user
+
+            Log.d("Auth", "sign In with Intent")
             SignInResult(
                 data = user?.run {
                     UserData(
@@ -52,6 +55,8 @@ class GoogleAuthUiClient(
                 },
                 errorMessage = null
             )
+
+
         } catch(e: Exception) {
             e.printStackTrace()
             if(e is CancellationException) throw e
