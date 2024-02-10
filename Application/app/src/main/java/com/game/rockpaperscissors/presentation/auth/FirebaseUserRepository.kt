@@ -153,6 +153,9 @@ class FirebaseUserRepository @Inject constructor(
     }
 
     override suspend fun updateProfilePic(profilePicture: String) {
+
+        Log.w("currentUser", "ProfilePic")
+
         try {
             val profileUpdates = userProfileChangeRequest {
                 photoUri  = Uri.parse(profilePicture)
@@ -161,7 +164,7 @@ class FirebaseUserRepository @Inject constructor(
 
         }catch (e: Exception){
             e.printStackTrace()
-            e.message?.let { Log.d("currentUser --DNFUR", it) }
+            Log.e("currentUser --DNFUR", "exception: ${e.message}")
 
         }
     }
