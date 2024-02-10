@@ -15,7 +15,7 @@ interface UserRepository {
     suspend fun signUpEMail(email: String, password: String, userName: String, profilePicture: String?) : SignInResult
     suspend fun updateDisplayName(userName: String)
     suspend fun updateEmail(email: String)
-    suspend fun updateProfilePic(userName: String)
+    suspend fun updateProfilePic(profilePicture: String)
     suspend fun resetPassword(email: String) : SignInResult
     suspend fun deleteUser(): SignInResult
     suspend fun signOut()

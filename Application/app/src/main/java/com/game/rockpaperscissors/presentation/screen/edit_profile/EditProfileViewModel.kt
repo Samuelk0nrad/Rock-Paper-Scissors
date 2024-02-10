@@ -1,6 +1,7 @@
 package com.game.rockpaperscissors.presentation.screen.edit_profile
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.UserRepository
@@ -18,30 +19,34 @@ class EditProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     context: Context
 ) : AuthViewModel(context) {
-    private val _userData: MutableStateFlow<UserData?> = MutableStateFlow(
-        Firebase.auth.currentUser?.let {
-            UserData(
-                userId = it.uid,
-                username = it.displayName,
-                email = it.email,
-                profilePictureUrl = it.photoUrl?.toString()
-            )
-        }
-
-    )
+    private val _userData: MutableStateFlow<UserData?> = MutableStateFlow(null)
     val userData = _userData.asStateFlow()
 
     val userName = MutableStateFlow("")
     val email = MutableStateFlow("")
+    val profilePic = MutableStateFlow<Uri?>(null)
 
 
     init {
+        val user = Firebase.auth.currentUser
+        _userData.update {
+            user?.let { it1 ->
+                Log.d("currentUser ------","${it1.email}")
+                UserData(
+                    userId = it1.uid,
+                    email = it1.email,
+                    username = it1.displayName,
+                    profilePictureUrl = it1.photoUrl?.toString()
+                )
+            }
+        }
         userName.update {
             _userData.value?.username ?: ""
         }
         email.update {
             _userData.value?.email ?: ""
         }
+
     }
 
     fun updateUserName(newUserName: String){
@@ -50,12 +55,20 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
+    fun updateProfilePic(newProfilePic: Uri){
+        this.profilePic.update {
+            newProfilePic
+        }
+    }
 
     fun updateEmail(newEmail: String){
         email.update {
             newEmail
         }
     }
+
+
+
 
     fun onClickSave(goToScreen: () -> Unit, onValueChange: (Boolean) -> Unit = {}){
         launchCatching {
@@ -70,6 +83,14 @@ class EditProfileViewModel @Inject constructor(
                 Log.d("currentUser", "userName.Change")
 
                 userRepository.updateDisplayName(userName.value)
+            }
+
+            if(profilePic.value != null){
+                Log.d("currentUser", "profilePic.Change")
+
+                userRepository.updateProfilePic(profilePic.value.toString())
+
+
             }
 
             onValueChange(false)

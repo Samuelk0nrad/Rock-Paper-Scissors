@@ -8,6 +8,7 @@ import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.UserRepository
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -26,6 +27,8 @@ class SignUpViewModel @Inject constructor(
     val userName = MutableStateFlow("")
     val profilePicUri: MutableStateFlow<Uri?> = MutableStateFlow(null)
 
+
+    private var storage = FirebaseStorage.getInstance()
 
 
     fun updateEmail(newEmail: String) {
@@ -83,7 +86,7 @@ class SignUpViewModel @Inject constructor(
                 throw Exception(errorMessage)
             }
 
-            checkIfExistsUserName(userName.value){
+            checkIfExistsUserName(userName.value){ it ->
                 if(it == null){
                     launchCatching {
                         val res = accountService.signUpEMail(
@@ -98,14 +101,29 @@ class SignUpViewModel @Inject constructor(
                         accountService.updateDisplayName(userName = userName.value)
                         onValueChange(false)
 
-                        upLoadUserName(res.data?.userId ?:""){}
+                        uploadProfilePic{image, error ->
+                            if(error == null){
+                                launchCatching {
+                                    accountService.updateProfilePic(image ?:"")
+                                }
 
+                                upLoadUserName(res.data?.userId ?:"", image ?:""){errorM ->
+                                    if(errorM == null) {
+                                        errorMessage = res.errorMessage
+                                        errorHandling(errorMessage)
 
-                        errorMessage = res.errorMessage
-                        errorHandling(errorMessage)
-
-                        if (res.errorMessage == null) {
-                            goToScreen()
+                                        if (res.errorMessage == null) {
+                                            goToScreen()
+                                        }
+                                    }else{
+                                        errorMessage = "Please Tray again"
+                                        errorHandling(errorMessage)
+                                    }
+                                }
+                            }else{
+                                errorMessage = "Please Tray again"
+                                errorHandling(errorMessage)
+                            }
                         }
                     }
                 }else{
@@ -141,7 +159,7 @@ class SignUpViewModel @Inject constructor(
     }
 
 
-    private fun upLoadUserName(userId: String, callback: (String?) -> Unit){
+    private fun upLoadUserName(userId: String, profilePic: String, callback: (String?) -> Unit){
 
         Log.d(TAG, "userId is: $userId")
         if(userId == ""){
@@ -162,7 +180,7 @@ class SignUpViewModel @Inject constructor(
                 callback("Fail")
             }
 
-        userRef.child("profilePicture").setValue(profilePicUri.value?.toString())
+        userRef.child("profilePicture").setValue(profilePic)
             .addOnSuccessListener {
                 callback(null)
             }
@@ -181,6 +199,41 @@ class SignUpViewModel @Inject constructor(
             }
     }
 
+
+    private fun uploadProfilePic(callback: (uri: String?, error: String?) -> Unit){
+        if(profilePicUri.value == null){
+            callback(null, null)
+            Log.d(TAG, "profilePic is null")
+            return
+
+        }
+
+
+        val storageRef = storage.getReference("users/profilePics/${userName.value}")
+
+        storageRef.putFile(profilePicUri.value!!)
+            .addOnSuccessListener {
+                storageRef.downloadUrl
+                    .addOnSuccessListener {
+                        callback(it.toString(), null)
+                        Log.d(TAG, "Successful get Image Uri")
+                        Log.d(TAG, "Successful get Image Uri")
+                        Log.d(TAG, "Successful get Image Uri")
+                        Log.d(TAG, "Successful get Image Uri")
+                    }
+                    .addOnCanceledListener {
+
+                        callback(null, "failed to get uri")
+                    }
+
+                Log.d(TAG, "Successful uploaded Image")
+            }
+            .addOnCanceledListener {
+                callback(null, "failed to upload")
+            }
+
+    }
+
     fun containsAnyLetter(inputString: String, lettersToCheck: List<Char>): Boolean {
         for (letter in lettersToCheck) {
             if (letter in inputString) {
@@ -191,3 +244,19 @@ class SignUpViewModel @Inject constructor(
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

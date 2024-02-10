@@ -144,20 +144,17 @@ fun ProfileScreen(
                     .clip(RoundedCornerShape(100.dp))
 
             ) {
-                val imageFile: File? = null
-
                 Image(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(appColor.onBackground),
+                    modifier = Modifier.fillMaxSize(),
                     imageVector = Icons.Rounded.Person,
                     contentDescription = "Profile"
                 )
-                if (imageFile != null) {
+                if (profilePicture != "") {
                     AsyncImage(
-                        model = imageFile.toUri(),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
+                        model = profilePicture,
+                        contentDescription = "Profile picture",
+                        modifier = Modifier
+                            .size(150.dp),
                         contentScale = ContentScale.Crop
                     )
                 }

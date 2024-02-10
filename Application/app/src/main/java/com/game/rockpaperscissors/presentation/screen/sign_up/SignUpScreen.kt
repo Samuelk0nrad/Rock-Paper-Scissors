@@ -129,23 +129,12 @@ fun SignUpScreen(
     val userName = viewModel.userName.collectAsState()
     val profilePic = viewModel.profilePicUri.collectAsState()
 
-
-
-    var imageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-
-    var fileName: String? by remember {
-        mutableStateOf(null)
-    }
-
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {uri ->
             if(uri != null){
-                imageUri = uri
                 viewModel.updateProfilePic(uri)
-                fileName = saveImageToInternalStorage(context = context, uri = uri, fileName = "profile_picture")
+//                fileName = saveImageToInternalStorage(context = context, uri = uri, fileName = "profile_picture")
             }
         }
     )
@@ -200,9 +189,6 @@ fun SignUpScreen(
                         contentAlignment = Alignment.Center
 
                     ) {
-                        val imageFile: File? = fileName?.let { getImage(context, it) }
-
-
                         Icon(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -211,14 +197,14 @@ fun SignUpScreen(
                             contentDescription = "Camara",
                             tint = appColor.background
                         )
-                        if (imageFile != null) {
-                            AsyncImage(
-                                model = imageFile.toUri(),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
+
+                        AsyncImage(
+                            model = profilePic.value,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+
                     }
                 }
                 Spacer(modifier = Modifier.height(38.dp))

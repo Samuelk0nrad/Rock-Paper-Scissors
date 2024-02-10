@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,8 +44,6 @@ fun Player(
     level: Int = 41,
     isReady: Boolean = false,
     onClick: () -> Unit = {},
-    context: Context
-
 ){
     Row(
         modifier = Modifier
@@ -60,18 +60,17 @@ fun Player(
         ){
 
 
-            val imageFile: File? = getImage(context, profilePicture)
-
-
             Image(
-                painter = painterResource(id = R.drawable.blank_profile_picture),
-                contentDescription = "Profile Picture"
+                modifier = Modifier.fillMaxSize(),
+                imageVector = Icons.Rounded.Person,
+                contentDescription = "Profile"
             )
-            if (imageFile != null) {
+            if (profilePicture != "") {
                 AsyncImage(
-                    model = imageFile.toUri(),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
+                    model = profilePicture,
+                    contentDescription = "Profile picture",
+                    modifier = Modifier
+                        .size(150.dp),
                     contentScale = ContentScale.Crop
                 )
             }

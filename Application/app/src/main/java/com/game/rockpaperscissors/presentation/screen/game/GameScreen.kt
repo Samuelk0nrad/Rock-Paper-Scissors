@@ -199,7 +199,6 @@ class GameScreen (
 
                         navController.navigate(Screen.GamePlayerProfileScreen.route)
                     },
-                    context = context,
                     profilePicture = gameViewModel.enemy.value?.profilePictureUrl ?:""
                 )
                 Spacer(modifier = Modifier.height(55.dp))
@@ -249,7 +248,6 @@ class GameScreen (
                         navController.navigate(Screen.GamePlayerProfileScreen.route)
                     },
                     isBot = false,
-                    context = context,
                     profilePicture = gameViewModel.player.value?.profilePictureUrl ?:""
                 )
                 Spacer(modifier = Modifier.height(60.dp))

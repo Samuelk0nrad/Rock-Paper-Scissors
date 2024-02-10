@@ -43,6 +43,7 @@ import com.game.rockpaperscissors.presentation.screen.friends.FriendsViewModel
 import com.game.rockpaperscissors.presentation.screen.game.SettingUpGameScreen
 import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameViewModel
 import com.game.rockpaperscissors.presentation.screen.profile.ProfileViewModel
+import com.game.rockpaperscissors.presentation.screen.testScreen
 import com.game.rockpaperscissors.ui.theme.appColor
 
 @Composable
@@ -126,10 +127,9 @@ fun Navigation(
 
             viewModel.updateUserData()
 
-            val pic = viewModel.userData.collectAsState().value?.username
 
+            HomeScreen(navController, viewModel = viewModel)
 
-            HomeScreen(navController, pic?:"")
         }
 
         composable(route = Screen.ProfileScreen.route){

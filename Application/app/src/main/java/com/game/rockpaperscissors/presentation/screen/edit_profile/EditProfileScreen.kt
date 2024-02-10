@@ -2,6 +2,10 @@ package com.game.rockpaperscissors.presentation.screen.edit_profile
 
 import android.content.Context
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,12 +17,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -41,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.screen.CustomTextFiled
@@ -58,6 +66,8 @@ fun EditProfileScreen(
 
     val email = viewModel.email.collectAsState()
     val userName = viewModel.userName.collectAsState()
+    val profilePic = viewModel.profilePic.collectAsState()
+    val savedPic = viewModel.userData.collectAsState().value?.profilePictureUrl
 
 
     var isLoading by remember {
@@ -66,21 +76,15 @@ fun EditProfileScreen(
 
 
 
-/*    val photoPickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickVisualMedia(),
-//        onResult = {uri ->
-//            if(uri != null){
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {uri ->
+            if(uri != null){
+                viewModel.updateProfilePic(uri)
 //                fileName = saveImageToInternalStorage(context = context, uri = uri, fileName = "profile_picture")
-//
-//                onEvent(PlayerDataEvent.SetUserImage(fileName!!))
-//
-//            }
-//        }
-   )*/
-
-
-
-
+            }
+        }
+    )
 
 
 
@@ -177,28 +181,36 @@ fun EditProfileScreen(
 
             ) {
 
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
+                ) {
 
-                /*val imageFile: File? = getImage(context, fileName)
+                    if (profilePic.value != null) {
+                        AsyncImage(
+                            model = profilePic.value,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            imageVector = Icons.Rounded.Person,
+                            contentDescription = "Profile"
+                        )
+                        if (savedPic != "") {
+                            AsyncImage(
+                                model = savedPic,
+                                contentDescription = "Profile picture",
+                                modifier = Modifier
+                                    .size(150.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                }
 
-
-                Image(
-                    contentDescription = "Profile",
-                    imageVector = Icons.Rounded.Person,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(100.dp))
-                        .background(appColor.onBackground)
-
-                )
-                if (imageFile != null) {
-                    AsyncImage(
-                        model = imageFile.toUri(),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                            .clip(RoundedCornerShape(100.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                }*/
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.BottomEnd
@@ -210,9 +222,9 @@ fun EditProfileScreen(
                             .size(30.dp)
                             .clip(RoundedCornerShape(30.dp))
                             .clickable {
-//                                photoPickerLauncher.launch(
-//                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-//                                )
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
                             }
                             .background(appColor.background),
                         contentAlignment = Alignment.Center

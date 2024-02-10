@@ -152,8 +152,18 @@ class FirebaseUserRepository @Inject constructor(
         }
     }
 
-    override suspend fun updateProfilePic(userName: String) {
-        TODO("Not yet implemented")
+    override suspend fun updateProfilePic(profilePicture: String) {
+        try {
+            val profileUpdates = userProfileChangeRequest {
+                photoUri  = Uri.parse(profilePicture)
+            }
+            Firebase.auth.currentUser!!.updateProfile(profileUpdates).await()
+
+        }catch (e: Exception){
+            e.printStackTrace()
+            e.message?.let { Log.d("currentUser --DNFUR", it) }
+
+        }
     }
 
     override suspend fun resetPassword(email: String) : SignInResult {
