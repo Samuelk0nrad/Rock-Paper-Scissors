@@ -50,6 +50,7 @@ open class AuthViewModel @Inject constructor(
             block = block
         )
 
+
     companion object {
         const val ERROR_TAG = "NOTES APP ERROR"
     }
@@ -72,6 +73,10 @@ open class AuthViewModel @Inject constructor(
             }
     }
 }
+
+
+
+
 
 
 

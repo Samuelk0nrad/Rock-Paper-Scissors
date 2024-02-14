@@ -12,7 +12,7 @@
     <string name="online">Online</string>
     <string name="play">Play</string>
     <string name="all">All</string>
-    <string name="you_dont_have_friends_jet">You don\'t have Friends jet\\n you can add Friends if you click on the + Button</string>
+    <string name="you_dont_have_friends_jet">You don\'t have Friends jet\nyou can add Friends if you click on the + Button</string>
     <string name="level">Level</string>
     <string name="searching_for_a_player">Searching For A Player</string>
     <string name="exit">Exit</string>
@@ -51,13 +51,13 @@
     <string name="last">Last</string>
     <string name="days">days</string>
     <string name="all_rounds">All Rounds</string>
-    <string name="play_the_classic_game">Play the classic game of\\n rock, paper, scissors</string>
+    <string name="play_the_classic_game">Play the classic game of\nrock, paper, scissors</string>
     <string name="modes">Modes</string>
     <string name="rounds">Rounds</string>
     <string name="enemy">Enemy</string>
     <string name="times">Times</string>
     <string name="welcome">Welcome</string>
-    <string name="please_login_or_sign_up">Please login or sign up to continue\\nusing our app.</string>
+    <string name="please_login_or_sign_up">Please login or sign up to continue\nusing our app.</string>
     <string name="create_new_account">Create New Account</string>
     <string name="do_you_have_already_a_account">Do you have already a account?</string>
     <string name="ready">Ready</string>
