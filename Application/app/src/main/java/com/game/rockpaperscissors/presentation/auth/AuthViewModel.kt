@@ -1,5 +1,6 @@
 package com.game.rockpaperscissors.presentation.auth
 
+import android.content.ComponentCallbacks
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
+import com.google.firebase.messaging.ktx.messaging
+import com.google.firebase.messaging.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -19,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,9 +73,24 @@ open class AuthViewModel @Inject constructor(
                     userRef.child("userId").setValue(userData.userId)
                     userRef.child("profilePicture").setValue(userData.profilePictureUrl)
                     userRef.child("email").setValue(userData.email)
+
+                    getNotificationToken {token ->
+                        userRef.child("notification_token").setValue(token)
+                    }
                 }
             }
     }
+
+
+
+    fun getNotificationToken(callback : (token : String) -> Unit){
+        com.google.firebase.ktx.Firebase.messaging.token
+            .addOnSuccessListener{
+                callback(it)
+            }
+    }
+
+
 }
 
 

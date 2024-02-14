@@ -7,6 +7,7 @@ import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.UserRepository
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.database.database
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -114,6 +115,9 @@ class SignUpViewModel @Inject constructor(
 
                                         if (res.errorMessage == null) {
                                             goToScreen()
+
+                                            val userName = Firebase.auth.currentUser?.displayName ?: return@upLoadUserName
+                                            setNotificationToken(userName)
                                         }
                                     }else{
                                         errorMessage = "Please Tray again"
@@ -134,6 +138,17 @@ class SignUpViewModel @Inject constructor(
     }
 
     private val database = Firebase.database(context.getString(R.string.firebase_realtime_database)).reference
+
+
+    private fun setNotificationToken(userName: String){
+
+        val notificationTokenRef = database.child("users").child(userName).child("notification_token")
+
+        getNotificationToken {token ->
+            notificationTokenRef.setValue(token)
+        }
+    }
+
 
     private fun checkIfExistsUserName(userName: String, callback: (String?) -> Unit){
         val usersRef = database.child("users")

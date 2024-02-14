@@ -1,13 +1,12 @@
 package com.game.rockpaperscissors.presentation.screen.sign_in
 
 
-import android.content.ComponentCallbacks
 import android.content.Context
-import android.util.Log
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.presentation.auth.AuthViewModel
 import com.game.rockpaperscissors.presentation.auth.UserRepository
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -50,6 +49,9 @@ class SignInViewModel @Inject constructor(
 
                             if(res.errorMessage == null) {
                                 goToScreen()
+
+                                val userName = Firebase.auth.currentUser?.displayName ?: return@launchCatching
+                                setNotificationToken(userName)
                             }
                         }
 
@@ -70,23 +72,41 @@ class SignInViewModel @Inject constructor(
 
                 if(res.errorMessage == null) {
                     goToScreen()
+
+
+
+                    val userName = Firebase.auth.currentUser?.displayName ?: return@launchCatching
+                    setNotificationToken(userName)
                 }
-
             }
-
         }
     }
 
     private val database = Firebase.database(context.getString(R.string.firebase_realtime_database)).reference
 
-    fun getEmail(callback: (String?, String?) -> Unit){
+
+    private fun setNotificationToken(userName: String){
+
+        val notificationTokenRef = database.child("users").child(userName).child("notification_token")
+
+        getNotificationToken {token ->
+            notificationTokenRef.setValue(token)
+        }
+    }
+
+
+
+
+    private fun getEmail(callback: (String?, String?) -> Unit){
         val userRef = database.child("users").child(email.value)
+
+
 
 
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if(dataSnapshot.exists()){
-                    val email = dataSnapshot.getValue(String::class.java)
+                    val email = dataSnapshot.child("email").getValue(String::class.java)
                     callback(email, null)
                     return
                 }else{
@@ -105,5 +125,5 @@ class SignInViewModel @Inject constructor(
         userRef.addValueEventListener(valueEventListener)
     }
 
-    fun ifEmail(email: String): Boolean = '@' in email
+    private fun ifEmail(email: String): Boolean = '@' in email
 }
