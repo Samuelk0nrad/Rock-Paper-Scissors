@@ -1,4 +1,4 @@
-package com.game.rockpaperscissors
+ package com.game.rockpaperscissors
 
 import android.content.Context
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
@@ -20,6 +20,9 @@ class PushNotificationService : FirebaseMessagingService() {
     private val database: DatabaseReference? =
         if(this::context.isInitialized) Firebase.database(context.getString(R.string.firebase_realtime_database)).reference
         else null
+
+
+
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 

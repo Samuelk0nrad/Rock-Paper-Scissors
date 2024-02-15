@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
         auth = Firebase.auth
 
 
+
         installSplashScreen().apply {
 
 

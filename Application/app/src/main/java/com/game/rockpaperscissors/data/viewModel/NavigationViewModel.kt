@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.game.rockpaperscissors.data.PlayerDataState
 import com.game.rockpaperscissors.data.local.database.PlayerDataDao
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,6 +50,8 @@ class NavigationViewModel @Inject constructor(
 
             _isReady.value = true
             _isLoggedIn.value = state.value.allPlayer.isNotEmpty()
+            Firebase.messaging.subscribeToTopic("weather").await()
+
         }
     }
 
