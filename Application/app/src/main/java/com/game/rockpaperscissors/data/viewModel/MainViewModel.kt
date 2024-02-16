@@ -4,6 +4,7 @@ package com.game.rockpaperscissors.data.viewModel
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
 import com.google.firebase.Firebase
@@ -14,9 +15,11 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,20 +82,13 @@ class MainViewModel @Inject constructor(
                                         }
                                     }
 
-                                    is InAppNotification.PlayWithFriend -> TODO()
+                                    is InAppNotification.PlayWithFriend -> {}
                                 }
                             }
                             if (!exists) {
-                                _state.update {
-                                    InAppNotificationState(
-                                        display = true,
-                                        notification =
-                                        it.notification + InAppNotification.FriendRequest(friendName)
-                                    )
-                                }
+                                addNotification(InAppNotification.FriendRequest(friendName))
                             }
                         }
-
                     }
                     Log.d(TAG,"size of friends: ${_state.value.notification.size}, exists")
 
@@ -141,6 +137,19 @@ class MainViewModel @Inject constructor(
         _state.update {
             val notifications: MutableList<InAppNotification> = it.notification.toMutableList()
             notifications.remove(inAppNotification)
+
+            InAppNotificationState(
+                notifications.isNotEmpty(),
+                notifications
+            )
+        }
+    }
+
+    private fun addNotification(inAppNotification: InAppNotification){
+        _state.update {
+            val notifications: MutableList<InAppNotification> = it.notification.toMutableList()
+            if(notifications.isEmpty()) deleteDelay()
+            notifications.add(inAppNotification)
 
             InAppNotificationState(
                 notifications.isNotEmpty(),
@@ -204,6 +213,23 @@ class MainViewModel @Inject constructor(
         val requestRef = database.child("users").child(_user.value?.username ?:"").child("requests")
 
         requestRef.child(userName).removeValue()
+    }
+
+
+    private fun deleteDelay(){
+
+        viewModelScope.launch {
+            delay(500)
+
+            while(_state.value.notification.isNotEmpty()){
+                Log.d("MainViewModelLog", "delete: ${_state.value.notification[0]}")
+                delay(5 * 1000)
+
+
+                onDismissNotification(_state.value.notification[0])
+            }
+
+        }
     }
 }
 
