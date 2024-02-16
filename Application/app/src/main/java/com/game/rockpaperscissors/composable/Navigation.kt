@@ -3,6 +3,8 @@ package com.game.rockpaperscissors.composable
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,6 +39,8 @@ import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
+import com.game.rockpaperscissors.data.viewModel.InAppNotification
+import com.game.rockpaperscissors.data.viewModel.MainViewModel
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
 import com.game.rockpaperscissors.presentation.screen.edit_profile.EditProfileViewModel
 import com.game.rockpaperscissors.presentation.screen.friends.FriendsViewModel
@@ -49,6 +53,7 @@ import com.game.rockpaperscissors.ui.theme.appColor
 @Composable
 fun Navigation(
     context: Context,
+    mainViewModel: MainViewModel
 ) {
 
     val navController = rememberNavController()
@@ -160,8 +165,8 @@ fun Navigation(
 
         }
         
-        navigation(route = Screen.MainStatistic.route, startDestination = Screen.StatisticScreen.route){
-            composable(route = Screen.StatisticScreen.route){
+        navigation(route = Screen.MainStatistic.route, startDestination = Screen.StatisticScreen.route) {
+            composable(route = Screen.StatisticScreen.route) {
                 SetBarColor(
                     colorStatus = appColor.secondaryContainer,
                     colorNavigation = appColor.background
@@ -171,15 +176,15 @@ fun Navigation(
                 val state by viewModel.state.collectAsState()
                 val gameData = state.allGames
 
-                if(gameData.isNotEmpty()){
+                if (gameData.isNotEmpty()) {
                     StatisticScreen(navController = navController, gameData = gameData)
                 }
             }
-            
+
             composable(
                 route = "${Screen.ModeStatisticScreen.route}/{mode}",
-                arguments = listOf(navArgument("mode"){type = NavType.StringType})
-            ){backStackEntry->
+                arguments = listOf(navArgument("mode") { type = NavType.StringType })
+            ) { backStackEntry ->
 
                 var mode: GameModesEnum? = null
 
@@ -194,22 +199,26 @@ fun Navigation(
 
                 var gameData: List<GameDataEntity> = emptyList()
 
-                if(mode != null) {
+                if (mode != null) {
 
                     allGameData.forEach {
-                        if (it.mode == mode){
+                        if (it.mode == mode) {
                             gameData = gameData + it
                         }
                     }
 
-                    ModeStatisticScreen(mode = mode!!, navController = navController, gameData = gameData)
+                    ModeStatisticScreen(
+                        mode = mode!!,
+                        navController = navController,
+                        gameData = gameData
+                    )
                 }
             }
 
             composable(
                 route = "${Screen.RoundStatisticScreen.route}/{roundId}",
-                arguments = listOf(navArgument("roundId"){type = NavType.LongType})
-            ){backStackEntry->
+                arguments = listOf(navArgument("roundId") { type = NavType.LongType })
+            ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getLong("roundId")
 
                 val viewModel = hiltViewModel<GameDataViewModel>()
@@ -222,26 +231,44 @@ fun Navigation(
                     RoundStatisticScreen(navController = navController, round = roundData)
                 }
             }
-
-            composable(route = Screen.Setting.route){
-
-            }
-
-            composable(route = Screen.FriendsScreen.route){
-                val viewModel = hiltViewModel<FriendsViewModel>()
-
-                FriendsScreen(
-                    navController = navController,
-                    viewModel = viewModel
-                )
-            }
-            composable(route = Screen.SignInActivity.route){
-                val intent = Intent(context, SignUpInActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(context, intent, null)
-            }
         }
+
+        composable(route = Screen.Setting.route){
+
+
+        }
+
+        composable(route = Screen.FriendsScreen.route){
+            val viewModel = hiltViewModel<FriendsViewModel>()
+            FriendsScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+
+        composable(route = Screen.SignInActivity.route){
+            val intent = Intent(context, SignUpInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(context, intent, null)
+        }
+
     }
+
+    val state = mainViewModel.state.collectAsState()
+
+
+    if(state.value.display){
+        InAppNotificationManager(
+            notification = state.value.notification,
+            navController = navController,
+            onDelete = mainViewModel::onDismissNotification,
+            multiple = state.value.notification.size > 1,
+            onClick = mainViewModel::onClickAction
+        )
+    }
+
+
+
 }
 
 @Composable

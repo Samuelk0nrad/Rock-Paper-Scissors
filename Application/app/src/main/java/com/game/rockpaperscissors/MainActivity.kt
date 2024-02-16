@@ -8,13 +8,12 @@ import android.util.Log
 import android.Manifest
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,11 +24,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.game.rockpaperscissors.composable.InAppNotificationManager
 import com.game.rockpaperscissors.composable.Navigation
-import com.game.rockpaperscissors.data.viewModel.NavigationViewModel
+import com.game.rockpaperscissors.data.viewModel.MainViewModel
+import com.game.rockpaperscissors.data.viewModel.InAppNotification
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.game.rockpaperscissors.ui.theme.appColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -41,7 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<NavigationViewModel>()
+    private lateinit var viewModel : MainViewModel
 
 
     private lateinit var auth: FirebaseAuth
@@ -80,6 +82,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             RockPaperScissorsTheme {
 
+                viewModel = hiltViewModel<MainViewModel>()
+
                 Log.d("currentUser", "Main Activity")
                 SetBarColor(colorSystem = appColor.background)
                 // A surface container using the 'background' color from the theme
@@ -87,10 +91,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = appColor.background
                 ) {
-                    Navigation(context = applicationContext)
+                    Navigation(context = applicationContext, viewModel)
 //                    Greeting(name = "asdf")
 
+
                 }
+
+
+
+
+
             }
         }
     }
@@ -156,11 +166,3 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         })
     )
 }
-
-
-
-
-
-
-
-

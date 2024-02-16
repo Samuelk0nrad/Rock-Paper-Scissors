@@ -229,7 +229,7 @@ class FriendsViewModel @Inject constructor (
             }
     }
 
-    fun exceptRequest(userName: String){
+    fun acceptRequest(userName: String){
         if(_player.value == null){
             Log.d(TAG, "no Player")
             return

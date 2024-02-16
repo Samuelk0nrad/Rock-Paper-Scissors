@@ -27,6 +27,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -189,23 +190,23 @@ fun FriendsScreen(
                                 pictureUri = it.profilePictureUrl ?: "",
                                 buttonText = "Add",
                             ){
-                                viewModel.exceptRequest(it.username ?:"")
+                                viewModel.acceptRequest(it.username ?:"")
                             }
-                            if (i != allFriends.value.size) {
+                            if (i != 0 || i != allFriends.value.size - 1) {
                                 Spacer(modifier = Modifier.height(16.dp))
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ){
-                                Spacer(
+                                Box(
                                     modifier = Modifier
-                                        .height(1.dp)
-                                        .fillMaxWidth(0.7f)
-                                        .background(appColor.onSecondaryContainer.copy(alpha = 0.5f))
-                                )
+                                        .fillMaxWidth(),
+                                    contentAlignment = Alignment.Center
+                                ){
+                                    Spacer(
+                                        modifier = Modifier
+                                            .height(1.dp)
+                                            .fillMaxWidth(0.7f)
+                                            .background(appColor.onSecondaryContainer.copy(alpha = 0.5f))
+                                    )
 
-                            }
+                                }
                                 Spacer(modifier = Modifier.height(16.dp))
                             }
                             i++
@@ -336,7 +337,7 @@ fun FriendsScreen(
                         .background(appColor.background),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+                    LinearProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
                 }
             }
         }
@@ -467,7 +468,6 @@ fun FriendsScreen(
                         CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
                     }
                 }
-
             }
         }
     }
