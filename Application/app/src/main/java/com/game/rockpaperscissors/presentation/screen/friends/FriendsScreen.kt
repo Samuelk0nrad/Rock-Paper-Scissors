@@ -338,7 +338,11 @@ fun FriendsScreen(
                         .background(appColor.background),
                     contentAlignment = Alignment.Center
                 ) {
+<<<<<<< Updated upstream
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+=======
+                    CircularProgressIndicator(color = appColor.onBackground)
+>>>>>>> Stashed changes
                 }
             }
         }

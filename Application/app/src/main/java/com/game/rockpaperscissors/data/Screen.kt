@@ -2,7 +2,14 @@ package com.game.rockpaperscissors.data
 
 sealed class Screen(val route: String){
     object StartScreen : Screen("welcome_screen")
+
     object MainGame : Screen("main_game")
+    object RandomGame : Screen("random_game")
+    object LocalMultiplayerGameScreen : Screen("local_multiplayer_game")
+    object OnlineMultiplayerGame : Screen("online_multiplayer_game")
+    object OnlineMultiplayerGameScreen : Screen("online_multiplayer_game_screen")
+    object OnlineMultiplayerSearchScreen : Screen("online_multiplayer_search_screen")
+    object FriendsSearchScreen : Screen("friends_multiplayer_game")
     object GameScreen : Screen("game_screen")
     object GameStatisticScreen : Screen("game_statistic_screen")
     object GameSettingScreen : Screen("game_setting_screen")

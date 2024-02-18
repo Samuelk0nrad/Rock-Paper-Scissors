@@ -37,11 +37,18 @@ import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
+<<<<<<< Updated upstream
 import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
+=======
+import com.game.rockpaperscissors.data.viewModel.MainViewModel
+>>>>>>> Stashed changes
 import com.game.rockpaperscissors.presentation.screen.edit_profile.EditProfileViewModel
 import com.game.rockpaperscissors.presentation.screen.friends.FriendsViewModel
 import com.game.rockpaperscissors.presentation.screen.game.SettingUpGameScreen
+import com.game.rockpaperscissors.presentation.screen.game.local_multiplayer.LocalMultiplayerGameScreen
+import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameScreen
 import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameViewModel
+import com.game.rockpaperscissors.presentation.screen.game.random.RandomGameScreen
 import com.game.rockpaperscissors.presentation.screen.profile.ProfileViewModel
 import com.game.rockpaperscissors.ui.theme.appColor
 
@@ -98,6 +105,52 @@ fun Navigation(
                 )
 
             }
+
+
+            composable(route = Screen.RandomGame.route){entry ->
+                val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
+                val gameDataViewModel = hiltViewModel<GameDataViewModel>()
+
+                RandomGameScreen(
+                    gameViewModel = viewModel,
+                    onEvent = gameDataViewModel::onEvent,
+                    navController = navController,
+                    context = context
+                )
+            }
+
+            composable(route = Screen.LocalMultiplayerGameScreen.route){ entry ->
+                val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
+                val gameDataViewModel = hiltViewModel<GameDataViewModel>()
+
+                LocalMultiplayerGameScreen(
+                    gameViewModel = viewModel,
+                    onEvent = gameDataViewModel::onEvent,
+                    navController = navController,
+                    context = context
+                )
+            }
+
+
+
+            composable(route = Screen.OnlineMultiplayerGame.route){entry ->
+
+                val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
+                val gameDataViewModel = hiltViewModel<GameDataViewModel>()
+                val onlineMultiplayerGameViewModel = hiltViewModel<OnlineMultiplayerGameViewModel>()
+
+
+                OnlineMultiplayerGameScreen(
+                    viewModel = onlineMultiplayerGameViewModel,
+                    gameViewModel = viewModel,
+                    onEvent = gameDataViewModel::onEvent,
+                    navController = navController,
+                    context = context
+                )
+            }
+
+
+
             composable(route = Screen.GameStatisticScreen.route){ entry->
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
                 Log.d("GameViewModel", "${viewModel.draw}")
@@ -105,6 +158,10 @@ fun Navigation(
                 SetBarColor(appColor.secondaryContainer, appColor.background)
                 GameStatisticScreen(navController,viewModel)
             }
+
+
+
+
             composable(route = Screen.GamePlayerProfileScreen.route){entry->
                 SetBarColor(appColor.secondaryContainer, appColor.background)
 
@@ -241,6 +298,31 @@ fun Navigation(
                 startActivity(context, intent, null)
             }
         }
+<<<<<<< Updated upstream
+=======
+
+        composable(route = Screen.Setting.route){
+
+            
+
+
+        }
+
+        composable(route = Screen.FriendsScreen.route){
+            val viewModel = hiltViewModel<FriendsViewModel>()
+            FriendsScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+
+        composable(route = Screen.SignInActivity.route){
+            val intent = Intent(context, SignUpInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(context, intent, null)
+        }
+
+>>>>>>> Stashed changes
     }
 }
 
