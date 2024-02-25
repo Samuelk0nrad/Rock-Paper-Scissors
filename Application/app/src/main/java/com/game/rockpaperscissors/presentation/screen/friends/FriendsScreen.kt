@@ -252,7 +252,7 @@ fun FriendsScreen(
                                 pictureUri = it.profilePictureUrl ?: "",
                                 buttonText = stringResource(id = R.string.play),
                             ){
-
+                                viewModel.onClickPlay(it.username ?:"")
                             }
                             if (i != 0 || i != allFriends.value.size - 1) {
                                 Spacer(modifier = Modifier.height(16.dp))
@@ -338,11 +338,9 @@ fun FriendsScreen(
                         .background(appColor.background),
                     contentAlignment = Alignment.Center
                 ) {
-<<<<<<< Updated upstream
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
-=======
+
                     CircularProgressIndicator(color = appColor.onBackground)
->>>>>>> Stashed changes
+                    
                 }
             }
         }

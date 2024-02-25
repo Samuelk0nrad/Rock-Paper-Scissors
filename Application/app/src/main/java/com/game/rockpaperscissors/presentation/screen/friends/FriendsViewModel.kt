@@ -305,6 +305,9 @@ class FriendsViewModel @Inject constructor (
         }
     }
 
+    fun onClickPlay(userName: String) {
+        
+    }
 
 
 }

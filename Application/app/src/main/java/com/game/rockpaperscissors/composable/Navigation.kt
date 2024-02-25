@@ -37,14 +37,9 @@ import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
-<<<<<<< Updated upstream
-import com.game.rockpaperscissors.data.viewModel.PlayerViewModel
-=======
-import com.game.rockpaperscissors.data.viewModel.MainViewModel
->>>>>>> Stashed changes
+import com.game.rockpaperscissors.presentation.screen.OnlineMultiplayerGameNavigation
 import com.game.rockpaperscissors.presentation.screen.edit_profile.EditProfileViewModel
 import com.game.rockpaperscissors.presentation.screen.friends.FriendsViewModel
-import com.game.rockpaperscissors.presentation.screen.game.SettingUpGameScreen
 import com.game.rockpaperscissors.presentation.screen.game.local_multiplayer.LocalMultiplayerGameScreen
 import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameScreen
 import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameViewModel
@@ -85,26 +80,6 @@ fun Navigation(
                     mode = mode,
                 )
             }
-            composable(route = Screen.GameScreen.route){ entry->
-                val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
-
-                SetBarColor(appColor.background)
-
-                val gameDataViewModel = hiltViewModel<GameDataViewModel>()
-                val onlineMultiplayerGameViewModel = hiltViewModel<OnlineMultiplayerGameViewModel>()
-
-
-
-                SettingUpGameScreen(
-                    gameMode = viewModel.gameMode,
-                    gameViewModel = viewModel,
-                    onEvent = gameDataViewModel::onEvent,
-                    navController = navController,
-                    context = context,
-                    onlineMultiplayerGameViewModel = onlineMultiplayerGameViewModel
-                )
-
-            }
 
 
             composable(route = Screen.RandomGame.route){entry ->
@@ -137,14 +112,13 @@ fun Navigation(
 
                 val viewModel = entry.sharedViewModel<GameViewModel>(navController = navController)
                 val gameDataViewModel = hiltViewModel<GameDataViewModel>()
-                val onlineMultiplayerGameViewModel = hiltViewModel<OnlineMultiplayerGameViewModel>()
 
 
-                OnlineMultiplayerGameScreen(
-                    viewModel = onlineMultiplayerGameViewModel,
+                OnlineMultiplayerGameNavigation(
+                    navController = navController,
+                    mode = viewModel.gameMode,
                     gameViewModel = viewModel,
                     onEvent = gameDataViewModel::onEvent,
-                    navController = navController,
                     context = context
                 )
             }
@@ -298,8 +272,6 @@ fun Navigation(
                 startActivity(context, intent, null)
             }
         }
-<<<<<<< Updated upstream
-=======
 
         composable(route = Screen.Setting.route){
 
@@ -322,7 +294,6 @@ fun Navigation(
             startActivity(context, intent, null)
         }
 
->>>>>>> Stashed changes
     }
 }
 

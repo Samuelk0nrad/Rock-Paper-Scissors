@@ -71,6 +71,9 @@ fun GameSettingScreen(
         GameModesEnum.AI_MODE -> {
 
         }
+        GameModesEnum.FRIEND_MULTIPLAYER -> {
+
+        }
     }
 
     var selectedRounds by remember {
@@ -226,7 +229,24 @@ fun GameSettingScreen(
                                     else -> 3
                                 }
                             )
-                            navController.navigate(Screen.GameScreen.route)
+                            navController.navigate(
+                                when(mode){
+                                    GameModesEnum.RANDOM -> {
+                                        Screen.RandomGame.route
+                                    }
+                                    GameModesEnum.LOCAL_MULTIPLAYER -> {
+                                        Screen.LocalMultiplayerGameScreen.route
+                                    }
+                                    GameModesEnum.ONLINE_MULTIPLAYER -> {
+                                        Screen.OnlineMultiplayerGame.route
+                                    }
+                                    GameModesEnum.FRIEND_MULTIPLAYER -> {
+                                        Screen.OnlineMultiplayerGame.route
+                                    }
+                                    GameModesEnum.AI_MODE -> TODO()
+                                }
+
+                            )
                         }
                         .padding(top = 10.dp, bottom = 12.dp)
                 ) {

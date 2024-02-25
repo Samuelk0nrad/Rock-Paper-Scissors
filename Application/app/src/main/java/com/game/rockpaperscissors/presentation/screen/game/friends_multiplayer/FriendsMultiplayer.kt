@@ -15,7 +15,7 @@ import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
 import com.game.rockpaperscissors.presentation.screen.game.GameScreen
 import com.game.rockpaperscissors.presentation.screen.game.GameViewModel
-import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.GameLoading
+
 
 @Composable
 fun FriendsMultiplayer(
@@ -51,7 +51,7 @@ fun FriendsMultiplayer(
         )
     )
 
-    if(hasGameStart) {
+
 
 
         val gameComposable by remember {
@@ -155,9 +155,7 @@ fun FriendsMultiplayer(
             enemySelection =
                 viewModel.enemyState.collectAsState().value.selection ?: SelectionType.ROCK
         }
-    } else{
-        GameLoading(navController, viewModel::exitPlayerSearch)
-    }
+
 
 
 }

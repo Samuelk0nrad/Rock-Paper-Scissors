@@ -42,21 +42,16 @@ fun OnlineMultiplayerGameScreen(
     gameViewModel: GameViewModel,
     onEvent: (GameDataEvent) -> Unit,
     navController: NavController,
-    context: Context
+    context: Context,
+    gameId: String
 ) {
 
     var hasFunctionBeenCalled by remember {
         mutableStateOf(false)
     }
 
-    var hasGameStart by remember {
-        mutableStateOf(false)
-    }
-
     if(!hasFunctionBeenCalled){
-        viewModel.startGame(gameViewModel.rounds.collectAsState().value){
-            hasGameStart = it
-        }
+        viewModel.startGame(gameId)
         hasFunctionBeenCalled = true
     }
 
@@ -67,169 +62,131 @@ fun OnlineMultiplayerGameScreen(
         email = null
     ))
 
-    if(hasGameStart) {
-
-
-        val gameComposable by remember {
-            mutableStateOf(
-                GameScreen(
-                    gameViewModel = gameViewModel,
-                    onEvent = onEvent,
-                    navController = navController,
-                ) {
-                    viewModel.endGame()
-                }
-            )
-        }
-
-        var enemyHide by remember {
-            mutableStateOf(true)
-        }
-
-        var enemyIsSelected by remember {
-            mutableStateOf(false)
-        }
-
-        var enemySelection by remember {
-            mutableStateOf(SelectionType.ROCK)
-        }
-
-        var playerUpdate by remember {
-            mutableStateOf(false)
-        }
-
-        Log.d("Screen.GameScreen.route", "update")
-        Log.d("Screen.GameScreen.route", "${gameComposable.enemyData.selection}")
-        gameComposable.printisReady()
 
 
 
-        gameComposable.enemyData = gameComposable.enemyData.copy(
-            hide = enemyHide,
-            isSelectable = false,
-            isSelected = enemyIsSelected,
-            selection = enemySelection
+    val gameComposable by remember {
+        mutableStateOf(
+            GameScreen(
+                gameViewModel = gameViewModel,
+                onEvent = onEvent,
+                navController = navController,) {
+                viewModel.endGame()
+            }
         )
+    }
+    var enemyHide by remember {
+        mutableStateOf(true)
+    }
+    var enemyIsSelected by remember {
+        mutableStateOf(false)
+    }
+    var enemySelection by remember {
+        mutableStateOf(SelectionType.ROCK)
+    }
+    var playerUpdate by remember {
+        mutableStateOf(false)
+    }
 
-        gameComposable.playerData = gameComposable.playerData.copy(
+
+    Log.d("Screen.GameScreen.route", "update")
+    Log.d("Screen.GameScreen.route", "${gameComposable.enemyData.selection}")
+
+
+    gameComposable.printisReady()
+
+    gameComposable.enemyData = gameComposable.enemyData.copy(
+        hide = enemyHide,
+        isSelectable = false,
+        isSelected = enemyIsSelected,
+        selection = enemySelection
+    )
+
+
+    gameComposable.playerData = gameComposable.playerData.copy(
+        hide = false,
+        isSelectable = true
+    )
+
+
+    if (!playerUpdate && gameComposable.playerData.isSelected) {
+
+        viewModel.updatePlayerState(true, gameComposable.playerData.selection)
+
+        playerUpdate = true
+
+    } else if (!gameComposable.playerData.isSelected) {
+
+        playerUpdate = false
+
+
+    }
+
+
+    fun resetGame(){
+
+        viewModel.updateRound()
+        viewModel.getEnemyState()
+
+        gameComposable.playerData = PlayerPlayData(
             hide = false,
-            isSelectable = true
+            isSelectable = true,
+            selection = SelectionType.ROCK,
+            isSelected = false,
+            isOnToSelect = true
         )
 
-        if (!playerUpdate && gameComposable.playerData.isSelected) {
-            viewModel.updatePlayerState(true, gameComposable.playerData.selection)
-            playerUpdate = true
-        } else if (!gameComposable.playerData.isSelected) {
-            playerUpdate = false
-        }
+        enemyHide = true
+
+        enemySelection = SelectionType.ROCK
+        gameComposable.setEnemySelection(SelectionType.ROCK)
+        gameComposable.setEnemySelection(false)
+
+        enemyIsSelected = false
 
 
-        fun resetGame(){
-            viewModel.updateRound()
-            viewModel.getEnemyState()
-            gameComposable.playerData = PlayerPlayData(
-                hide = false,
-                isSelectable = true,
-                selection = SelectionType.ROCK,
-                isSelected = false,
-                isOnToSelect = true
-            )
-            enemyHide = true
-            enemySelection = SelectionType.ROCK
-            gameComposable.setEnemySelection(SelectionType.ROCK)
-            gameComposable.setEnemySelection(false)
-            enemyIsSelected = false
-            gameComposable.enemyData = PlayerPlayData(
-                hide = true,
-                isSelected = false,
-                selection = SelectionType.ROCK,
-                isSelectable = false,
-                isOnToSelect = false
-            )
-        }
-
-        gameComposable.CompGameScreen(
-            onReset = {
-                resetGame()
-            },
-            context = context
+        gameComposable.enemyData = PlayerPlayData(
+            hide = true,
+            isSelected = false,
+            selection = SelectionType.ROCK,
+            isSelectable = false,
+            isOnToSelect = false
         )
-
-        gameComposable.setEnemySelection(enemyIsSelected)
-        gameComposable.setEnemySelection(enemySelection)
-
-
-
-        if (gameComposable.playerData.isSelected && gameComposable.enemyData.isSelected) {
-            enemyHide = false
-            gameComposable.enemyData = gameComposable.enemyData.copy(hide = false)
-            gameComposable.winner {
-                resetGame()
-            }
-        } else {
-            enemyIsSelected = viewModel.enemyState.collectAsState().value.isReady
-            enemySelection =
-                viewModel.enemyState.collectAsState().value.selection ?: SelectionType.ROCK
-        }
-    } else{
-        GameLoading(navController, viewModel::exitPlayerSearch)
     }
 
 
-}
 
-@Composable
-fun GameLoading(navController: NavController, exitLogic: () -> Unit){
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(appColor.background)
-            .padding(horizontal = 31.dp),
-    ){
-        Text(
-            modifier = Modifier.padding(top = 160.dp),
-            text = stringResource(id = R.string.searching_for_a_player),
-            fontFamily = Oswald,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = appColor.onBackground
-        )
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ){
-            CircularProgressIndicator(color = appColor.onBackground)
+    gameComposable.CompGameScreen(
+        onReset = {
+            resetGame() },
+        context = context
+    )
+
+
+    gameComposable.setEnemySelection(enemyIsSelected)
+    gameComposable.setEnemySelection(enemySelection)
+
+
+    if (gameComposable.playerData.isSelected && gameComposable.enemyData.isSelected) {
+
+        enemyHide = false
+
+        gameComposable.enemyData = gameComposable.enemyData.copy(hide = false)
+
+        gameComposable.winner {
+            resetGame()
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 150.dp),
-            contentAlignment = Alignment.BottomCenter
-        ){
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(appColor.secondaryContainer)
-                    .fillMaxWidth()
-                    .clickable {
-                        navController.popBackStack()
-                        exitLogic()
-                    }
-                    .padding(top = 10.dp, bottom = 10.dp)
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = R.string.exit),
-                    fontSize = 16.sp,
-                    fontFamily = Oswald,
-                    fontWeight = FontWeight.Normal,
-                    textAlign = TextAlign.Center,
-                    color = appColor.onBackground
-                )
-            }
+    } else {
 
-        }
+        enemyIsSelected = viewModel.enemyState.collectAsState().value.isReady
+        enemySelection = viewModel.enemyState.collectAsState().value.selection ?: SelectionType.ROCK
     }
 }
+
+
+
+
+
+

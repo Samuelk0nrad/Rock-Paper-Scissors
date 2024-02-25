@@ -11,8 +11,6 @@ import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.Query
-import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,29 +51,18 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
 
     val enemy = _enemy.asStateFlow()
 
-    private val gameId = MutableStateFlow("")
-    private val lobbyId = MutableStateFlow("")
+    private val _gameId = MutableStateFlow("")
 
-    fun startGame(rounds: Int,callback: (Boolean) -> Unit) {
-        callback(false)
-
-        searchLobby(rounds){ lobby,player, error ->
-            if(lobby != null){
-                lobbyId.value = lobby
-                foundLobby(lobby, player ?:""){
-                    callback(it)
-                }
-            }else if (error != null){
-                createLobby(rounds){
-                    callback(it)
-                }
-            }
+    fun startGame(gameId: String) {
+        _gameId.update {
+            gameId
         }
+        getEnemyData(gameId)
+        getEnemyState()
     }
 
-
     fun endGame() {
-        val gameRef = database.child(Childs.OnlineGames.name.value).child(gameId.value)
+        val gameRef = database.child("classic_online_games").child(_gameId.value)
 
         gameRef.get()
             .addOnSuccessListener {
@@ -95,248 +82,61 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
             }
     }
 
-    fun exitPlayerSearch(){
-        if(gameId.value != ""){
-            endGame()
-        }
-        val lobbyRef = database.child(Childs.Lobby.name.value).child(lobbyId.value)
 
-        lobbyRef.get()
-            .addOnSuccessListener {
-                if(it.exists()){
-                    lobbyRef.removeValue()
-                }
-            }
-    }
+    private fun getEnemyData(gameId: String){
 
+        getEnemyName(gameId){ playerName ->
 
-    private fun searchLobby(rounds: Int, callback: (String?, String?, String?) -> Unit){
-        val lobbyRef = database.child(Childs.Lobby.name.value)
+            if(playerName != null){
+                val userRef = database.child("users").child(playerName)
 
-        val query: Query = lobbyRef.orderByChild("rounds").equalTo(rounds.toDouble())
-        Log.d(TAG,"Start searching Lobby ")
-
-
-        query.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var i = 0
-                for(lobbySnapshot in dataSnapshot.children){
-                    val lobbyKey = lobbySnapshot.key
-                    val alreadyFoundPlayer = lobbySnapshot.child("foundPlayer").exists()
-                    val createdTime = lobbySnapshot.child("creationTime").getValue(Long::class.java) ?:0
-                    val currentTime = System.currentTimeMillis()
-                    if(currentTime - createdTime > 1000 * 60 * 60 * 2){
-                        if (lobbyKey != null) {
-                            lobbyRef.child(lobbyKey).removeValue()
+                userRef.get()
+                    .addOnSuccessListener {
+                        _enemy.update {enemy->
+                            UserData(
+                                userId = it.child("userId").getValue(String::class.java) ?:"",
+                                username = playerName,
+                                email = null,
+                                profilePictureUrl = it.child("profile_picture").getValue(String::class.java)
+                            )
                         }
-                    }else if(!alreadyFoundPlayer){
-
-                        val playerId = lobbySnapshot.child("host").getValue(String::class.java)
-
-                        if(playerId == _player?.username){
-                            if (lobbyKey != null) {
-                                lobbyRef.child(lobbyKey).removeValue()
-                            }
-                        }else{
-                            Log.d(TAG,"lobby Found: $lobbyKey")
-                            callback(lobbyKey,playerId, null)
-                            return
-                        }
+                        Log.d(TAG, "Successful get Enemy Data")
                     }
-
-                    i++
-                }
-                Log.d(TAG,"no Lobby Found: $i")
-                callback(null,null, "lobby not Found")
-
-                return
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.w(TAG,"Error by searching Lobby: ${error.message}")
-                callback(null,null, error.message)
-            }
-        })
-    }
-
-    private fun createLobby( rounds: Int, callback: (Boolean) -> Unit){
-        val lobbyRef = database.child(Childs.Lobby.name.value)
-
-        val newLobbyRef = lobbyRef.push()
-
-
-        val lobbyData = hashMapOf(
-            "host" to _player?.username,
-            "rounds" to rounds,
-            "creationTime" to ServerValue.TIMESTAMP,
-            "foundPlayer" to null
-        )
-
-        newLobbyRef.setValue(lobbyData)
-            .addOnSuccessListener{_->
-                Log.d(TAG,"Success created Lobby")
-            }
-
-
-        val lobbyId = newLobbyRef.key
-        this.lobbyId.value = lobbyId ?:""
-        waitForPlayer(lobbyId ?:""){player, error->
-            if(player == null){
-                Log.d(TAG,"callback with player Id is null and Error: $error")
-
-            }else if(error == null){
-
-                getEnemyData(player)
-
-                createGame(
-                    player,
-                    lobbyId ?: "",
-                ){gameId, error ->
-                    callback(true)
-                }
             }
         }
     }
 
-    private fun waitForPlayer(lobbyId: String, callback: (String?, String?) -> Unit){
-        val valueRef = database.child(Childs.Lobby.name.value).child(lobbyId).child("foundPlayer")
+    private fun getEnemyName(gameId: String, callback: (String?) -> Unit){
+        if(_player?.username == null || _player.username == ""){
+            callback(null)
+            return
+        }
+
+        val gameRef = database.child("classic_online_games").child(gameId)
 
 
-        val valueEventListener = object : ValueEventListener {
+        val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val hostName = dataSnapshot.child("host").getValue(String::class.java)
+                if(hostName == _player.username){
+                    val playerName = dataSnapshot.child("player0").getValue(String::class.java)
 
-                val updatedValue = dataSnapshot.getValue(String::class.java)
-                if (updatedValue != null) {
-                    // Handle the updated value
-                    callback(updatedValue, null)
-                    Log.d(TAG,"found Player: $updatedValue")
-                    return
+                    callback(playerName)
+                }else{
+                    callback(hostName)
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Handle errors
-                Log.d(TAG,"Error: ${databaseError.message}")
-                callback(null, databaseError.message)
-                return
+                // Getting Post failed, log a message
+                Log.d(TAG,"get Enemy State went wrong: ${databaseError.message}")
+
+                callback(null)
             }
         }
 
 
-        Log.d(TAG,"Start searching Player")
-
-        // Add the ValueEventListener to the reference
-        valueRef.addValueEventListener(valueEventListener)
-    }
-
-    private fun waitForGame(lobbyId: String, callback: (String?, String?) -> Unit){
-        val valueRef = database.child(Childs.Lobby.name.value).child(lobbyId).child("game")
-
-        val valueEventListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val updatedValue = dataSnapshot.getValue(String::class.java)
-                if (updatedValue != null) {
-                    // Handle the updated value
-                    Log.d(TAG,"get Game: $updatedValue")
-                    callback(updatedValue, null)
-                    return
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Handle errors
-                Log.d(TAG,"Error: ${databaseError.message}")
-                callback(null, databaseError.message)
-                return
-            }
-        }
-
-        // Add the ValueEventListener to the reference
-        valueRef.addValueEventListener(valueEventListener)
-    }
-
-    private fun foundLobby(lobbyId: String?, playerId: String, callback: (Boolean) -> Unit){
-
-        val lobbyRef = database.child(Childs.Lobby.name.value).child(lobbyId?:"")
-
-        lobbyRef.child("foundPlayer").setValue(_player?.username)
-        Log.d(TAG,"set Player Id")
-
-        getEnemyData(playerId)
-
-        waitForGame(lobbyId ?:""){gameId, error ->
-
-            if(gameId != null || error == null){
-                Log.d(TAG,"Remove lobby: $lobbyId")
-
-                this.gameId.update {
-                    gameId ?:""
-                }
-
-                lobbyRef.removeValue()
-                callback(true)
-                getEnemyState()
-            }
-        }
-    }
-
-
-
-    private fun createGame(playerId: String, lobbyId: String, callback: (String?, String?) -> Unit){
-        Log.d(TAG,"Start creating Game")
-
-        val lobbyRef = database.child(Childs.Lobby.name.value).child(lobbyId)
-        val gameRef = database.child(Childs.OnlineGames.name.value)
-
-        val newGameRef = gameRef.push()
-        gameId.update {
-            newGameRef.key ?: ""
-        }
-
-        Log.d(TAG,"Start setting gameId to Lobby lobbyId: $lobbyId , gameId: ${gameId.value}")
-
-
-
-        lobbyRef.child("game").setValue(gameId.value)
-            .addOnSuccessListener {
-                Log.d(TAG,"Success set game to Lobby")
-
-            }
-            .addOnCanceledListener {
-                Log.d(TAG,"Canceled set game to Lobby")
-
-            }
-
-
-        val gameData = hashMapOf(
-            "host" to _player?.username,
-            "player0" to playerId,
-        )
-
-        newGameRef.setValue(gameData)
-            .addOnSuccessListener{_->
-                Log.d(TAG,"Success created Game")
-                callback(gameId.value, null)
-                getEnemyData(_enemy.value?.username ?: "")
-                getEnemyState()
-            }
-    }
-
-    private fun getEnemyData(playerName: String){
-        val userRef = database.child("users").child(playerName)
-
-        userRef.get()
-            .addOnSuccessListener {
-                _enemy.update {enemy->
-                    UserData(
-                        userId = it.child("userId").getValue(String::class.java) ?:"",
-                        username = playerName,
-                        email = null,
-                        profilePictureUrl = it.child("profile_picture").getValue(String::class.java)
-                    )
-                }
-                Log.d(TAG, "Successful get Enemy Data")
-            }
+        gameRef.addListenerForSingleValueEvent(postListener)
 
 
     }
@@ -346,7 +146,7 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
     fun updatePlayerState(isReady: Boolean, selection: SelectionType?){
 
         Log.d(TAG,"Start updating Player State")
-        val gameRef = database.child(Childs.OnlineGames.name.value).child(gameId.value).child("round${_currentRound.value}")
+        val gameRef = database.child("classic_online_games").child(_gameId.value).child("round${_currentRound.value}")
 
 
         gameRef.child("${_player?.username}_is_ready").setValue(isReady)
@@ -361,7 +161,7 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
     }
 
     fun getEnemyState(){
-        val gameRef = database.child(Childs.OnlineGames.name.value).child(gameId.value).child("round${_currentRound.value}")
+        val gameRef = database.child("classic_online_games").child(_gameId.value).child("round${_currentRound.value}")
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -369,7 +169,7 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
                 val isReady = dataSnapshot.child("${_enemy.value?.username}_is_ready").getValue(Boolean::class.java)
                 val selection = dataSnapshot.child("${_enemy.value?.username}_selection").getValue(String::class.java)
 
-                var selectionError = false
+                var selectionError: Boolean
 
                 val enumSelection = try {
                     Log.d(TAG, "selection: $selection")
@@ -409,18 +209,11 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
             it + 1
         }
     }
-
-
-    sealed class Childs(var name: MutableStateFlow<String>){
-        object Lobby : Childs(MutableStateFlow("lobby"))
-        object OnlineGames : Childs(MutableStateFlow("classic_online_games"))
-    }
-
-    data class UserState(
-        val isReady: Boolean,
-        val selection: SelectionType?
-    )
 }
 
+data class UserState(
+    val isReady: Boolean,
+    val selection: SelectionType?
+)
 
 
