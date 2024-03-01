@@ -1,11 +1,15 @@
 package com.game.rockpaperscissors.presentation.screen.game
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -106,10 +110,10 @@ class GameViewModel : ViewModel(){
     private val _rounds = MutableStateFlow(3)
     val rounds = _rounds.asStateFlow()
 
-    fun setRounds(round: Int ){
+    fun setRounds(round: Int){
         _rounds.value = round
     }
-    //GameSettings  Start//
+
 }
 
 

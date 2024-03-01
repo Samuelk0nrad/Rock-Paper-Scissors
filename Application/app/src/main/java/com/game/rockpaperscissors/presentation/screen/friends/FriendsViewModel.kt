@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.game.rockpaperscissors.R
+import com.game.rockpaperscissors.data.Screen
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -90,15 +91,12 @@ class FriendsViewModel @Inject constructor (
                         }
                     }
                 }
-
                 Log.d(TAG, "get ${dataSnapshot.children.count()} players")
 
                 callback(friends, null)
 
                 Log.d(TAG, "saved ${_allFriends.value.count()} players")
 
-
-                return
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -108,7 +106,7 @@ class FriendsViewModel @Inject constructor (
 
         val query: Query = userFriends.orderByChild("addTime")
 
-        query.addListenerForSingleValueEvent(valueEventListener)
+        query.addValueEventListener(valueEventListener)
     }
 
 
@@ -147,9 +145,6 @@ class FriendsViewModel @Inject constructor (
                 callback(friends, null)
 
                 Log.d(TAG, "saved ${_allFriends.value.count()} players")
-
-
-                return
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -159,7 +154,7 @@ class FriendsViewModel @Inject constructor (
 
         val query: Query = userFriends.orderByChild("addTime")
 
-        query.addListenerForSingleValueEvent(valueEventListener)
+        query.addValueEventListener(valueEventListener)
     }
 
 
@@ -310,8 +305,47 @@ class FriendsViewModel @Inject constructor (
         }
     }
 
+    fun onClickPlay(userName: String, navigation: (String) -> Unit) {
+        Log.d(TAG, "start")
+
+        createLobby(userName){
+            navigation("${Screen.GameSettingScreen.route}/FRIEND_MULTIPLAYER/false")
+        }
+
+        pullToFriendToPlay(userName)
+
+    }
+
+    private fun createLobby(userName: String, callback: () -> Unit){
+        if((_player.value == null) || _player.value?.username == null){
+            Log.d(TAG, "no username")
+            return
+        }
+
+        val newLobbyRef = database.child("reserved_lobby").push()
 
 
+        val lobbyData = hashMapOf(
+            "host" to _player.value?.username,
+            "player" to userName
+        )
+
+
+        newLobbyRef.setValue(lobbyData)
+            .addOnSuccessListener {
+                callback()
+            }
+    }
+
+    private fun pullToFriendToPlay(userName: String){
+        if(_player.value == null || _player.value?.username == null){
+            return
+        }
+
+        val friendRef = database.child("users").child(userName).child("play_request").push()
+
+        friendRef.setValue(_player.value?.username)
+    }
 }
 
 

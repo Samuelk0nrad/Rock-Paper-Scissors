@@ -35,7 +35,6 @@ import androidx.navigation.NavController
 import com.game.rockpaperscissors.R
 import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.Screen
-import com.game.rockpaperscissors.data.local.database.PlayerData
 import com.game.rockpaperscissors.presentation.auth.third_party_sign_in.UserData
 import com.game.rockpaperscissors.presentation.screen.game.GameViewModel
 import com.game.rockpaperscissors.ui.theme.Oswald
@@ -47,6 +46,7 @@ fun GameSettingScreen(
     navController: NavController,
     gameViewModel: GameViewModel,
     mode: GameModesEnum,
+    ifRounds: Boolean,
 ){
     gameViewModel.gameMode = mode
 
@@ -69,6 +69,9 @@ fun GameSettingScreen(
 
         }
         GameModesEnum.AI_MODE -> {
+
+        }
+        GameModesEnum.FRIEND_MULTIPLAYER -> {
 
         }
     }
@@ -128,84 +131,86 @@ fun GameSettingScreen(
 
             Column {
 
-                BoxWithConstraints (
-                    modifier = Modifier
-                        .padding(bottom = 24.dp)
-                ){
+                if(!ifRounds) {
 
-                    val width = this.maxWidth / 4
-                    Row (
+                    BoxWithConstraints(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 62.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                            .padding(bottom = 24.dp)
+                    ) {
 
-                        Box(
+                        val width = this.maxWidth / 4
+                        Row(
                             modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(if (selectedRounds == 1) appColor.secondary else appColor.secondaryContainer)
-                                .width(width)
-                                .clickable {
-                                    selectedRounds = 1
-
-                                }
-                                .padding(top = 8.dp, bottom = 10.dp)
+                                .fillMaxWidth()
+                                .padding(end = 62.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = "3",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Normal,
-                                textAlign = TextAlign.Center,
-                                color = appColor.onBackground
-                            )
-                        }
 
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(if (selectedRounds == 2) appColor.secondary else appColor.secondaryContainer)
-                                .width(width)
-                                .clickable {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(if (selectedRounds == 1) appColor.secondary else appColor.secondaryContainer)
+                                    .width(width)
+                                    .clickable {
+                                        selectedRounds = 1
+                                    }
+                                    .padding(top = 8.dp, bottom = 10.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = "3",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Normal,
+                                    textAlign = TextAlign.Center,
+                                    color = appColor.onBackground
+                                )
+                            }
 
-                                    selectedRounds = 2
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(if (selectedRounds == 2) appColor.secondary else appColor.secondaryContainer)
+                                    .width(width)
+                                    .clickable {
 
-                                }
-                                .padding(top = 8.dp, bottom = 10.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = "5",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Normal,
-                                textAlign = TextAlign.Center,
-                                color = appColor.onBackground
-                            )
-                        }
+                                        selectedRounds = 2
+
+                                    }
+                                    .padding(top = 8.dp, bottom = 10.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = "5",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Normal,
+                                    textAlign = TextAlign.Center,
+                                    color = appColor.onBackground
+                                )
+                            }
 
 
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(if (selectedRounds == 3) appColor.secondary else appColor.secondaryContainer)
-                                .width(width)
-                                .clickable {
-                                    selectedRounds = 3
-                                }
-                                .padding(top = 8.dp, bottom = 10.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = "13 ",
-                                fontSize = 16.sp,
-                                fontFamily = Oswald,
-                                fontWeight = FontWeight.Normal,
-                                textAlign = TextAlign.Center,
-                                color = appColor.onBackground
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(if (selectedRounds == 3) appColor.secondary else appColor.secondaryContainer)
+                                    .width(width)
+                                    .clickable {
+                                        selectedRounds = 3
+                                    }
+                                    .padding(top = 8.dp, bottom = 10.dp)
+                            ) {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = "13 ",
+                                    fontSize = 16.sp,
+                                    fontFamily = Oswald,
+                                    fontWeight = FontWeight.Normal,
+                                    textAlign = TextAlign.Center,
+                                    color = appColor.onBackground
+                                )
+                            }
                         }
                     }
                 }
@@ -219,14 +224,31 @@ fun GameSettingScreen(
                         .fillMaxWidth()
                         .clickable {
                             gameViewModel.setRounds(
-                                when (selectedRounds) {
+                                round =  when (selectedRounds) {
                                     1 -> 3
                                     2 -> 5
                                     3 -> 13
                                     else -> 3
                                 }
                             )
-                            navController.navigate(Screen.GameScreen.route)
+                            navController.navigate(
+                                when(mode){
+                                    GameModesEnum.RANDOM -> {
+                                        Screen.RandomGame.route
+                                    }
+                                    GameModesEnum.LOCAL_MULTIPLAYER -> {
+                                        Screen.LocalMultiplayerGameScreen.route
+                                    }
+                                    GameModesEnum.ONLINE_MULTIPLAYER -> {
+                                        Screen.OnlineMultiplayerGame.route
+                                    }
+                                    GameModesEnum.FRIEND_MULTIPLAYER -> {
+                                        Screen.OnlineMultiplayerGame.route
+                                    }
+                                    GameModesEnum.AI_MODE -> TODO()
+                                }
+
+                            )
                         }
                         .padding(top = 10.dp, bottom = 12.dp)
                 ) {
