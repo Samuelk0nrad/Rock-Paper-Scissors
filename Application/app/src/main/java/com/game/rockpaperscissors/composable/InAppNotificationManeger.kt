@@ -72,6 +72,7 @@ fun InAppNotificationManager(
 
                         is InAppNotification.PlayWithFriend -> {
                             PlayRequestPushUp(userName = appNotification.userName) {
+                                navController.navigate("${Screen.GameSettingScreen.route}/FRIEND_MULTIPLAYER/true")
                                 onClick(appNotification, 1)
                             }
                         }

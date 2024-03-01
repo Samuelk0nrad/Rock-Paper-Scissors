@@ -59,8 +59,10 @@ class MainViewModel @Inject constructor(
 
     private fun checkingFriendRequest(){
         if(_user.value == null || _user.value?.username == null){
+            Log.d(TAG,"checkingFriendRequest return")
             return
         }
+        Log.d(TAG,"! checkingFriendRequest !not! return")
 
         val friendRef = database.child("users").child(_user.value?.username!!).child("requests")
 
@@ -148,8 +150,6 @@ class MainViewModel @Inject constructor(
 
         playRequestRef.addValueEventListener(valueEventListener)
 
-
-
     }
 
 
@@ -229,7 +229,7 @@ class MainViewModel @Inject constructor(
                 }
             }
             is InAppNotification.PlayWithFriend -> {
-
+                acceptPlayRequest(inAppNotification.userName)
             }
         }
 
@@ -275,7 +275,14 @@ class MainViewModel @Inject constructor(
         requestRef.child(userName).removeValue()
     }
 
-    private fun acceptPlayRequest(gameId: String){
+    private fun acceptPlayRequest(userName: String){
+        if(_user.value == null || _user.value?.username == null || _user.value?.username == "" || userName == ""){
+            return
+        }
+
+        val requestRef = database.child("users").child(userName).child("play_request")
+        requestRef.child(_user.value?.username!!).removeValue()
+
     }
 
 

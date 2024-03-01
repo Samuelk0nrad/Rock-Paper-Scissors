@@ -1,13 +1,10 @@
 package com.game.rockpaperscissors
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -15,9 +12,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.game.rockpaperscissors.composable.Navigation
-import com.game.rockpaperscissors.data.viewModel.NavigationViewModel
+import com.game.rockpaperscissors.data.viewModel.MainViewModel
 import com.game.rockpaperscissors.ui.theme.RockPaperScissorsTheme
 import com.game.rockpaperscissors.ui.theme.appColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -29,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<NavigationViewModel>()
+    private lateinit var viewModel : MainViewModel
 
 
     private lateinit var auth: FirebaseAuth
@@ -63,6 +60,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             RockPaperScissorsTheme {
 
+                viewModel = hiltViewModel<MainViewModel>()
+
                 Log.d("currentUser", "Main Activity")
                 SetBarColor(colorSystem = appColor.background)
                 // A surface container using the 'background' color from the theme
@@ -70,7 +69,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = appColor.background
                 ) {
-                    Navigation(context = applicationContext)
+                    Navigation(context = applicationContext, viewModel)
                 }
             }
         }

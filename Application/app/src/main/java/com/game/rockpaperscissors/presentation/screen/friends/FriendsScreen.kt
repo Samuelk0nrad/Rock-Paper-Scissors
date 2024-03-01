@@ -2,6 +2,7 @@
 
 package com.game.rockpaperscissors.presentation.screen.friends
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,6 +58,7 @@ import com.game.rockpaperscissors.ui.theme.appColor
 import com.game.rockpaperscissors.R
 
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendsScreen(
@@ -193,22 +195,22 @@ fun FriendsScreen(
                             ){
                                 viewModel.exceptRequest(it.username ?:"")
                             }
-                            if (i != allFriends.value.size) {
+                            if (i != allFriends.value.size && i != 0) {
                                 Spacer(modifier = Modifier.height(16.dp))
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ){
-                                Spacer(
+                                Box(
                                     modifier = Modifier
-                                        .height(1.dp)
-                                        .fillMaxWidth(0.7f)
-                                        .background(appColor.onSecondaryContainer.copy(alpha = 0.5f))
-                                )
+                                        .fillMaxWidth(),
+                                    contentAlignment = Alignment.Center
+                                ){
+                                    Spacer(
+                                        modifier = Modifier
+                                            .height(1.dp)
+                                            .fillMaxWidth(0.7f)
+                                            .background(appColor.onSecondaryContainer.copy(alpha = 0.5f))
+                                    )
 
-                            }
-                                Spacer(modifier = Modifier.height(16.dp))
+                                }
+                                    Spacer(modifier = Modifier.height(16.dp))
                             }
                             i++
                         }
@@ -252,7 +254,9 @@ fun FriendsScreen(
                                 pictureUri = it.profilePictureUrl ?: "",
                                 buttonText = stringResource(id = R.string.play),
                             ){
-                                viewModel.onClickPlay(it.username ?:"")
+                                viewModel.onClickPlay(it.username ?:""){
+                                    navController.navigate(it)
+                                }
                             }
                             if (i != 0 || i != allFriends.value.size - 1) {
                                 Spacer(modifier = Modifier.height(16.dp))
@@ -304,7 +308,9 @@ fun FriendsScreen(
                                 pictureUri = it.profilePictureUrl ?: "",
                                 buttonText = stringResource(id = R.string.play),
                             ) {
-
+                                viewModel.onClickPlay(it.username ?:""){navLocation ->
+                                    navController.navigate(navLocation)
+                                }
                             }
 
                             if (i != allFriends.value.size - 1) {

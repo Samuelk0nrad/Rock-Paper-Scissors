@@ -47,18 +47,27 @@ class FriendsMultiplayerSearchViewModel @Inject constructor(
     val gameId = _gameId.asStateFlow()
 
 
-    fun startGame(callback: (String) -> Unit) {
-        searchLobby{ lobby, playerId, isHost, _ ->
-            if(isHost == true && lobby != null && playerId != null){
-                _lobbyId.value = lobby
-                foundLobby(lobby){
-                    callback(it)
-                }
-            }else if(isHost == false && lobby != null && playerId != null){
-                createGame(lobbyId = lobby, playerId = playerId){gameId ->
-                    callback(gameId)
+    fun startGame(rounds: Int? = null,callback: (String, Int) -> Unit) {
+        var count = 0
+        searchLobby{ lobby, playerId, isHost, error ->
+            if(count == 0){
+                Log.d(TAG, "callback of searchLobby ${lobby}, ${playerId}, $isHost, $error")
+                if(isHost == true && lobby != null && playerId != null){
+                    _lobbyId.value = lobby
+                    Log.d(TAG, "Host is true")
+
+                    foundLobby(rounds!!, lobby){
+                        callback(it, rounds)
+                    }
+                }else if(isHost == false && lobby != null && playerId != null){
+                    Log.d(TAG, "Host is false")
+
+                    createGame(lobbyId = lobby, playerId = playerId){gameId, rounds ->
+                        callback(gameId, rounds)
+                    }
                 }
             }
+            count++
         }
     }
 
@@ -76,7 +85,6 @@ class FriendsMultiplayerSearchViewModel @Inject constructor(
 
         Log.d(TAG,"Start searching Lobby ")
 
-        var isHost = true
 
 
         val valueEventListener = object : ValueEventListener {
@@ -84,37 +92,39 @@ class FriendsMultiplayerSearchViewModel @Inject constructor(
 
                 for(lobbySnapshot in dataSnapshot.children){
                     val lobbyKey = lobbySnapshot.key
-                    val playerId = if(isHost){
-                        lobbySnapshot.child("player").getValue(String::class.java)
-                    } else lobbySnapshot.child("host").getValue(String::class.java)
-
-                    callback(lobbyKey,playerId, isHost, null)
+                    val host = lobbySnapshot.child("host").getValue(String::class.java)
+                    val player = lobbySnapshot.child("player").getValue(String::class.java)
+                    val isHost = host == _player.username
+                    callback(lobbyKey,if(isHost) player else host, isHost, null)
                     return
                 }
                 callback(null, null,null, "lobby not Found")
                 return
+
             }
 
             override fun onCancelled(error: DatabaseError) {
+
                 Log.w(TAG,"Error by searching Lobby: ${error.message}")
                 callback(null,null, null, error.message)
             }
         }
 
         queryHost.addListenerForSingleValueEvent(valueEventListener)
-        isHost = false
         queryPlayer.addValueEventListener(valueEventListener)
     }
 
 
 
 
-    private fun foundLobby(lobbyId: String?, callback: (String) -> Unit){
+    private fun foundLobby(rounds: Int, lobbyId: String?, callback: (String) -> Unit){
         if(lobbyId == null){
             return
         }
 
         val lobbyRef = database.child("reserved_lobby").child(lobbyId)
+
+        lobbyRef.child("rounds").setValue(rounds)
         waitForGame(lobbyId){gameId, error ->
 
             if(gameId != null && error == null){
@@ -131,7 +141,7 @@ class FriendsMultiplayerSearchViewModel @Inject constructor(
     }
 
 
-    private fun createGame(playerId: String, lobbyId: String, callback: (String) -> Unit){
+    private fun createGame(playerId: String, lobbyId: String, callback: (String, Int) -> Unit){
         Log.d(TAG,"Start creating Game")
 
         val lobbyRef = database.child("reserved_lobby").child(lobbyId)
@@ -156,6 +166,17 @@ class FriendsMultiplayerSearchViewModel @Inject constructor(
 
             }
 
+        var rounds = 3
+
+        lobbyRef.child("rounds").get()
+            .addOnSuccessListener {
+                val round = it.getValue(Int::class.java)
+
+                if(round!= null){
+                    rounds = round
+                }
+            }
+
 
         val gameData = hashMapOf(
             "host" to  playerId,
@@ -163,9 +184,9 @@ class FriendsMultiplayerSearchViewModel @Inject constructor(
         )
 
         newGameRef.setValue(gameData)
-            .addOnSuccessListener{_->
+            .addOnSuccessListener{
                 Log.d(TAG,"Success created Game")
-                callback(_gameId.value)
+                callback(_gameId.value, rounds)
             }
     }
 

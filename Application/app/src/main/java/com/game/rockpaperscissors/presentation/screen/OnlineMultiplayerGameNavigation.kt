@@ -1,6 +1,7 @@
 package com.game.rockpaperscissors.presentation.screen
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -92,8 +93,10 @@ fun OnlineMultiplayerGameNavigation(
 
 
             if(!isGameStarted){
-                viewModel.startGame{gameId ->
+                Log.d("OnlineMultiplayerGameViewModel", "Starting start Game")
+                viewModel.startGame{gameId, rounds ->
                     localNavController.navigate("${Screen.OnlineMultiplayerGameScreen.route}/$gameId")
+                    gameViewModel.setRounds(rounds)
                 }
                 isGameStarted = true
             }

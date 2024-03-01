@@ -120,7 +120,7 @@ class SignUpInActivity : ComponentActivity() {
                         composable(route = Screen.WelcomeScreen.route) {
 
 
-                            val googleSignInViewModel = viewModel<AuthViewModel>()
+                            val googleSignInViewModel = hiltViewModel<AuthViewModel>()
                             val state by googleSignInViewModel.state.collectAsStateWithLifecycle()
 
                             LaunchedEffect(key1 = Unit) {

@@ -59,6 +59,7 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
         }
         getEnemyData(gameId)
         getEnemyState()
+
     }
 
     fun endGame() {
@@ -111,7 +112,6 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
             callback(null)
             return
         }
-
         val gameRef = database.child("classic_online_games").child(gameId)
 
 
@@ -137,8 +137,6 @@ class OnlineMultiplayerGameViewModel @Inject constructor (
 
 
         gameRef.addListenerForSingleValueEvent(postListener)
-
-
     }
 
 

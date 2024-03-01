@@ -41,7 +41,7 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.whithwurfel,
-        rout = "${Screen.GameSettingScreen.route}/RANDOM",
+        rout = "${Screen.GameSettingScreen.route}/RANDOM/false",
         available = true
     ),
 
@@ -53,7 +53,7 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.white_multiplayer,
-        rout = "${Screen.GameSettingScreen.route}/LOCAL_MULTIPLAYER",
+        rout = "${Screen.GameSettingScreen.route}/LOCAL_MULTIPLAYER/false",
         available = true
     ),
     GameModes(
@@ -64,7 +64,7 @@ var gameModes: List<GameModes> = mutableListOf(
 
         },
         symbol = R.drawable.white_video_game,
-        rout = "${Screen.GameSettingScreen.route}/ONLINE_MULTIPLAYER",
+        rout = "${Screen.GameSettingScreen.route}/ONLINE_MULTIPLAYER/false",
         available = true
     ),
 

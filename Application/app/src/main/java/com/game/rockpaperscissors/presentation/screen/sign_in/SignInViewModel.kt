@@ -1,7 +1,6 @@
 package com.game.rockpaperscissors.presentation.screen.sign_in
 
 
-import android.content.ComponentCallbacks
 import android.content.Context
 import android.util.Log
 import com.game.rockpaperscissors.R
@@ -67,7 +66,6 @@ class SignInViewModel @Inject constructor(
 
                 errorHandling(res.errorMessage)
 
-
                 if(res.errorMessage == null) {
                     goToScreen()
                 }
@@ -86,7 +84,8 @@ class SignInViewModel @Inject constructor(
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if(dataSnapshot.exists()){
-                    val email = dataSnapshot.getValue(String::class.java)
+                    val email = dataSnapshot.child("email").getValue(String::class.java)
+                    Log.d("", "email ========================= $email")
                     callback(email, null)
                     return
                 }else{

@@ -37,12 +37,11 @@ import com.game.rockpaperscissors.data.GameModesEnum
 import com.game.rockpaperscissors.data.local.database.GameDataEntity
 import com.game.rockpaperscissors.data.local.database.GameDataEvent
 import com.game.rockpaperscissors.data.viewModel.GameDataViewModel
+import com.game.rockpaperscissors.data.viewModel.MainViewModel
 import com.game.rockpaperscissors.presentation.screen.OnlineMultiplayerGameNavigation
 import com.game.rockpaperscissors.presentation.screen.edit_profile.EditProfileViewModel
 import com.game.rockpaperscissors.presentation.screen.friends.FriendsViewModel
 import com.game.rockpaperscissors.presentation.screen.game.local_multiplayer.LocalMultiplayerGameScreen
-import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameScreen
-import com.game.rockpaperscissors.presentation.screen.game.online_multiplayer.OnlineMultiplayerGameViewModel
 import com.game.rockpaperscissors.presentation.screen.game.random.RandomGameScreen
 import com.game.rockpaperscissors.presentation.screen.profile.ProfileViewModel
 import com.game.rockpaperscissors.ui.theme.appColor
@@ -50,6 +49,7 @@ import com.game.rockpaperscissors.ui.theme.appColor
 @Composable
 fun Navigation(
     context: Context,
+    mainViewModel: MainViewModel
 ) {
 
     val navController = rememberNavController()
@@ -60,9 +60,14 @@ fun Navigation(
             route = Screen.MainGame.route,
             startDestination = Screen.GameSettingScreen.route
         ){
+
+
             composable(
-                route = "${Screen.GameSettingScreen.route}/{mode}",
-                arguments = listOf(navArgument("mode"){type = NavType.StringType})
+                route = "${Screen.GameSettingScreen.route}/{mode}/{round}",
+                arguments = listOf(
+                        navArgument("mode"){type = NavType.StringType},
+                        navArgument("round"){type = NavType.BoolType}
+                    )
 
             ){ entry->
                 SetBarColor(appColor.secondaryContainer, appColor.background)
@@ -71,6 +76,7 @@ fun Navigation(
 
                 val modeString: String? = entry.arguments?.getString("mode")
                 val mode: GameModesEnum = enumValueOf(modeString!!)
+                val round: Boolean = entry.arguments?.getBoolean("round") ?: false
 
 
 
@@ -78,6 +84,7 @@ fun Navigation(
                     navController = navController,
                     gameViewModel = gameViewModel,
                     mode = mode,
+                    ifRounds = round
                 )
             }
 
@@ -105,7 +112,6 @@ fun Navigation(
                     context = context
                 )
             }
-
 
 
             composable(route = Screen.OnlineMultiplayerGame.route){entry ->
@@ -295,6 +301,23 @@ fun Navigation(
         }
 
     }
+
+
+    val state = mainViewModel.state.collectAsState()
+
+
+    if(state.value.display){
+        InAppNotificationManager(
+            notification = state.value.notification,
+            navController = navController,
+            onDelete = mainViewModel::onDismissNotification,
+            multiple = state.value.notification.size > 1,
+            onClick = mainViewModel::onClickAction
+        )
+    }
+
+
+
 }
 
 @Composable
