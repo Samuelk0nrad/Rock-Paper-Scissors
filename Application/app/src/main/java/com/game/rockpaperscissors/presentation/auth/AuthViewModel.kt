@@ -13,8 +13,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
-import com.google.firebase.messaging.ktx.messaging
-import com.google.firebase.messaging.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -73,24 +71,9 @@ open class AuthViewModel @Inject constructor(
                     userRef.child("userId").setValue(userData.userId)
                     userRef.child("profilePicture").setValue(userData.profilePictureUrl)
                     userRef.child("email").setValue(userData.email)
-
-                    getNotificationToken {token ->
-                        userRef.child("notification_token").setValue(token)
-                    }
                 }
             }
     }
-
-
-
-    fun getNotificationToken(callback : (token : String) -> Unit){
-        com.google.firebase.ktx.Firebase.messaging.token
-            .addOnSuccessListener{
-                callback(it)
-            }
-    }
-
-
 }
 
 
