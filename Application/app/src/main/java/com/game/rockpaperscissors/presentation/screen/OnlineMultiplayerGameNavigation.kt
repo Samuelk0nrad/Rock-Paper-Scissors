@@ -94,7 +94,7 @@ fun OnlineMultiplayerGameNavigation(
 
             if(!isGameStarted){
                 Log.d("OnlineMultiplayerGameViewModel", "Starting start Game")
-                viewModel.startGame{gameId, rounds ->
+                viewModel.startGame(rounds = rounds.value){gameId, rounds ->
                     localNavController.navigate("${Screen.OnlineMultiplayerGameScreen.route}/$gameId")
                     gameViewModel.setRounds(rounds)
                 }

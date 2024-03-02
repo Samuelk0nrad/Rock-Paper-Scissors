@@ -43,7 +43,6 @@ import com.game.rockpaperscissors.presentation.screen.SocialLogin
 import com.game.rockpaperscissors.ui.theme.Oswald
 import com.game.rockpaperscissors.ui.theme.appColor
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
     navController: NavController,
@@ -355,17 +354,6 @@ fun SignInScreen(
                     )
                 }
             }
-
-            item {
-                Spacer(modifier = Modifier.height(35.dp))
-
-                SocialLogin{
-                    navController.navigate(Screen.LogedAlreadyIn.route)
-                }
-
-                Spacer(modifier = Modifier.height(35.dp))
-
-            }
         }
         if(isLoading){
             Box(
@@ -378,7 +366,6 @@ fun SignInScreen(
             }
         }
     }
-
 }
 
 

@@ -499,11 +499,6 @@ fun SignUpScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(35.dp))
-
-                SocialLogin{
-                    navController.navigate(Screen.LogedAlreadyIn.route)
-                }
             }
         }
 
