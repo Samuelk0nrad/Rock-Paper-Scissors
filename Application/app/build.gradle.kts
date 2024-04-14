@@ -12,11 +12,11 @@ plugins {
 }
 
 android {
-    namespace = "com.game.rockpaperscissors"
+    namespace = "com.thephoenix.rockpaperscissors"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.game.rockpaperscissors"
+        applicationId = "com.thephoenix.rockpaperscissors"
         minSdk = 26
         targetSdk = 33
         versionCode = 1
