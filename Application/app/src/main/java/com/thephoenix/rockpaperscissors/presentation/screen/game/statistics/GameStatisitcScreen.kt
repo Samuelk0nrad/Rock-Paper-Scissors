@@ -169,7 +169,7 @@ fun WinStatistic(
 
                 Text(
                     modifier = Modifier.width(width),
-                    text = ": $win",
+                    text = "${stringResource(id = R.string.win)}: $win",
                     fontSize = 16.sp,
                     fontFamily = Oswald,
                     fontWeight = FontWeight.Bold,
