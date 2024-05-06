@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -131,6 +132,98 @@ fun SignUpScreen(
             }
         }
     )
+
+
+
+    fun onSubbmit() {
+        viewModel.onSignUpClick(
+            goToScreen = {
+                navController.navigate(Screen.LogedAlreadyIn.route)
+            },
+            errorHandling = {
+                when (it) {
+                    "Given String is Empty User Name" -> {
+                        userNameError = true
+                        userNameEText = ""
+                    }
+
+                    "Passwords do not match" -> {
+                        confirmPasswordError = true
+                        confinePasswordEText = it
+                    }
+
+                    "The email address is already in use by another account." -> {
+                        eMailError = true
+                        eMailEText = "The email address is already in use"
+                    }
+
+                    "Given String is empty or null" -> {
+                        if (email.value == "") {
+                            eMailError = true
+                            eMailEText = ""
+                        }
+
+                        if (password.value == "") {
+                            passwordError = true
+                            passwordEText = ""
+                        }
+                    }
+
+                    "The email address is badly formatted." -> {
+                        eMailError = true
+                        eMailEText = "The email address is badly formatted."
+
+                    }
+
+                    "The given password is invalid. [ Password should be at least 6 characters ]" -> {
+                        passwordError = true
+                        passwordEText =
+                            "Password should be at least 6 characters"
+                    }
+
+                    "The user account has been disabled by an administrator." -> {
+                        errorText = it
+                    }
+
+                    "The provided custom claim attributes are invalid." -> {
+                        errorText = it
+                    }
+
+                    "This operation is not allowed. You must enable this service in the console." -> {
+                        errorText = it
+                    }
+
+                    "We have blocked all requests from this device due to unusual activity. Try again later." -> {
+                        errorText = it
+                    }
+
+                    "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
+                        errorText = it
+                    }
+
+                    "An unknown error occurred." -> {
+                        errorText = it
+                    }
+
+                    "User Name already exists" -> {
+                        userNameError = true
+                        userNameEText = it
+                    }
+
+                    "user name contains illegible letters" -> {
+                        userNameError = true
+                        userNameEText = it
+                    }
+
+                    null -> {}
+                    else -> {
+                        errorText = it
+                    }
+                }
+            },
+            onValueChange = { isLoading = it }
+        )
+    }
 
 
     Scaffold (
@@ -296,7 +389,8 @@ fun SignUpScreen(
                     startPadding = 0.dp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = PasswordVisualTransformation(),
-                    lineColor = if(confirmPasswordError) appColor.red else appColor.onBackground
+                    lineColor = if(confirmPasswordError) appColor.red else appColor.onBackground,
+                    onEnter = { onSubbmit() }
                 )
                 Text(
                     modifier = Modifier.fillMaxWidth(),
@@ -330,93 +424,7 @@ fun SignUpScreen(
                         .background(appColor.secondaryContainer)
                         .fillMaxWidth()
                         .clickable {
-                            viewModel.onSignUpClick(
-                                goToScreen = {
-                                    navController.navigate(Screen.LogedAlreadyIn.route)
-                                },
-                                errorHandling = {
-                                    when (it) {
-                                        "Given String is Empty User Name" -> {
-                                            userNameError = true
-                                            userNameEText = ""
-                                        }
-
-                                        "Passwords do not match" -> {
-                                            confirmPasswordError = true
-                                            confinePasswordEText = it
-                                        }
-
-                                        "The email address is already in use by another account." -> {
-                                            eMailError = true
-                                            eMailEText = "The email address is already in use"
-                                        }
-
-                                        "Given String is empty or null" -> {
-                                            if (email.value == "") {
-                                                eMailError = true
-                                                eMailEText = ""
-                                            }
-
-                                            if (password.value == "") {
-                                                passwordError = true
-                                                passwordEText = ""
-                                            }
-                                        }
-
-                                        "The email address is badly formatted." -> {
-                                            eMailError = true
-                                            eMailEText = "The email address is badly formatted."
-
-                                        }
-
-                                        "The given password is invalid. [ Password should be at least 6 characters ]" -> {
-                                            passwordError = true
-                                            passwordEText =
-                                                "Password should be at least 6 characters"
-                                        }
-
-                                        "The user account has been disabled by an administrator." -> {
-                                            errorText = it
-                                        }
-
-                                        "The provided custom claim attributes are invalid." -> {
-                                            errorText = it
-                                        }
-
-                                        "This operation is not allowed. You must enable this service in the console." -> {
-                                            errorText = it
-                                        }
-
-                                        "We have blocked all requests from this device due to unusual activity. Try again later." -> {
-                                            errorText = it
-                                        }
-
-                                        "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
-                                            errorText = it
-                                        }
-
-                                        "An unknown error occurred." -> {
-                                            errorText = it
-                                        }
-
-                                        "User Name already exists" -> {
-                                            userNameError = true
-                                            userNameEText = it
-                                        }
-
-                                        "user name contains illegible letters" -> {
-                                            userNameError = true
-                                            userNameEText = it
-                                        }
-
-                                        null -> {}
-                                        else -> {
-                                            errorText = it
-                                        }
-                                    }
-                                },
-                                onValueChange = { isLoading = it }
-                            )
+                            onSubbmit()
                         }
                         .padding(top = 10.dp, bottom = 10.dp)
                 ) {
@@ -474,7 +482,7 @@ fun SignUpScreen(
                     .background(appColor.background.copy(alpha = 0.3f)),
                 contentAlignment = Alignment.Center
             ){
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+                CircularProgressIndicator(color = Color.White)
             }
         }
     }

@@ -19,7 +19,7 @@ android {
         applicationId = "com.thephoenix.rockpaperscissors"
         minSdk = 26
         targetSdk = 33
-        versionCode = 1
+        versionCode = 10
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -69,7 +69,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
 }
 
 dependencies {

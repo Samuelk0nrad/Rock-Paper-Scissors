@@ -13,11 +13,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowForwardIos
 import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +38,7 @@ import com.thephoenix.rockpaperscissors.data.Screen
 import com.thephoenix.rockpaperscissors.presentation.screen.game.GameViewModel
 import com.thephoenix.rockpaperscissors.ui.theme.Oswald
 import com.thephoenix.rockpaperscissors.ui.theme.appColor
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -39,6 +46,12 @@ fun GameStatisticScreen(
     navController: NavController,
     viewModel: GameViewModel
 ){
+    var showButton by remember{ mutableStateOf(false)}
+
+    LaunchedEffect(key1 = Unit){
+        delay(500)
+        showButton = true
+    }
 
     BoxWithConstraints (modifier = Modifier.fillMaxSize()){
         val lazyHeight = (this.maxHeight - 50.dp) -45.dp
@@ -101,23 +114,24 @@ fun GameStatisticScreen(
                 }
             }
 
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(45.dp)
-                    .background(appColor.background)
-                    .padding(end = 24.dp)
-                    .clickable {
-                        navController.navigate(Screen.HomeScreen.route)
-                    },
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.ArrowForwardIos,
-                    contentDescription = "Navigation",
-                    tint = appColor.onBackground
-                )
+            if(showButton){
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp)
+                        .background(appColor.background)
+                        .padding(end = 24.dp)
+                        .clickable {
+                            navController.navigate(Screen.HomeScreen.route)
+                        },
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+                        contentDescription = "Navigation",
+                        tint = appColor.onBackground
+                    )
+                }
             }
         }
     }

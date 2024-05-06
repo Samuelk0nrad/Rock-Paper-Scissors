@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CameraAlt
@@ -418,7 +420,8 @@ fun CustomTextFiled(
     lineColor: Color = appColor.onBackground,
     startPadding: Dp = 51.dp,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    onEnter: (KeyboardActionScope.() -> Unit)? = null
 ) {
     Box (
         modifier = modifier
@@ -441,7 +444,10 @@ fun CustomTextFiled(
             visualTransformation = visualTransformation,
             singleLine = true,
             keyboardOptions = keyboardOptions,
-            cursorBrush = SolidColor(appColor.onBackground)
+            cursorBrush = SolidColor(appColor.onBackground),
+            keyboardActions = KeyboardActions(
+                onDone = onEnter
+            ),
         )
 
         if (value == "") {

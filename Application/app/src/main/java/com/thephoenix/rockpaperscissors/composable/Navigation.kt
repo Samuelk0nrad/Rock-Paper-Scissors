@@ -207,9 +207,8 @@ fun Navigation(
                 val state by viewModel.state.collectAsState()
                 val gameData = state.allGames
 
-                if(gameData.isNotEmpty()){
-                    StatisticScreen(navController = navController, gameData = gameData)
-                }
+                StatisticScreen(navController = navController, gameData = gameData)
+
             }
             
             composable(

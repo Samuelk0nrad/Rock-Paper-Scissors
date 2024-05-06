@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -81,6 +82,76 @@ fun SignInScreen(
         mutableStateOf("")
     }
 
+
+    fun onSubbmit() {
+        viewModel.onSignInClick(
+            goToScreen = {
+                navController.navigate(Screen.LogedAlreadyIn.route)
+            },
+            errorHandling = { error: String? ->
+                when (error) {
+                    "Given String is empty or null" -> {
+                        if (email.value == "") {
+                            eMailError = true
+                            eMailEText = ""
+                        }
+                        if (password.value == "") {
+                            passwordError = true
+                            passwordEText = ""
+                        }
+                    }
+
+                    "The supplied auth credential is incorrect, malformed or has expired." -> {
+                        errorText = "Invalid email or username or password."
+                    }
+
+                    "The email address is badly formatted." -> {
+                        eMailError = true
+                        eMailEText = error
+                    }
+
+                    "The email address or password is incorrect." -> {
+                        errorText = error
+                    }
+
+                    "There is no user record corresponding to this identifier. The user may have been deleted." -> {
+                        errorText = error
+                    }
+
+                    "The user account has been disabled by an administrator." -> {
+                        errorText = error
+                    }
+
+                    "We have blocked all requests from this device due to unusual activity. Try again later." -> {
+                        errorText = error
+                    }
+
+                    "The provided custom claim attributes are invalid." -> {
+                        errorText = error
+                    }
+
+                    "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
+                        errorText =
+                            "Network error. Check your connection and try again."
+                    }
+
+                    "An unknown error occurred." -> {
+                        errorText = error
+                    }
+
+                    null -> {}
+                    else -> {
+                        errorText = error
+                    }
+                }
+            },
+            onValueChange = {
+
+                isLoading = it
+
+            }
+        )
+    }
 
 
     Scaffold (
@@ -155,7 +226,10 @@ fun SignInScreen(
                     startPadding = 0.dp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = PasswordVisualTransformation(),
-                    lineColor = if(passwordError) appColor.red else appColor.onBackground
+                    lineColor = if(passwordError) appColor.red else appColor.onBackground,
+                    onEnter = {
+                        onSubbmit()
+                    }
                 )
 
                 Text(
@@ -210,74 +284,7 @@ fun SignInScreen(
                         .background(appColor.secondaryContainer)
                         .fillMaxWidth()
                         .clickable {
-
-                            viewModel.onSignInClick(
-                                goToScreen = {
-                                    navController.navigate(Screen.LogedAlreadyIn.route)
-                                },
-                                errorHandling = { error: String? ->
-                                    when (error) {
-                                        "Given String is empty or null" -> {
-                                            if (email.value == "") {
-                                                eMailError = true
-                                                eMailEText = ""
-                                            }
-                                            if (password.value == "") {
-                                                passwordError = true
-                                                passwordEText = ""
-                                            }
-                                        }
-
-                                        "The supplied auth credential is incorrect, malformed or has expired." -> {
-                                            errorText = "Invalid email or username or password."
-                                        }
-
-                                        "The email address is badly formatted." -> {
-                                            eMailError = true
-                                            eMailEText = error
-                                        }
-
-                                        "The email address or password is incorrect." -> {
-                                            errorText = error
-                                        }
-
-                                        "There is no user record corresponding to this identifier. The user may have been deleted." -> {
-                                            errorText = error
-                                        }
-
-                                        "The user account has been disabled by an administrator." -> {
-                                            errorText = error
-                                        }
-
-                                        "We have blocked all requests from this device due to unusual activity. Try again later." -> {
-                                            errorText = error
-                                        }
-
-                                        "The provided custom claim attributes are invalid." -> {
-                                            errorText = error
-                                        }
-
-                                        "A network error (such as timeout, interrupted connection, or unreachable host) has occurred." -> {
-                                            errorText =
-                                                "Network error. Check your connection and try again."
-                                        }
-
-                                        "An unknown error occurred." -> {
-                                            errorText = error
-                                        }
-
-                                        null -> {}
-                                        else -> {
-                                            errorText = error
-                                        }
-                                    }
-                                },
-                                onValueChange = {
-
-                                    isLoading = it
-
-                                }
-                            )
+                            onSubbmit()
                         }
                         .padding(top = 10.dp, bottom = 10.dp)
                 ) {
@@ -331,7 +338,7 @@ fun SignInScreen(
                     .background(appColor.background.copy(alpha = 0.3f)),
                 contentAlignment = Alignment.Center
             ){
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+                CircularProgressIndicator(color = Color.White)
             }
         }
     }

@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBackIos
 import androidx.compose.material.icons.filled.Add
@@ -44,9 +46,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -344,7 +348,8 @@ fun FriendsScreen(
                             Text(
                                 text = stringResource(id = R.string.you_dont_have_friends_jet),
                                 fontSize = 20.sp,
-                                fontFamily = Oswald
+                                fontFamily = Oswald,
+                                color = Color.White
                             )
                         }
                     }
@@ -463,6 +468,24 @@ fun FriendsScreen(
                             unfocusedBorderColor = appColor.secondaryContainer
                         ),
                         isError = error,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done // Specify the action for the IME button
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                isWorking = true
+
+                                viewModel.onClickAddFriend { errorMessage ->
+                                    if (errorMessage != null) {
+                                        error = true
+                                        errorText = errorMessage
+
+                                    }
+
+                                    isWorking = false
+                                }
+                            }
+                        ),
                     )
                 }
 

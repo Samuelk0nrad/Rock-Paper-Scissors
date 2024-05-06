@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
 
 
     private lateinit var auth: FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,17 +37,12 @@ class MainActivity : ComponentActivity() {
 
 
         installSplashScreen().apply {
-
-
-
             setKeepOnScreenCondition{
-
-
                 if(auth.currentUser == null){
                     val intent = Intent(applicationContext, SignUpInActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
                 }
-
                 false
             }
         }

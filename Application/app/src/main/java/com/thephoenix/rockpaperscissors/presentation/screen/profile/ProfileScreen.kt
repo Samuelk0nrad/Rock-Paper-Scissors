@@ -211,6 +211,7 @@ fun ProfileScreen(
                                 .height(size.dp)
                                 .clickable {
 
+                                    navController.navigate(Screen.MainStatistic.route)
 
                                 }
                                 .background(appColor.secondaryContainer),
@@ -248,6 +249,7 @@ fun ProfileScreen(
                                 .height(size.dp)
                                 .clickable {
 
+                                    navController.navigate(Screen.FriendsScreen.route)
 
                                 }
                                 .background(appColor.secondaryContainer),

@@ -1,5 +1,6 @@
 package com.thephoenix.rockpaperscissors.presentation.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,53 +72,6 @@ fun StatisticScreen(
     var eRock = 0
     var ePaper = 0
     var eScissors = 0
-
-    gameDataEntityList.forEach{ data ->
-
-        var isAdd = false
-        modeList.forEach{modeData->
-            if(data.mode == modeData.mode){
-                modeData.allPlayedRounds++
-
-                when(data.win){
-                    WinTyp.Lose -> modeData.allLose++
-                    WinTyp.Win -> modeData.allWins++
-                    WinTyp.Draw -> modeData.allDraws++
-                }
-                isAdd = true
-            }
-        }
-
-        if(!isAdd){
-            val mode = dataMode(
-                mode = data.mode,
-                allPlayedRounds = 1
-            )
-            when(data.win){
-                WinTyp.Lose -> mode.allLose++
-                WinTyp.Win -> mode.allWins++
-                WinTyp.Draw -> mode.allDraws++
-            }
-
-            modeList = modeList + mode
-
-        }
-
-        data.allRounds.forEach{
-            when(it.enemySelection){
-                SelectionType.ROCK -> eRock++
-                SelectionType.PAPER -> ePaper++
-                SelectionType.SCISSORS -> eScissors++
-            }
-
-
-            when(it.playerSelection){
-                SelectionType.ROCK -> yRock++
-                SelectionType.PAPER -> yPaper++
-                SelectionType.SCISSORS -> yScissors++
-            }
-        }
-    }
 
 
 
@@ -288,17 +243,70 @@ fun StatisticScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(15.dp))
+        if(gameData.isNotEmpty() && gameDataEntityList.isNotEmpty()) {
 
-        val barName = listOf(stringResource(id = R.string.rock), stringResource(id = R.string.paper), stringResource(
-            id = R.string.scissors
-        ))
+            gameDataEntityList.forEach{ data ->
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 36.dp)
-        ){
+                var isAdd = false
+                modeList.forEach{modeData->
+                    if(data.mode == modeData.mode){
+                        modeData.allPlayedRounds++
+
+                        when(data.win){
+                            WinTyp.Lose -> modeData.allLose++
+                            WinTyp.Win -> modeData.allWins++
+                            WinTyp.Draw -> modeData.allDraws++
+                        }
+                        isAdd = true
+                    }
+                }
+
+                if(!isAdd){
+                    val mode = dataMode(
+                        mode = data.mode,
+                        allPlayedRounds = 1
+                    )
+                    when(data.win){
+                        WinTyp.Lose -> mode.allLose++
+                        WinTyp.Win -> mode.allWins++
+                        WinTyp.Draw -> mode.allDraws++
+                    }
+
+                    modeList = modeList + mode
+
+                }
+
+                data.allRounds.forEach{
+                    when(it.enemySelection){
+                        SelectionType.ROCK -> eRock++
+                        SelectionType.PAPER -> ePaper++
+                        SelectionType.SCISSORS -> eScissors++
+                    }
+
+
+                    when(it.playerSelection){
+                        SelectionType.ROCK -> yRock++
+                        SelectionType.PAPER -> yPaper++
+                        SelectionType.SCISSORS -> yScissors++
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            val barName = listOf(
+                stringResource(id = R.string.rock),
+                stringResource(id = R.string.paper),
+                stringResource(
+                    id = R.string.scissors
+                )
+            )
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 36.dp)
+            ) {
 /*
             item {
                 Spacer(modifier = Modifier.height(15.dp))
@@ -339,110 +347,131 @@ fun StatisticScreen(
 
 
 
-            item {
-                Spacer(modifier = Modifier.height(53.dp))
-            }
+                item {
+                    Spacer(modifier = Modifier.height(53.dp))
+                }
 
-            item {
-                BarGraph(
-                    values = listOf(yRock.toFloat(), yPaper.toFloat(), yScissors.toFloat()),
-                    name = barName,
-                    height = 302,
-                    title = "${stringResource(id = R.string.your_selection)}:"
-                )
-            }
+                item {
+                    BarGraph(
+                        values = listOf(yRock.toFloat(), yPaper.toFloat(), yScissors.toFloat()),
+                        name = barName,
+                        height = 302,
+                        title = "${stringResource(id = R.string.your_selection)}:"
+                    )
+                }
 
-            item {
-                Spacer(modifier = Modifier.height(53.dp))
-            }
+                item {
+                    Spacer(modifier = Modifier.height(53.dp))
+                }
 
-            item {
-                BarGraph(
-                    values = listOf(eRock.toFloat(), ePaper.toFloat(), eScissors.toFloat()),
-                    name = barName,
-                    height = 302,
-                    title = "${stringResource(id = R.string.enemy_selection)}:"
-                )
-            }
-
-
-            item {
-                Spacer(modifier = Modifier.height(44.dp))
-
-                Text(
-                    text = "${stringResource(id = R.string.modes)}:",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = Oswald,
-                    letterSpacing = 0.48.sp,
-                    color = appColor.onBackground
-                )
-            }
+                item {
+                    BarGraph(
+                        values = listOf(eRock.toFloat(), ePaper.toFloat(), eScissors.toFloat()),
+                        name = barName,
+                        height = 302,
+                        title = "${stringResource(id = R.string.enemy_selection)}:"
+                    )
+                }
 
 
-            items(modeList){mode->
-                Modes(
-                    mode = mode.mode,
-                    rounds = mode.allPlayedRounds,
-                    wins = mode.allWins,
-                    loses = mode.allLose,
-                    clicked = {
-                        navController.navigate("${Screen.ModeStatisticScreen.route}/$it")
-                    }
-                )
+                item {
+                    Spacer(modifier = Modifier.height(54.dp))
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = "${stringResource(id = R.string.modes)}:",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = Oswald,
+                        letterSpacing = 0.48.sp,
+                        color = appColor.onBackground
+                    )
+                    Spacer(modifier = Modifier.height(26.dp))
 
-            }
+                }
 
-            item {
-                Spacer(modifier = Modifier.height(44.dp))
 
-                Text(
-                    text = "${stringResource(id = R.string.all_rounds)}:",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = Oswald,
-                    letterSpacing = 0.48.sp,
-                    color = appColor.onBackground
-                )
-            }
-
-            items(gameDataEntityList){ gameData ->
-                Column {
-
-                    var yourWins = 0
-                    var enemyWins = 0
-                    gameData.allRounds.forEach{round->
-                        when(round.result){
-                            WinTyp.Lose -> enemyWins++
-                            WinTyp.Win -> yourWins++
-                            else -> {}
-                        }
-                    }
-
-                    val formattedDate = gameData.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
-
-                    AllRounds(
-                        rounds = gameData.rounds,
-                        yourWins = yourWins,
-                        enemyWins = enemyWins,
-                        win = gameData.win,
-                        date = formattedDate,
-                        mode = gameData.mode,
-                        onClick = {
-                            navController.navigate("${Screen.RoundStatisticScreen.route}/${gameData.id}")
+                items(modeList) { mode ->
+                    Modes(
+                        mode = mode.mode,
+                        rounds = mode.allPlayedRounds,
+                        wins = mode.allWins,
+                        loses = mode.allLose,
+                        clicked = {
+                            navController.navigate("${Screen.ModeStatisticScreen.route}/$it")
                         }
                     )
 
-                    Spacer(modifier = Modifier.height(15.dp))
-                    Spacer(modifier = Modifier
-                        .height(1.dp)
-                        .width(316.dp)
-                        .background(appColor.onSecondaryContainer))
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(44.dp))
+
+                    Text(
+                        text = "${stringResource(id = R.string.all_rounds)}:",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = Oswald,
+                        letterSpacing = 0.48.sp,
+                        color = appColor.onBackground
+                    )
+                    Spacer(modifier = Modifier.height(22.dp))
+
+                }
+
+                items(gameDataEntityList) { gameData ->
+                    Column {
+
+                        var yourWins = 0
+                        var enemyWins = 0
+                        gameData.allRounds.forEach { round ->
+                            when (round.result) {
+                                WinTyp.Lose -> enemyWins++
+                                WinTyp.Win -> yourWins++
+                                else -> {}
+                            }
+                        }
+
+                        val formattedDate =
+                            gameData.timestamp.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+
+                        AllRounds(
+                            rounds = gameData.rounds,
+                            yourWins = yourWins,
+                            enemyWins = enemyWins,
+                            win = gameData.win,
+                            date = formattedDate,
+                            mode = gameData.mode,
+                            onClick = {
+                                navController.navigate("${Screen.RoundStatisticScreen.route}/${gameData.id}")
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(
+                            modifier = Modifier
+                                .height(1.dp)
+                                .width(316.dp)
+                                .background(appColor.onSecondaryContainer)
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                    }
                 }
             }
+        } else  {
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Text(
+                text = "No Existing Data \nfor this filter",
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = Oswald,
+                letterSpacing = 0.48.sp,
+                color = appColor.onBackground,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
@@ -604,6 +633,16 @@ fun Modes(
     clicked: (GameModesEnum) -> Unit
 ) {
 
+    var imageId = when(mode){
+        GameModesEnum.RANDOM -> {
+            R.drawable.whithwurfel
+        }
+        GameModesEnum.LOCAL_MULTIPLAYER -> R.drawable.white_multiplayer
+        GameModesEnum.ONLINE_MULTIPLAYER -> R.drawable.white_video_game
+        GameModesEnum.FRIEND_MULTIPLAYER -> R.drawable.white_multiplayer
+        GameModesEnum.AI_MODE -> R.drawable.white_microchip
+    }
+
     Box(
         modifier = Modifier
             .width(288.dp)
@@ -617,10 +656,14 @@ fun Modes(
         ){
             Box(
                 modifier = Modifier
-                    .size(82.dp)
-                    .background(appColor.onBackground)
+                    .size(82.dp),
+                contentAlignment = Alignment.Center
             ){
-
+                Image(
+                    modifier = Modifier.fillMaxSize(0.6f),
+                    painter = painterResource(id = imageId),
+                    contentDescription = "Welcome Illustration",
+                )
             }
 
             Box(modifier = Modifier.fillMaxSize()){

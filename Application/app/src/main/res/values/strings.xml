@@ -65,11 +65,11 @@
     <string name="random">Random</string>
     <string name="random_description">Play agens a random selector</string>
     <string name="local_multiplayer">Local Multiplayer</string>
-    <string name="local_multiplayer_description">Play With a friend local</string>
+    <string name="local_multiplayer_description">Play agens a friend local</string>
     <string name="online_multiplayer">Online Multiplayer</string>
-    <string name="online_multiplayer_description">Play with other player</string>
+    <string name="online_multiplayer_description">Play agens other player</string>
     <string name="ai_mode">AI Mode</string>
-    <string name="ai_mode_description">Play With a Computer AI</string>
+    <string name="ai_mode_description">Play agens a Bot AI</string>
     <string name="home">Home</string>
 </resources>
 

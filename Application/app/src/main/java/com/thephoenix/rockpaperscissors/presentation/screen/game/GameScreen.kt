@@ -1,5 +1,6 @@
 package com.thephoenix.rockpaperscissors.presentation.screen.game
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
 import android.util.Log
@@ -116,6 +117,7 @@ class GameScreen (
 
 
 
+    @SuppressLint("UnrememberedMutableInteractionSource")
     @Composable
     fun CompGameScreen(
         onReset: () -> Unit,
@@ -282,7 +284,7 @@ class GameScreen (
                         ) {
                             //isShowWinText = false
                             if (!isReset) {
-                                reset(onReset)
+                                reset(onReset, true)
                             }
                         },
                     contentAlignment = Alignment.Center
@@ -411,7 +413,7 @@ class GameScreen (
 
 
 
-    private fun reset(onReset: () -> Unit) {
+    private fun reset(onReset: () -> Unit, isGameEnd: Boolean = false) {
         if(isRoundAdded)
             statistics.currentRound++
         if (statistics.currentRound <= statistics.rounds) {
@@ -433,7 +435,7 @@ class GameScreen (
                 isPlayerSelect = false
             )
             onReset()
-        } else{
+        } else if(isGameEnd){
             statistics.currentRound--
             endGame()
         }
